@@ -1,11 +1,16 @@
 DEVELOPMENT WORKFLOW
-=======================
+====================
 
+1. Start the development server from the root directory
+npm run client
+
+2. Start the backend server from the root directory
+npm run start
 
 
 
 GIT WORKFLOW
-=======================
+============
 
 1. Confirm working tree is clean, you are on local master branch, and in-sync with org master.
 git status
