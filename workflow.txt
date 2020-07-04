@@ -1,0 +1,41 @@
+DEVELOPMENT WORKFLOW
+=======================
+
+
+
+
+GIT WORKFLOW
+=======================
+
+1. Confirm working tree is clean, you are on local master branch, and in-sync with org master.
+git status
+git checkout master
+git pull upstream master
+
+2. Create a new branch.
+git checkout -b new-branch-name
+
+3. Make edits. Stage changes. Make commits with imperative message.
+
+4. Check for updates to org master and merge into your new branch.
+git pull upstream master
+
+4b. If merging changes in Nano, save default commit message.
+ctrl + o, enter, ctrl + x
+
+5. After incorporating new changes
+git push origin new-branch-name
+
+6. Go to GitHub and submit a pull request from your origin.
+6b. Someone should review your code and either merge or request revisions.
+
+7a. If no revisions are necessary, merge pull request on GitHub. Select delete branch when merge completes.
+7b. If revisions are necessary, return to step 3.
+
+8. After merging, checkout local master branch, update from upstream, and delete the branch.
+git checkout master
+git pull upstream master
+git branch -d new-branch-name
+
+9. Update origin master.
+git push origin master
