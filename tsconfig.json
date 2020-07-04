@@ -6,7 +6,10 @@
     "target": "es6",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "lib": ["es6"],
+    "lib": [
+      "es6",
+      "DOM"
+    ],
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "removeComments": false
