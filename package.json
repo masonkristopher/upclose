@@ -22,7 +22,9 @@
   "homepage": "https://github.com/wpreble1/upclose#readme",
   "dependencies": {
     "@types/express": "^4.17.6",
+    "axios": "^0.19.2",
     "express": "^4.17.1",
+    "ts-node": "^8.10.2",
     "typescript": "^3.9.6"
   }
 }
