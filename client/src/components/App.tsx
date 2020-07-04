@@ -5,7 +5,7 @@ const App = () => {
     <div className="text-red-700">
       I am the almighty App
     </div>
-  )
+  );
 };
 
 export default App;
