@@ -23,7 +23,11 @@ git pull upstream master
 4b. If merging changes in Nano, save default commit message.
 ctrl + o, enter, ctrl + x
 
-5. After incorporating new changes
+=============================================================
+TEST YOUR MERGE FOR BUGS!!!
+=============================================================
+
+5. If you have tested your merge and there are no bugs...
 git push origin new-branch-name
 
 6. Go to GitHub and submit a pull request from your origin.
