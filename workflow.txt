@@ -1,12 +1,14 @@
 DEVELOPMENT WORKFLOW
 ====================
 
-1. Start the development server from the root directory
+1. Install dependencies in project root (server) and client 
+npm run iall
+
+2. Start the development server from the root directory
 npm run client
 
-2. Start the backend server from the root directory
+3. Start the backend server from the root directory
 npm run start
-
 
 
 GIT WORKFLOW
@@ -48,3 +50,13 @@ git branch -d new-branch-name
 
 9. Update origin master.
 git push origin master
+
+
+PRODUCTION WORKFLOW
+===================
+
+1. Build server for production 
+npm run build
+
+2. Build client for production
+npm run build:client
