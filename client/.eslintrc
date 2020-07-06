@@ -26,6 +26,7 @@
     "no-useless-constructor": "off",
     "@typescript-eslint/no-useless-constructor": "error",
     "no-console": 0,
-    "no-debugger": 1
+    "no-debugger": 1,
+    "arrow-body-style": 0
   }
 }
