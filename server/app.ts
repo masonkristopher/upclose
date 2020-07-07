@@ -35,30 +35,59 @@ class Server {
       .catch((error) => {
         console.error('Unable to connect to the database:', error);
       });
-      User.init(
-        {
-          id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            autoIncrement: true,
-            primaryKey: true,
-          },
-          name: {
-            type: new DataTypes.STRING(128),
-            allowNull: false,
-          },
-          preferredName: {
-            type: new DataTypes.STRING(128),
-            allowNull: true,
-          },
+    User.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
         },
-        {
-          tableName: 'users',
-          sequelize, // passing the `sequelize` instance is required
+        nameFirst: {
+          type: new DataTypes.STRING(128),
+          allowNull: false,
         },
-      );
+        nameLast: {
+          type: new DataTypes.STRING(128),
+          allowNull: true,
+        },
+        username: {
+          type: new DataTypes.STRING(128),
+          allowNull: true,
+        },
+        password: {
+          type: new DataTypes.STRING(128),
+          allowNull: true,
+        },
+        email: {
+          type: new DataTypes.STRING(128),
+          allowNull: true,
+        },
+        avatar: {
+          type: new DataTypes.STRING(128),
+          allowNull: true,
+        },
 
-    sequelize.sync({ force: true }); // if you need to drop the tables
-    // sequelize.sync(); // if you just need to update the tables
+      },
+      {
+        tableName: 'users',
+        sequelize, // passing the `sequelize` instance is required
+      },
+    );
+
+    // sequelize.sync({ force: true }); // if you need to drop the tables
+    sequelize.sync(); // if you just need to update the tables
+    async function doStuffWithUser() {
+      const newUser = await User.create({
+        nameFirst: 'pop',
+        nameLast: 'skippy',
+        username: 'pop-skippy',
+        password: 'pop',
+        email: 'skippy@email.com',
+        avatar: 'an-avatar.com',
+      });
+      console.log(newUser);
+    }
+    doStuffWithUser();
   }
 }
 
