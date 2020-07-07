@@ -1,7 +1,10 @@
 import {
   Model,
   Optional,
+  DataTypes,
 } from 'sequelize';
+
+import sequelize from '../index';
 // These are all the attributes in the User model
 interface UserAttributes {
   id: number
@@ -18,28 +21,63 @@ interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'avatar
 
 class User extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes {
-  public id!: number; // Note that the `null assertion` `!` is required in strict mode.
+  public id!: number // Note that the `null assertion` `!` is required in strict mode.
 
-  public nameFirst!: string;
+  public nameFirst!: string
 
-  public nameLast: string | null; // for nullable fields
+  public nameLast: string | null // for nullable fields
 
-  public username!: string;
+  public username!: string
 
-  public password!: string;
+  public password!: string
 
-  public email!: string;
+  public email!: string
 
-  public avatar: string | null;
+  public avatar: string | null
 
   // timestamps!
   public readonly createdAt!: Date;
 
   public readonly updatedAt!: Date;
-
-  // Since TS cannot determine model association at compile time
-  // we have to declare them here purely virtually
-  // these will not exist until `Model.init` was called.
 }
+
+User.init(
+  {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    nameFirst: {
+      type: new DataTypes.STRING(128),
+      allowNull: false,
+    },
+    nameLast: {
+      type: new DataTypes.STRING(128),
+      allowNull: true,
+    },
+    username: {
+      type: new DataTypes.STRING(128),
+      allowNull: true,
+    },
+    password: {
+      type: new DataTypes.STRING(128),
+      allowNull: true,
+    },
+    email: {
+      type: new DataTypes.STRING(128),
+      allowNull: true,
+    },
+    avatar: {
+      type: new DataTypes.STRING(128),
+      allowNull: true,
+    },
+
+  },
+  {
+    tableName: 'users',
+    sequelize, // passing the `sequelize` instance is required
+  },
+);
 
 export default User;
