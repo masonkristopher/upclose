@@ -1,7 +1,12 @@
 import express, { Application, Request, Response } from 'express';
 import socketIO, { Server as SocketIOServer } from 'socket.io';
 import { createServer, Server as HTTPServer } from 'http';
-import * as path from 'path';
+// import * as path from 'path';
+// import express, { Express, Request, Response } from 'express';
+import path from 'path';
+import { DataTypes } from 'sequelize';
+import sequelize from './db/index';
+import User from './db/models/user';
 
 class Server {
   private httpServer: HTTPServer;
@@ -85,6 +90,37 @@ class Server {
         socket.broadcast.emit('remove-user', { socketId: socket.id });
       });
     });
+    sequelize.authenticate()
+      .then(() => {
+        console.log('connected to database!');
+      })
+      .catch((error) => {
+        console.error('Unable to connect to the database:', error);
+      });
+      User.init(
+        {
+          id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            autoIncrement: true,
+            primaryKey: true,
+          },
+          name: {
+            type: new DataTypes.STRING(128),
+            allowNull: false,
+          },
+          preferredName: {
+            type: new DataTypes.STRING(128),
+            allowNull: true,
+          },
+        },
+        {
+          tableName: 'users',
+          sequelize, // passing the `sequelize` instance is required
+        },
+      );
+
+    sequelize.sync({ force: true }); // if you need to drop the tables
+    // sequelize.sync(); // if you just need to update the tables
   }
 
   public listen(callback: (port: number) => void): void {
