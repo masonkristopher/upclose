@@ -79,15 +79,15 @@ class Server {
     async function doStuffWithUser() {
       const newUser = await User.create({
         nameFirst: 'pop',
-        nameLast: 'skippy',
+        // nameLast: 'skippy',
         username: 'pop-skippy',
         password: 'pop',
         email: 'skippy@email.com',
-        avatar: 'an-avatar.com',
+        // avatar: 'an-avatar.com',
       });
       console.log(newUser);
     }
-    doStuffWithUser();
+    // doStuffWithUser();
   }
 }
 
