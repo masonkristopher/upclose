@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import socketIO, { Server as SocketIOServer } from 'socket.io';
 import { createServer, Server as HTTPServer } from 'http';
+import * as path from 'path';
 
 class Server {
   private httpServer: HTTPServer;
@@ -17,6 +18,18 @@ class Server {
     this.initialize();
     this.handleRoutes();
     this.handleSocketConnection();
+
+    this.app.use(express.static(`${path.resolve('./')}/client/build`));
+
+    this.app.get('/api', (req: Request, res: Response): void => {
+      console.log('hit me');
+      res.send('You have reached the API!');
+    });
+
+    // for any requests to wildcard endpoints (from react router), server the static build files
+    this.app.get('*', (req: Request, res: Response): void => {
+      res.sendFile(`${path.resolve('./')}/client/build/index.html`);
+    });
   }
 
   private initialize(): void {
