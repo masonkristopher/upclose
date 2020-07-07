@@ -4,17 +4,17 @@ import {
 } from 'sequelize';
 // These are all the attributes in the User model
 interface UserAttributes {
-  id: number;
+  id: number
   nameFirst: string
-  nameLast: string | null;
+  nameLast: string | null
   username: string
   password: string
   email: string
-  avatar: string
+  avatar: string | null
 }
 
 // Some attributes are optional in `User.build` and `User.create` calls
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'avatar' | 'nameLast'> {}
 
 class User extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes {
@@ -22,7 +22,7 @@ class User extends Model<UserAttributes, UserCreationAttributes>
 
   public nameFirst!: string;
 
-  public nameLast!: string | null; // for nullable fields
+  public nameLast: string | null; // for nullable fields
 
   public username!: string;
 
@@ -30,7 +30,7 @@ class User extends Model<UserAttributes, UserCreationAttributes>
 
   public email!: string;
 
-  public avatar!: string;
+  public avatar: string | null;
 
   // timestamps!
   public readonly createdAt!: Date;
