@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -10,10 +10,16 @@ import UserProfile from './UserProfile';
 import Neighborhood from './Neighborhood';
 import Messages from './Messages';
 
-const Navbar = ( {setAppsUser}:any ) => {
-  // triggers when a user successfully logs out; should alert the user and hit an endpoint in our server?
+const Navbar = ({ setUser, user }:any) => {
+
+// triggers when a user successfully logs out; should alert the user and hit our server?
   const logout = () => {
     console.log('logged out');
+  };
+
+  const changeState = () => {
+    console.log('click');
+    setUser('testing');
   };
 
   // the response from google after the login
@@ -37,6 +43,7 @@ const Navbar = ( {setAppsUser}:any ) => {
   return (
     <Router>
       <div className="text-blue">
+        <button type="button" onClick={changeState}>change state</button>
         <ul>
           {/* link to UserProfile */}
           <li><Link to="/profile">Profile</Link></li>
