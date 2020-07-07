@@ -13,9 +13,11 @@
     "@types/react-dom": "^16.9.8",
     "@types/sequelize": "^4.28.9",
     "@types/validator": "^13.1.0",
+    "@types/react-router-dom": "^5.1.5",
     "axios": "^0.19.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "typescript": "^3.7.5"
   },
