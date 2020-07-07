@@ -1,6 +1,5 @@
 import express, { Express, Request, Response } from 'express';
 import path from 'path';
-import { DataTypes } from 'sequelize';
 import sequelize from './db/index';
 import User from './db/models/user';
 
@@ -35,44 +34,6 @@ class Server {
       .catch((error) => {
         console.error('Unable to connect to the database:', error);
       });
-    User.init(
-      {
-        id: {
-          type: DataTypes.INTEGER.UNSIGNED,
-          autoIncrement: true,
-          primaryKey: true,
-        },
-        nameFirst: {
-          type: new DataTypes.STRING(128),
-          allowNull: false,
-        },
-        nameLast: {
-          type: new DataTypes.STRING(128),
-          allowNull: true,
-        },
-        username: {
-          type: new DataTypes.STRING(128),
-          allowNull: true,
-        },
-        password: {
-          type: new DataTypes.STRING(128),
-          allowNull: true,
-        },
-        email: {
-          type: new DataTypes.STRING(128),
-          allowNull: true,
-        },
-        avatar: {
-          type: new DataTypes.STRING(128),
-          allowNull: true,
-        },
-
-      },
-      {
-        tableName: 'users',
-        sequelize, // passing the `sequelize` instance is required
-      },
-    );
 
     // sequelize.sync({ force: true }); // if you need to drop the tables
     sequelize.sync(); // if you just need to update the tables
@@ -87,7 +48,7 @@ class Server {
       });
       console.log(newUser);
     }
-    // doStuffWithUser();
+    doStuffWithUser();
   }
 }
 
