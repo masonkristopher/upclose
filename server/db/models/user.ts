@@ -6,11 +6,11 @@ import {
 interface UserAttributes {
   id: number
   nameFirst: string
-  nameLast: string | null
+  nameLast: string
   username: string
   password: string
   email: string
-  avatar: string | null
+  avatar: string
 }
 
 // Some attributes are optional in `User.build` and `User.create` calls
