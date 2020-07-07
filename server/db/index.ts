@@ -1,13 +1,14 @@
 // setup database in here
-const { Sequelize, DataTypes } = require('sequelize');
+import { Sequelize } from 'sequelize';
+
 require('dotenv').config();
 
-const DB_NAME = process.env.DB_NAME || 'op';
+const DB_NAME = process.env.DB_NAME || 'uc';
 const DB_USER = process.env.DB_USER || 'root';
 const DB_PASS = process.env.DB_PASS || '';
 const { DB_INSTANCE, NODE_ENV } = process.env;
 
-let sequelize = null;
+let sequelize;
 
 if (NODE_ENV === 'production') {
   // production (cloud sql) database connection
@@ -28,17 +29,6 @@ if (NODE_ENV === 'production') {
   });
 }
 
-sequelize.authenticate()
-  .then(() => {
-    console.log(`Connection has been established with ${DB_NAME} database successfully.`);
-  })
-  .catch(error => {
-    console.error('Unable to connect to the database:', error);
-  });
-
-sequelize.sync({ force: true });
 // sequelize.sync(); // will not drop tables every time
 
-module.exports = {
-  sequelize,
-};
+export default sequelize;
