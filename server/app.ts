@@ -1,6 +1,9 @@
 import { Express, Request, Response } from 'express';
 // import path from 'path';
 // import express from 'express';
+import { DataTypes } from 'sequelize';
+import sequelize from './db/index';
+import User from './db/models/user';
 
 class Server {
   private app: Express;
@@ -17,6 +20,37 @@ class Server {
     this.app.listen(port, () => {
       console.log(`Server listening on port ${port}!`);
     });
+    sequelize.authenticate()
+      .then(() => {
+        console.log('connected to database!');
+      })
+      .catch((error) => {
+        console.error('Unable to connect to the database:', error);
+      });
+      User.init(
+        {
+          id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            autoIncrement: true,
+            primaryKey: true,
+          },
+          name: {
+            type: new DataTypes.STRING(128),
+            allowNull: false,
+          },
+          preferredName: {
+            type: new DataTypes.STRING(128),
+            allowNull: true,
+          },
+        },
+        {
+          tableName: 'users',
+          sequelize, // passing the `sequelize` instance is required
+        },
+      );
+
+    sequelize.sync({ force: true }); // if you need to drop the tables
+    // sequelize.sync(); // if you just need to update the tables
   }
 }
 
