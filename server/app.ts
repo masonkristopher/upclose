@@ -1,6 +1,5 @@
-import { Express, Request, Response } from 'express';
+import express, { Express, Request, Response } from 'express';
 import path from 'path';
-// import express from 'express';
 import { DataTypes } from 'sequelize';
 import sequelize from './db/index';
 import User from './db/models/user';
