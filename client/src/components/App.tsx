@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
+// import { UserContextProvider } from './contexts/UserContext';
 // import SampleVidChat from './SampleVidChat';
 
 const App = () => {
@@ -27,15 +28,21 @@ const App = () => {
             });
           }
         })
-        .then((response: any):void => {
+        .then((response: any): void => {
           if (response) {
             setUser(response.data);
           }
+        })
+        .catch((err: any) => {
+          console.error(err);
         });
     });
   }, []);
 
   return (
+    // <UserContextProvider
+    //   value={user}
+    // >
     <div>
       <div>
         I am the almighty App
@@ -47,6 +54,7 @@ const App = () => {
       </div>
 
     </div>
+    // </UserContextProvider>
   );
 };
 

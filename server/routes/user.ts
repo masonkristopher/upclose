@@ -1,6 +1,6 @@
 import express from 'express';
-import { addUser, getUser } from '../db/methods';
 import { OAuth2Client } from 'google-auth-library';
+import { addUser, getUser } from '../db/methods';
 
 const userRouter = express.Router();
 
