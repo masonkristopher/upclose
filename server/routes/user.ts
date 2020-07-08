@@ -1,4 +1,5 @@
 import express from 'express';
+import { addUser } from '../db/methods';
 import { OAuth2Client } from 'google-auth-library';
 
 const userRouter = express.Router();
@@ -15,9 +16,9 @@ userRouter.post('/verify', (req, res) => {
     });
     const payload = ticket.getPayload();
     const googleId = payload.sub;
+    // this will return a googleId
     return googleId;
   }
-  // this will return a googleId
   verify()
     .then((googleId) => {
       // we want to query our database instead of sending this id
@@ -26,6 +27,18 @@ userRouter.post('/verify', (req, res) => {
       res.status(200).send(googleId);
     })
     .catch(console.error);
+});
+
+userRouter.post('/save', (req, res) => {
+  const userObj = req.body;
+  console.log(userObj);
+  addUser(userObj)
+    .then(() => {
+      res.send('User added');
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 });
 
 export default userRouter;
