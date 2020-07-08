@@ -15,7 +15,9 @@ class Server {
 
   private io: SocketIOServer;
 
-  private activeSockets: string[] = [];
+  private users: any = {};
+
+  private socketToRoom: any = {};
 
   private readonly DEFAULT_PORT = 8080;
 
@@ -50,46 +52,46 @@ class Server {
   }
 
   private handleSocketConnection(): void {
-    this.io.on('connection', (socket) => {
-      console.log('socket connected');
+    this.io.on('connection', socket => {
+      socket.on('join room', roomID => {
+        if (this.users[roomID]) {
+          const { length } = this.users[roomID];
+          if (length === 4) {
+            socket.emit('room full');
+            return;
+          }
+          this.users[roomID].push(socket.id);
+        } else {
+          this.users[roomID] = [socket.id];
+        }
+        this.socketToRoom[socket.id] = roomID;
+        const usersInThisRoom = this.users[roomID].filter(id => id !== socket.id);
 
-      const existingSocket = this.activeSockets.find(activeSocket => activeSocket === socket.id);
-
-      if (!existingSocket) {
-        this.activeSockets.push(socket.id);
-
-        socket.emit('update-user-list', {
-          users: this.activeSockets.filter(activeSocket => activeSocket !== socket.id),
-        });
-
-        socket.broadcast.emit('update-user-list', {
-          users: [socket.id],
-        });
-      }
-
-      socket.on('call-user', (data: any) => {
-        socket.to(data.to).emit('call-made', {
-          offer: data.offer,
-          socket: socket.id,
-        });
+        socket.emit('all users', usersInThisRoom);
       });
 
-      socket.on('make-answer', (data: any) => {
-        socket.to(data.to).emit('answer-made', {
-          socket: socket.id,
-          answer: data.answer,
-        });
+      socket.on('sending signal', payload => {
+        this.io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
       });
 
-      socket.on('reject-call', (data: any) => {
-        socket.to(data.from).emit('call-rejected', { socket: socket.id });
+      socket.on('returning signal', payload => {
+        this.io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
       });
 
       socket.on('disconnect', () => {
-        this.activeSockets = this.activeSockets.filter(activeSocket => activeSocket !== socket.id);
-        socket.broadcast.emit('remove-user', { socketId: socket.id });
+        const roomID = this.socketToRoom[socket.id];
+        let room = this.users[roomID];
+        if (room) {
+          room = room.filter(id => id !== socket.id);
+          this.users[roomID] = room;
+        }
       });
     });
+  }
+
+  public listen(callback: (port: number) => void): void {
+    this.httpServer.listen(this.DEFAULT_PORT, () => callback(this.DEFAULT_PORT));
+
     sequelize.authenticate()
       .then(() => {
         console.log('connected to database!');
@@ -97,59 +99,32 @@ class Server {
       .catch((error) => {
         console.error('Unable to connect to the database:', error);
       });
-      User.init(
-        {
-          id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            autoIncrement: true,
-            primaryKey: true,
-          },
-          name: {
-            type: new DataTypes.STRING(128),
-            allowNull: false,
-          },
-          preferredName: {
-            type: new DataTypes.STRING(128),
-            allowNull: true,
-          },
+
+    User.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
         },
-        {
-          tableName: 'users',
-          sequelize, // passing the `sequelize` instance is required
+        name: {
+          type: new DataTypes.STRING(128),
+          allowNull: false,
         },
-      );
+        preferredName: {
+          type: new DataTypes.STRING(128),
+          allowNull: true,
+        },
+      },
+      {
+        tableName: 'users',
+        sequelize, // passing the `sequelize` instance is required
+      },
+    );
 
     sequelize.sync({ force: true }); // if you need to drop the tables
     // sequelize.sync(); // if you just need to update the tables
   }
-
-  public listen(callback: (port: number) => void): void {
-    this.httpServer.listen(this.DEFAULT_PORT, () => callback(this.DEFAULT_PORT));
-  }
 }
 
 export default Server;
-
-// import { Express, Request, Response } from 'express';
-// // import path from 'path';
-// // import express from 'express';
-
-// class Server {
-//   private app: Express;
-
-//   constructor(app: Express) {
-//     this.app = app;
-//     this.app.get('/api', (req: Request, res: Response): void => {
-//       console.log('hit me');
-//       res.send('You have reached the API!');
-//     });
-//   }
-
-//   public start(port: number): void {
-//     this.app.listen(port, () => {
-//       console.log(`Server listening on port ${port}!`);
-//     });
-//   }
-// }
-
-// export default Server;
