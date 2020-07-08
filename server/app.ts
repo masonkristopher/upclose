@@ -1,7 +1,9 @@
 import express, { Express, Request, Response } from 'express';
 import path from 'path';
 import sequelize from './db/index';
-import User from './db/models/user';
+import { initUser } from './db/models/user';
+import { initParty } from './db/models/party';
+import { initMessage } from './db/models/message';
 
 class Server {
   private app: Express;
@@ -34,21 +36,23 @@ class Server {
       .catch((error) => {
         console.error('Unable to connect to the database:', error);
       });
-
-    // sequelize.sync({ force: true }); // if you need to drop the tables
-    sequelize.sync(); // if you just need to update the tables
-    async function doStuffWithUser() {
-      const newUser = await User.create({
-        nameFirst: 'pop',
-        // nameLast: 'skippy',
-        username: 'pop-skippy',
-        password: 'pop',
-        email: 'skippy@email.com',
-        // avatar: 'an-avatar.com',
-      });
-      console.log(newUser);
-    }
-    doStuffWithUser();
+    initUser(sequelize);
+    initParty(sequelize);
+    initMessage(sequelize);
+    sequelize.sync({ force: true }); // if you need to drop the tables
+    // sequelize.sync(); // if you just need to update the tables
+    // async function doStuffWithUser() {
+    //   const newUser = await User.create({
+    //     nameFirst: 'pop',
+    //     // nameLast: 'skippy',
+    //     username: 'pop-skippy',
+    //     password: 'pop',
+    //     email: 'skippy@email.com',
+    //     // avatar: 'an-avatar.com',
+    //   });
+    //   console.log(newUser);
+    // }
+    // doStuffWithUser();
   }
 }
 
