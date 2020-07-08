@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
+// import UserContext from './contexts/UserContext';
 // import SampleVidChat from './SampleVidChat';
 
 const App = () => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   // when the app loads, check if the user is logged in with google
   useEffect(() => {
-    // loads the gapi. we have to use (window as any) b/c gapi does not exist on window until our script
+    // loads the gapi. we use (window as any) b/c gapi does not exist on window until our script
     // in public/index.html creates it
     (window as any).gapi.load('auth2', () => {
       // initializes the GoogleAuth object, which has all the fun methods we need
@@ -19,23 +20,28 @@ const App = () => {
           if ((window as any).gapi.auth2.getAuthInstance().isSignedIn.get()) {
             // if someone is signed, get that user object
             const userObj = (window as any).gapi.auth2.getAuthInstance().currentUser.get();
-            console.log(userObj, 'right before post to /user/verify');
             // send the token to our server, which will verify it and give us the user from database
             return axios.post('/user/verify', {
+              userObj,
               id_token: userObj.wc.id_token,
             });
           }
         })
-        .then((response: any):void => {
-          //response.data right now is just the googleId, but it should be a user object
-          setUser(response.data);
+        .then((response: any): void => {
+          if (response) {
+            setUser(response.data);
+          }
+        })
+        .catch((err: any) => {
+          console.error(err);
         });
     });
   }, []);
 
   return (
+
     <div>
-      <div className="text-red-700">
+      <div>
         I am the almighty App
         <Navbar
           user={user}

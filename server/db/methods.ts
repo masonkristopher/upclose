@@ -11,12 +11,12 @@ const addUser = async (userObj) => {
 
 // RETRIEVE USER BY GOOGLEID
 const getUser = async (googleId) => {
-  // try {
-  //   const user = await User.findOne({where: { googleId } });
-  //   return user;
-  // } catch (err) {
-  //   console.error(err);
-  // }
+  try {
+    const user = await User.findOne({where: { googleId } });
+    return user;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export {
