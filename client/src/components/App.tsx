@@ -4,7 +4,6 @@ import Navbar from './Navbar';
 // import SampleVidChat from './SampleVidChat';
 
 const App = () => {
-
   const [user, setUser] = useState({});
   // when the app loads, check if the user is logged in with google
   useEffect(() => {
@@ -26,9 +25,12 @@ const App = () => {
               id_token: userObj.wc.id_token,
             });
           }
+        })
+        .then((response: any):void => {
+          //response.data right now is just the googleId, but it should be a user object
+          setUser(response.data);
         });
     });
-
   }, []);
 
   return (
