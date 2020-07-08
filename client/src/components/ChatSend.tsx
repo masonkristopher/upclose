@@ -1,11 +1,11 @@
 import React from 'react';
 // I am a child of HouseParty
-const Chat = () => {
+const ChatSend = () => {
   return (
     <div className="text-blue">
-      I am the beautiful Chat
+      I am the beautiful ChatSend
     </div>
   );
 };
 
-export default Chat;
+export default ChatSend;
