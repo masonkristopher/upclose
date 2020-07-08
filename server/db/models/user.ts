@@ -15,6 +15,7 @@ interface UserAttributes {
   password: string
   email: string
   avatar: string
+  googleId: string
 }
 
 // Some attributes are optional in `User.build` and `User.create` calls
@@ -35,6 +36,8 @@ class User extends Model<UserAttributes, UserCreationAttributes>
   public email!: string
 
   public avatar: string | null
+
+  public googleId!: string
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -73,6 +76,11 @@ export function initUser(sequelize: Sequelize): void {
       avatar: {
         type: new DataTypes.STRING(128),
         allowNull: true,
+      },
+      googleId: {
+        type: new DataTypes.STRING(30),
+        allowNull: false,
+        unique: true,
       },
     },
     {

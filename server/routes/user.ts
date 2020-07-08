@@ -38,7 +38,7 @@ userRouter.post('/save', (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-    })
+    });
 });
 
 export default userRouter;
