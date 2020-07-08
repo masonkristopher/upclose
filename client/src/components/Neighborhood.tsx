@@ -15,7 +15,7 @@ interface IProps {
 const Neighborhood: FC<IProps> = () => {
   return (
     <div className="text-blue">
-      I am the beautiful Neighborhood
+      <h1 className="">Welcome to Your Neighborhood!</h1>
     </div>
   );
 };

@@ -21,6 +21,7 @@
   "rules": {
     "import/extensions": "off",
     "react/jsx-filename-extension": [0],
+    "react/prop-types": 0,
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "error",
     "no-useless-constructor": "off",
