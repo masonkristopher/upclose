@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 interface IProps {
   user:{ 
@@ -11,7 +11,7 @@ interface IProps {
     googleId: string,}
 }
 
-const UserProfile: React.FC<IProps> = () => {
+const UserProfile: FC<IProps> = () => {
   return (
     <div className="text-blue">
       I am the beautiful UserProfile

@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 // our landing page
 interface IProps {
-  user:{ 
+  user:{
     id: number,
     nameFirst: string,
     nameLast: string,
     username: string,
     email: string,
     avatar: string,
-    googleId: string,}
+    googleId: string,
+  }
 }
 
-const Neighborhood: React.FC<IProps> = () => {
+const Neighborhood: FC<IProps> = () => {
   return (
     <div className="text-blue">
       I am the beautiful Neighborhood

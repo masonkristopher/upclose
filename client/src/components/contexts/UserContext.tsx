@@ -10,8 +10,11 @@ interface UserInterface {
   googleId: string,
 }
 
-const ctxt = React.createContext<UserInterface | null>(null);
+const UserContext = React.createContext<Partial<UserInterface>>({});
 
-export const UserContextProvider = ctxt.Provider;
+export default UserContext;
+// const ctxt = React.createContext<UserInterface | null>(null);
 
-export const UserContextConsumer = ctxt.Consumer;
+// export const UserContextProvider = ctxt.Provider;
+
+// export const UserContextConsumer = ctxt.Consumer;

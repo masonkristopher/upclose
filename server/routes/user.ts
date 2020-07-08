@@ -8,11 +8,11 @@ const userRouter = express.Router();
 userRouter.post('/verify', (req, res) => {
   // console.log(req.body, 'beginning of userRoute');
   const { id_token, userObj } = req.body;
-  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
   async function verify() {
     const ticket = await client.verifyIdToken({
       idToken: id_token,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      audience: process.env.REACT_APP_GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
     const googleId = payload.sub;

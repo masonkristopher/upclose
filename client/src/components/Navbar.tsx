@@ -10,14 +10,13 @@ import { GoogleLogout, GoogleLogin } from 'react-google-login';
 import UserProfile from './UserProfile';
 import Neighborhood from './Neighborhood';
 import Messages from './Messages';
-// import { UserContextConsumer } from './contexts/UserContext';
+// import UserContext from './contexts/UserContext';
 
 const Navbar = ({
   // these come from App, and will alter App's user
   setUser,
   user,
 }: any) => {
-
   // triggers when a user successfully logs out; should alert the user and hit our server?
   const logout = () => {
     setUser(null);
@@ -35,17 +34,14 @@ const Navbar = ({
         console.log(resp);
         setUser(resp.data);
       });
-    // Then, on the server, verify the integrity of the ID token and
-    // use the user information contained in the token to establish a session or create a new account.
-    // alert the user that they have signed in, probs by changing state using setAppsUser and also setUser in Navbar?
-
 
     console.log(response);
   };
 
   return (
-    <Router>
+    // <UserContext.Consumer>
 
+    <Router>
       <div className="flex-1 flex flex-col">
         <nav className="px-4 flex justify-between bg-white h-16 border-b-2">
           {/* <!-- top bar left --> */}
@@ -81,7 +77,9 @@ const Navbar = ({
             <li className="p-2">
               {user && (
                 <div>
-                  <div>Logged in as {user.username}</div>
+                  <div>
+                    Logged in as {user.username}
+                  </div>
                   <img
                     className="rounded-full mx-auto h-6 w-6"
                     src={user.avatar}
@@ -101,18 +99,19 @@ const Navbar = ({
           />
         </Route>
         <Route path="/neighborhood">
-          <Neighborhood 
+          <Neighborhood
             user={user}
           />
         </Route>
         {/* <Route path="/logout"><Logout /></Route> */}
         <Route path="/messages">
-          <Messages 
+          <Messages
             user={user}
           />
-          </Route>
+        </Route>
       </Switch>
     </Router>
+    // </UserContext.Consumer>
   );
 };
 
