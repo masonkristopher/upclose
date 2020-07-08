@@ -7,7 +7,8 @@ const App = () => {
   const [user, setUser] = useState({});
   // when the app loads, check if the user is logged in with google
   useEffect(() => {
-    // loads the gapi
+    // loads the gapi. we have to use (window as any) b/c gapi does not exist on window until our script
+    // in public/index.html creates it
     (window as any).gapi.load('auth2', () => {
       // initializes the GoogleAuth object, which has all the fun methods we need
       (window as any).gapi.auth2.init({
@@ -15,9 +16,16 @@ const App = () => {
       })
         .then(() => {
           // accesses GoogleAuth object and checks if someone is signed in. returns boolean
-           (window as any).gapi.auth2.getAuthInstance().isSignedIn.get();
-        })
-      /* Ready. Make a call to gapi.auth2.init or some other API */
+          if ((window as any).gapi.auth2.getAuthInstance().isSignedIn.get()) {
+            // if someone is signed, get that user object
+            const userObj = (window as any).gapi.auth2.getAuthInstance().currentUser.get();
+            console.log(userObj, 'right before post to /user/verify');
+            // send the token to our server, which will verify it and give us the user from database
+            return axios.post('/user/verify', {
+              id_token: userObj.wc.id_token,
+            });
+          }
+        });
     });
 
   }, []);
