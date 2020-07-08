@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
+// import SampleVidChat from './SampleVidChat';
 
 const App = () => {
 
@@ -38,6 +39,7 @@ const App = () => {
           user={user}
           setUser={setUser}
         />
+        {/* <SampleVidChat /> */}
       </div>
 
     </div>
