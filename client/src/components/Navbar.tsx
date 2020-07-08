@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import axios from 'axios';
 import {
   BrowserRouter as Router,
   Switch,
@@ -10,32 +11,32 @@ import UserProfile from './UserProfile';
 import Neighborhood from './Neighborhood';
 import Messages from './Messages';
 
-const Navbar = ({ setUser, user }:any) => {
-
+const Navbar = ({
+  // these come from App, and will alter App's user
+  setUser,
+  user,
+}:any) => {
 // triggers when a user successfully logs out; should alert the user and hit our server?
   const logout = () => {
+    setUser(null);
     console.log('logged out');
-  };
-
-  const changeState = () => {
-    console.log('click');
-    setUser('testing');
   };
 
   // the response from google after the login
   const responseGoogle = (response: any) => {
-    /* after a user successfully signs in,
-    send the user's ID token to your server using HTTPS.
-    axios.post('/verify', {
-      id_token: response.tokenId
+    // after a user successfully signs in,
+    // send the user's ID token to your server using HTTPS.
+    axios.post('/user/verify', {
+      id_token: response.tokenId,
     })
-    Then, on the server, verify the integrity of the ID token and
-    axios.get('https://oauth2.googleapis.com/tokeninfo', {
-      id_token,
-    })
-    use the user information contained in the token to establish a session or create a new account.
-    alert the user that they have signed in, probs by changing state using setAppsUser and also setUser in Navbar?
-    */
+      .then((resp) => {
+        console.log(resp);
+        setUser(resp.data);
+      });
+    // Then, on the server, verify the integrity of the ID token and
+    // use the user information contained in the token to establish a session or create a new account.
+    // alert the user that they have signed in, probs by changing state using setAppsUser and also setUser in Navbar?
+    
 
     console.log(response);
   };
@@ -43,7 +44,9 @@ const Navbar = ({ setUser, user }:any) => {
   return (
     <Router>
       <div className="text-blue">
-        <button type="button" onClick={changeState}>change state</button>
+        {user && (
+          <div>Logged in as {user.username}</div>
+        )}
         <ul>
           {/* link to UserProfile */}
           <li><Link to="/profile">Profile</Link></li>
