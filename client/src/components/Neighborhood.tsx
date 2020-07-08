@@ -4,7 +4,7 @@ import React from 'react';
 const Neighborhood = () => {
   return (
     <div className="text-blue">
-      I am the beautiful Neighborhood
+      <h1 className="">Welcome to Your Neighborhood!</h1>
     </div>
   );
 };
