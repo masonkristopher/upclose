@@ -1,13 +1,14 @@
 import express, { Express, Request, Response } from 'express';
 import * as path from 'path';
+import cors from 'cors';
 import cookieparser from 'cookie-parser';
 import session from 'express-session';
 import dotenv from 'dotenv';
 import passport from 'passport';
 import { DataTypes } from 'sequelize';
-// import Auth0Strategy from 'passport-auth0';
 import sequelize from './db/index';
 import User from './db/models/user';
+import routes from './routes';
 
 dotenv.config();
 
@@ -35,6 +36,9 @@ class Server {
 
   constructor(app: Express) {
     this.app = app;
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cors());
     this.app.use(cookieparser());
     this.app.use(session(sess));
     // passport.use(strategy);
@@ -47,16 +51,12 @@ class Server {
     passport.deserializeUser((user, done) => {
       done(null, user);
     });
+    this.app.use('/', routes);
 
     // use the static files from the build
     this.app.use(express.static(`${path.resolve('./')}/client/build`));
 
-    this.app.get('/api', (req: any, res: Response): void => {
-      console.log(req);
-      res.send('You have reached the API!');
-    });
-
-    // for any requests to wildcard endpoints (from react router), server the static build files
+    // for any requests to wildcard endpoints (from react router), serve the static build files
     this.app.get('*', (req: any, res: Response): void => {
       console.log(req.session);
       res.sendFile(`${path.resolve('./')}/client/build/index.html`);
