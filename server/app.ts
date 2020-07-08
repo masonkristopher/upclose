@@ -1,15 +1,18 @@
 import express, { Request, Response, Application } from 'express';
 import socketIO, { Server as SocketIOServer } from 'socket.io';
 import { createServer, Server as HTTPServer } from 'http';
+
 import path from 'path';
 import cors from 'cors';
 // import cookieparser from 'cookie-parser';
 // import session from 'express-session';
 import dotenv from 'dotenv';
 // import passport from 'passport';
-import { DataTypes } from 'sequelize';
 import sequelize from './db/index';
-import User from './db/models/user';
+import { initUser } from './db/models/user';
+import { initParty } from './db/models/party';
+import { initMessage } from './db/models/message';
+import { initUserParty, associateUserParty } from './db/models/userParty';
 import routes from './routes';
 
 dotenv.config();
@@ -80,29 +83,25 @@ class Server {
       .catch((error) => {
         console.error('Unable to connect to the database:', error);
       });
-    User.init(
-      {
-        id: {
-          type: DataTypes.INTEGER.UNSIGNED,
-          autoIncrement: true,
-          primaryKey: true,
-        },
-        name: {
-          type: new DataTypes.STRING(128),
-          allowNull: false,
-        },
-        preferredName: {
-          type: new DataTypes.STRING(128),
-          allowNull: true,
-        },
-      },
-      {
-        tableName: 'users',
-        sequelize, // passing the `sequelize` instance is required
-      },
-    );
+    initUser(sequelize);
+    initParty(sequelize);
+    initMessage(sequelize);
+    initUserParty(sequelize);
+    associateUserParty();
     sequelize.sync({ force: true }); // if you need to drop the tables
     // sequelize.sync(); // if you just need to update the tables
+    // async function doStuffWithUser() {
+    //   const newUser = await User.create({
+    //     nameFirst: 'pop',
+    //     // nameLast: 'skippy',
+    //     username: 'pop-skippy',
+    //     password: 'pop',
+    //     email: 'skippy@email.com',
+    //     // avatar: 'an-avatar.com',
+    //   });
+    //   console.log(newUser);
+    // }
+    // doStuffWithUser();
   }
 }
 
