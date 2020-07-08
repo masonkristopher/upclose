@@ -1,12 +1,40 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Express, Request, Response, Application } from 'express';
 import socketIO, { Server as SocketIOServer } from 'socket.io';
 import { createServer, Server as HTTPServer } from 'http';
-// import * as path from 'path';
-// import express, { Express, Request, Response } from 'express';
+
 import path from 'path';
-import { DataTypes } from 'sequelize';
+import cors from 'cors';
+// import cookieparser from 'cookie-parser';
+// import session from 'express-session';
+import dotenv from 'dotenv';
+// import passport from 'passport';
 import sequelize from './db/index';
-import User from './db/models/user';
+import { initUser } from './db/models/user';
+import { initParty } from './db/models/party';
+import { initMessage } from './db/models/message';
+import { initUserParty, associateUserParty } from './db/models/userParty';
+import routes from './routes';
+
+dotenv.config();
+
+// const sess = {
+//   secret: `${process.env.SESSION_SECRET}`,
+//   cookie: {},
+//   resave: false,
+//   saveUninitialized: true,
+// };
+
+// const strategy = new Auth0Strategy(
+//   {
+//     clientID: process.env.GOOGLE_CLIENT_ID,
+//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     callbackURL:
+//       process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/',
+//   },
+//   (accessToken, refreshToken, extraParams, profile, done) => {
+//     return done(null, profile);
+//   },
+// );
 
 class Server {
   private httpServer: HTTPServer;
@@ -23,17 +51,18 @@ class Server {
 
   constructor() {
     this.initialize();
-    this.handleRoutes();
     this.handleSocketConnection();
+    // this.app.use(cookieparser());
+    // this.app.use(session(sess));
+    // passport.use(strategy);
+    // this.app.use(passport.initialize());
+    // this.app.use(passport.session());
+
+    this.app.use('/', routes);
 
     this.app.use(express.static(`${path.resolve('./')}/client/build`));
 
-    this.app.get('/api', (req: Request, res: Response): void => {
-      console.log('hit me');
-      res.send('You have reached the API!');
-    });
-
-    // for any requests to wildcard endpoints (from react router), server the static build files
+    // for any requests to wildcard endpoints (from react router), serve the static build files
     this.app.get('*', (req: Request, res: Response): void => {
       res.sendFile(`${path.resolve('./')}/client/build/index.html`);
     });
@@ -43,12 +72,9 @@ class Server {
     this.app = express();
     this.httpServer = createServer(this.app);
     this.io = socketIO(this.httpServer);
-  }
-
-  private handleRoutes(): void {
-    this.app.get('/', (req: Request, res: Response) => {
-      res.send('<h1>Hello World</h1>');
-    });
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cors());
   }
 
   private handleSocketConnection(): void {
@@ -91,7 +117,6 @@ class Server {
 
   public listen(callback: (port: number) => void): void {
     this.httpServer.listen(this.DEFAULT_PORT, () => callback(this.DEFAULT_PORT));
-
     sequelize.authenticate()
       .then(() => {
         console.log('connected to database!');
@@ -99,31 +124,25 @@ class Server {
       .catch((error) => {
         console.error('Unable to connect to the database:', error);
       });
-
-    User.init(
-      {
-        id: {
-          type: DataTypes.INTEGER.UNSIGNED,
-          autoIncrement: true,
-          primaryKey: true,
-        },
-        name: {
-          type: new DataTypes.STRING(128),
-          allowNull: false,
-        },
-        preferredName: {
-          type: new DataTypes.STRING(128),
-          allowNull: true,
-        },
-      },
-      {
-        tableName: 'users',
-        sequelize, // passing the `sequelize` instance is required
-      },
-    );
-
+    initUser(sequelize);
+    initParty(sequelize);
+    initMessage(sequelize);
+    initUserParty(sequelize);
+    associateUserParty();
     sequelize.sync({ force: true }); // if you need to drop the tables
     // sequelize.sync(); // if you just need to update the tables
+    // async function doStuffWithUser() {
+    //   const newUser = await User.create({
+    //     nameFirst: 'pop',
+    //     // nameLast: 'skippy',
+    //     username: 'pop-skippy',
+    //     password: 'pop',
+    //     email: 'skippy@email.com',
+    //     // avatar: 'an-avatar.com',
+    //   });
+    //   console.log(newUser);
+    // }
+    // doStuffWithUser();
   }
 }
 

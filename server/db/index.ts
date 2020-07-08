@@ -25,10 +25,8 @@ if (NODE_ENV === 'production') {
   sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
     host: 'localhost',
     dialect: 'mysql',
-    logging: false, // toggle logging SQL in console
+    logging: true, // toggle logging SQL in console
   });
 }
-
-// sequelize.sync(); // will not drop tables every time
 
 export default sequelize;
