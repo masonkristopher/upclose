@@ -2,9 +2,10 @@ import {
   Model,
   Optional,
   DataTypes,
+  Sequelize,
 } from 'sequelize';
 
-import sequelize from '../index';
+// import sequelize from '../index';
 // These are all the attributes in the User model
 interface UserAttributes {
   id: number
@@ -17,7 +18,7 @@ interface UserAttributes {
 }
 
 // Some attributes are optional in `User.build` and `User.create` calls
-interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'avatar' | 'nameLast'> {}
+interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'avatar' | 'nameLast'> { }
 
 class User extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes {
@@ -41,43 +42,44 @@ class User extends Model<UserAttributes, UserCreationAttributes>
   public readonly updatedAt!: Date;
 }
 
-User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
+export function initUser(sequelize: Sequelize): void {
+  User.init(
+    {
+      id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      nameFirst: {
+        type: new DataTypes.STRING(128),
+        allowNull: false,
+      },
+      nameLast: {
+        type: new DataTypes.STRING(128),
+        allowNull: true,
+      },
+      username: {
+        type: new DataTypes.STRING(128),
+        allowNull: true,
+      },
+      password: {
+        type: new DataTypes.STRING(128),
+        allowNull: true,
+      },
+      email: {
+        type: new DataTypes.STRING(128),
+        allowNull: true,
+      },
+      avatar: {
+        type: new DataTypes.STRING(128),
+        allowNull: true,
+      },
     },
-    nameFirst: {
-      type: new DataTypes.STRING(128),
-      allowNull: false,
+    {
+      tableName: 'users',
+      sequelize, // passing the `sequelize` instance is required
     },
-    nameLast: {
-      type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
-    username: {
-      type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
-    password: {
-      type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
-    email: {
-      type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
-    avatar: {
-      type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
-
-  },
-  {
-    tableName: 'users',
-    sequelize, // passing the `sequelize` instance is required
-  },
-);
+  );
+}
 
 export default User;
