@@ -19,7 +19,19 @@ const getUser = async (googleId) => {
   }
 };
 
+// GET ALL A USER'S PARTIES, BY USERID
+const getAllParties = async (id) => {
+  try {
+    // ****************************** to do: **************************************
+    // we need to query our user/party join table and return all parties that match the user's id
+    // const parties =
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export {
   addUser,
   getUser,
+  getAllParties,
 };
