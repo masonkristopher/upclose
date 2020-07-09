@@ -3,9 +3,16 @@ import {
   Optional,
   DataTypes,
   Sequelize,
+  HasManyGetAssociationsMixin,
+  HasManyAddAssociationMixin,
+  HasManyHasAssociationMixin,
+  Association,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
 } from 'sequelize';
 
 import Message from './message';
+import { User } from './user';
 
 interface PartyAttributes {
   id: number
@@ -17,17 +24,23 @@ interface PartyAttributes {
 
 interface PartyCreationAttributes extends Optional<PartyAttributes, 'id'> { }
 
-class Party extends Model<PartyAttributes, PartyCreationAttributes>
+export class Party extends Model<PartyAttributes, PartyCreationAttributes>
   implements PartyAttributes {
-  public id!: number
+  public id!: number;
 
-  public name: string
+  public name: string;
 
-  public idLayout: number
+  public idLayout: number;
 
   public readonly createdAt: Date;
 
   public readonly updatedAt: Date;
+
+  public addUser!: HasManyAddAssociationMixin<User, number>;
+
+  public static associations: {
+    parties: Association<Party, User>
+  };
 }
 
 export function initParty(sequelize: Sequelize): void {
@@ -69,5 +82,3 @@ export function associatePartyMessages(): void {
     as: 'messages',
   });
 }
-
-export default Party;
