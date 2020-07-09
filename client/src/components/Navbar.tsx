@@ -17,30 +17,30 @@ const Navbar = ({
   setUser,
   user,
 }: any) => {
-  // triggers when a user successfully logs out; should alert the user and hit our server?
+  // triggers when a user successfully logs out; should alert the user
   const logout = () => {
     setUser(null);
     console.log('logged out');
   };
 
+  const client_id = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
   // the response from google after the login
   const responseGoogle = (response: any) => {
     // after a user successfully signs in,
-    // send the user's ID token to your server using HTTPS.
-    axios.post('/user/verify', {
+    // send the user's ID token to your server
+    return axios.post('/user/verify', {
+      userObj: user,
       id_token: response.tokenId,
     })
       .then((resp) => {
         console.log(resp);
         setUser(resp.data);
       });
-
-    console.log(response);
   };
 
   return (
     // <UserContext.Consumer>
-
     <Router>
       <div className="flex-1 flex flex-col">
         <nav className="px-4 flex justify-between bg-white h-16 border-b-2">
@@ -94,20 +94,39 @@ const Navbar = ({
 
       <Switch>
         <Route path="/profile">
-          <UserProfile
-            user={user}
-          />
+          {user && (
+            <UserProfile
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>
+              Please Log In to see your profile!
+            </h1>
+          )}
         </Route>
         <Route path="/neighborhood">
-          <Neighborhood
-            user={user}
-          />
+          {user && (
+            <Neighborhood
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>Please log in!</h1>
+          )}
         </Route>
         {/* <Route path="/logout"><Logout /></Route> */}
         <Route path="/messages">
-          <Messages
-            user={user}
-          />
+          {user && (
+            <Messages
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>
+              Please Log In to see your messages!
+            </h1>
+          )}
         </Route>
       </Switch>
     </Router>
