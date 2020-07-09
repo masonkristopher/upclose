@@ -34,7 +34,8 @@ const UserProfile: FC<IProps> = () => {
   return (
     <div className="p-8">
       {showEditForm
-        ? <EditUserDetails user />
+      // pass user object and set function to this component make typescript like it
+        ? <EditUserDetails />
         : (
           <div className="container mx-auto px-4 m-8 grid grid-flowgrid-cols-2 gap-4">
             <div>
