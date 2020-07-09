@@ -1,7 +1,9 @@
 import React, { FC } from 'react';
-// our landing page
-interface IProps {
-  user:{
+
+import HouseParty from './HouseParty';
+
+interface NeighborhoodProps {
+  user: {
     id: number,
     nameFirst: string,
     nameLast: string,
@@ -12,10 +14,11 @@ interface IProps {
   }
 }
 
-const Neighborhood: FC<IProps> = () => {
+const Neighborhood: FC<NeighborhoodProps> = () => {
   return (
     <div className="text-blue">
       <h1 className="">Welcome to Your Neighborhood!</h1>
+      <HouseParty partyName="testParty" />
     </div>
   );
 };
