@@ -11,7 +11,7 @@ import {
   Sequelize,
 } from 'sequelize';
 
-import User from './user';
+import { User } from './user';
 
 interface MessageAttributes {
   id: number

@@ -11,8 +11,8 @@ import {
   Sequelize,
 } from 'sequelize';
 
-import User from './user';
-import Party from './party';
+import { User } from './user';
+import { Party } from './party';
 
 interface UserPartyAttributes {
   id: number
@@ -22,7 +22,7 @@ interface UserPartyAttributes {
   updatedAt: Date
 }
 
-class UserParty extends Model<UserPartyAttributes>
+export class UserParty extends Model<UserPartyAttributes>
   implements UserPartyAttributes {
   public id!: number
 
@@ -96,5 +96,3 @@ export function associateUserParty(): void {
   User.belongsToMany(Party, { through: 'UserParty', foreignKey: 'idUser' });
   Party.belongsToMany(User, { through: 'UserParty', foreignKey: 'idParty' });
 }
-
-export default UserParty;

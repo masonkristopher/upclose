@@ -11,7 +11,7 @@ import {
   HasManyCreateAssociationMixin,
 } from 'sequelize';
 
-import Party from './party';
+import { Party } from './party';
 // import sequelize from '../index';
 // These are all the attributes in the User model
 interface UserAttributes {
@@ -30,7 +30,7 @@ interface UserAttributes {
 // Some attributes are optional in `User.build` and `User.create` calls
 interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'avatar' | 'nameLast' | 'googleId'> { }
 
-class User extends Model<UserAttributes, UserCreationAttributes>
+export class User extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes {
   public id!: number // Note that the `null assertion` `!` is required in strict mode.
 
@@ -106,5 +106,3 @@ export function initUser(sequelize: Sequelize): void {
     },
   );
 }
-
-export default User;
