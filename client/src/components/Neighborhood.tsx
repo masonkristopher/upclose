@@ -44,10 +44,10 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
           </div>
           {parties.map((number, index) => {
             return (
-              <div className="relative flex">
+              <div key={parties[index].name} className="relative flex">
                 <img src="https://www.clipartmax.com/png/small/76-767905_file-ios-open-house-icon.png" alt="File - Ios - Open House Icon@clipartmax.com" />
                 <h3 className="flex absolute inset-x-0 bottom-0 pb-10 pl-10">
-                  <h1 className="p-2 text-orange-100 bg-black"><Link to={`/party/${parties[index].id}`}>to the party profile page!</Link></h1>
+                  <p className="p-2 text-orange-100 bg-black"><Link to={`/party/${parties[index].id}`}>to the party profile page!</Link></p>
                 </h3>
 
               </div>

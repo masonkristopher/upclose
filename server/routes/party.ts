@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllParties } from '../db/methods';
+import { getAllParties, getParty } from '../db/methods';
 
 const partyRouter = express.Router();
 
@@ -12,7 +12,18 @@ partyRouter.get('/all/:id', (req, res) => {
       res.send(parties);
     })
     .catch(err => console.error(err));
+});
 
+// retrieve one party by its id
+partyRouter.get('/:id', (req, res) => {
+  // party's id
+  const { id } = req.params;
+  getParty(id)
+    .then((party) => {
+      console.log(party, 'after getParty in party.ts *********')
+      res.send(party);
+    })
+    .catch(err => console.error(err));
 });
 
 export default partyRouter;

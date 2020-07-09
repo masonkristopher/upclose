@@ -18,15 +18,20 @@ interface PartyProfileProps {
 // party profile is rendered when the route matches /party/partyId
 // clicking a house in the neighborhood will take you here, with the partyId
 const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
-  const [party, setParty] = useState(null);
+  const [party, setParty] = useState({});
   // access the partyId from the route using useParams.
   const { partyId } = useParams();
 
   useEffect(() => {
     // should query the database and find the party we need on render
-    // then use setParty to put the party's info into state
-    console.log(partyId);
-  })
+    axios.get(`/party/${partyId}`)
+      .then((response) => {
+      // then use setParty to put the party's info into state
+        setParty(response.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <div>
       <div className="text-blue">
