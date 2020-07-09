@@ -1,7 +1,7 @@
 import React, { useState, FC } from 'react';
 import EditUserDetails from './EditUserDetails';
 
-interface IProps {
+interface UserProfileProps {
   user:{
     id: number,
     nameFirst: string,
@@ -12,56 +12,35 @@ interface IProps {
     googleId: string, }
 }
 
-const UserProfile: FC<IProps> = () => {
-  // change this to use the passed in user object
-  const [user, setUser] = useState({
-    id: 1,
-    username: 'Nass',
-    firstName: 'Naseer',
-    lastName: 'Hines',
-    email: 'Hinesnaseer@gmail.com',
-    avatar:
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTC7HaayceZ-Ql4p8mqmcw2-Z0YF5SgaagdIg&usqp=CAU',
-  });
+const UserProfile: FC<UserProfileProps> = ({ user }) => {
   const [showEditForm, setShowEditForm]: any = useState(false);
-
-  // Cheeky but for now store user and set user on its own object so ts doesn't hate me
-  // const [propStuff, setPropStuff] = useState({
-  //   user,
-  //   setShowEditForm,
-  // });
-
+  console.log(user);
   return (
     <div className="p-8">
       {showEditForm
-      // pass user object and set function to this component make typescript like it
-        ? <EditUserDetails />
+        ? <EditUserDetails setShowEditForm={setShowEditForm} user={user} />
         : (
-          <div className="container mx-auto px-4 m-8 grid grid-flowgrid-cols-2 gap-4">
-            <div>
-              <div className="m-8 lg:flex bg-gray-200 w-full sm:w-full md:w-4/6 lg:w-4/6 xl:w-4/6 rounded overflow-hidden shadow-lg">
-                <img
-                  className="rounded-full h-16 w-16 flex items-center justify-center"
-                  src={user.avatar}
-                  alt={user.avatar}
-                />
-              </div>
-              <div className="lg:flex bg-gray-200 w-full sm:w-full md:w-4/6 lg:w-4/6 xl:w-4/6 rounded overflow-hidden shadow-lg">
-                <div className="m-8">
-                  <p className="text-gray-900 font-bold text-xl mb-2">
-                    {user.username}
-                  </p>
-                  <p className="text-gray-900 font-bold text-xl mb-2">
-                    {user.firstName}
-                    {' '}
-                    {user.lastName}
-                  </p>
-                  <p className="text-gray-900 font-bold text-xl mb-2">
-                    {user.email}
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div>
+            <img className="flex-col object-cover rounded-full h-64 sm:w-full sm:h-64 md:w-full md:h-64 lg:w-2/5 lg:h-auto xl:w-2/5 xl:h-auto" src={user.avatar} alt={user.username} />
+            <h3>
+              Username
+            </h3>
+            <p className="text-gray-900 font-bold text-xl mb-2">{user.username}</p>
+            <h3>
+              First Name
+            </h3>
+            <p className="text-gray-900 font-bold text-xl mb-2">{user.nameFirst}</p>
+            <h3>
+              Last Name
+            </h3>
+            <p className="text-gray-900 font-bold text-xl mb-2">{user.nameLast}</p>
+            <h3>
+              Email
+            </h3>
+            <p className="text-gray-900 font-bold text-xl mb-2">{user.email}</p>
+            <button onClick={() => setShowEditForm(!showEditForm)} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4" type="button">
+              Edit User Details
+            </button>
           </div>
         )}
     </div>
