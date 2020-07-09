@@ -18,6 +18,8 @@ interface UserPartyAttributes {
   id: number
   idUser: number
   idParty: number
+  createdAt: Date
+  updatedAt: Date
 }
 
 class UserParty extends Model<UserPartyAttributes>
@@ -27,6 +29,10 @@ class UserParty extends Model<UserPartyAttributes>
   public idUser: number
 
   public idParty: number
+
+  public readonly createdAt: Date;
+
+  public readonly updatedAt: Date;
 }
 
 export function initUserParty(sequelize: Sequelize): void {
@@ -46,6 +52,14 @@ export function initUserParty(sequelize: Sequelize): void {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      createdAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
     },
     {
       tableName: 'userParties',
@@ -54,7 +68,7 @@ export function initUserParty(sequelize: Sequelize): void {
   );
 }
 
-export function associateUserParty() {
+export function associateUserParty(): void {
   User.belongsToMany(Party, { through: 'UserParty', foreignKey: 'idUser' });
   Party.belongsToMany(User, { through: 'UserParty', foreignKey: 'idParty' });
 }

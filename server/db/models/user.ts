@@ -3,8 +3,15 @@ import {
   Optional,
   DataTypes,
   Sequelize,
+  HasManyGetAssociationsMixin,
+  HasManyAddAssociationMixin,
+  HasManyHasAssociationMixin,
+  Association,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
 } from 'sequelize';
 
+import Party from './party';
 // import sequelize from '../index';
 // These are all the attributes in the User model
 interface UserAttributes {
@@ -16,10 +23,12 @@ interface UserAttributes {
   email: string
   avatar: string
   googleId: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 // Some attributes are optional in `User.build` and `User.create` calls
-interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'avatar' | 'nameLast'> { }
+interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'avatar' | 'nameLast' | 'googleId'> { }
 
 class User extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes {
@@ -40,9 +49,16 @@ class User extends Model<UserAttributes, UserCreationAttributes>
   public googleId!: string
 
   // timestamps!
-  public readonly createdAt!: Date;
+  public readonly createdAt: Date;
 
-  public readonly updatedAt!: Date;
+  public readonly updatedAt: Date;
+
+
+  public getParties!: HasManyGetAssociationsMixin<Party>; // Note the null assertions!
+  public addParty!: HasManyAddAssociationMixin<Party, number>;
+  public hasParty!: HasManyHasAssociationMixin<Party, number>;
+  public countPParty!: HasManyCountAssociationsMixin;
+  public createParty!: HasManyCreateAssociationMixin<Party>;
 }
 
 export function initUser(sequelize: Sequelize): void {
@@ -81,6 +97,14 @@ export function initUser(sequelize: Sequelize): void {
         type: new DataTypes.STRING(30),
         allowNull: false,
         unique: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
     },
     {

@@ -1,20 +1,18 @@
 import {
   Model,
-  HasManyGetAssociationsMixin,
-  HasManyAddAssociationMixin,
-  HasManyHasAssociationMixin,
-  Association,
-  HasManyCountAssociationsMixin,
-  HasManyCreateAssociationMixin,
   Optional,
   DataTypes,
   Sequelize,
 } from 'sequelize';
 
+import Message from './message';
+
 interface PartyAttributes {
   id: number
   name: string
   idLayout: number
+  createdAt: Date
+  updatedAt: Date
 }
 
 interface PartyCreationAttributes extends Optional<PartyAttributes, 'id'> { }
@@ -26,6 +24,10 @@ class Party extends Model<PartyAttributes, PartyCreationAttributes>
   public name: string
 
   public idLayout: number
+
+  public readonly createdAt: Date;
+
+  public readonly updatedAt: Date;
 }
 
 export function initParty(sequelize: Sequelize): void {
@@ -44,6 +46,14 @@ export function initParty(sequelize: Sequelize): void {
         type: new DataTypes.INTEGER(),
         allowNull: false,
       },
+      createdAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
     },
     {
       tableName: 'parties',
@@ -51,4 +61,13 @@ export function initParty(sequelize: Sequelize): void {
     },
   );
 }
+
+export function associatePartyMessages(): void {
+  Party.hasMany(Message, {
+    sourceKey: 'id',
+    foreignKey: 'idParty',
+    as: 'messages',
+  });
+}
+
 export default Party;
