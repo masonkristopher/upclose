@@ -27,7 +27,7 @@ const App = () => {
           }
         })
         .then((response: any):void => {
-          //response.data right now is just the googleId, but it should be a user object
+          // response.data right now is just the googleId, but it should be a user object
           setUser(response.data);
         });
     });
