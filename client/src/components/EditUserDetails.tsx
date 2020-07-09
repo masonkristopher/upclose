@@ -11,6 +11,22 @@ const EditUserDetails = ({
   const [lastName, setLastName] = useState(user.lastName);
   const [email, setEmail] = useState(user.email);
   const [avatar, setAvatar]: any = useState(user.avatar);
+  const changeUserDetails = (event) => {
+    event.preventDefault();
+    const userObj = {
+        user.id,
+        username,
+        firstName,
+        lastName,
+        email,
+        avatar
+    };
+    // make request to change user details
+    axios.put(`/profile/edit/${user.id}`, { userObj })
+        .then(() => setShowEditForm(false))
+        .catch((err) => console.error(err));
+  };
+
 
   return (
     <div>
