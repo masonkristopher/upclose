@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { FC } from 'react';
 // our landing page
+interface IProps {
+  user:{
+    id: number,
+    nameFirst: string,
+    nameLast: string,
+    username: string,
+    email: string,
+    avatar: string,
+    googleId: string,
+  }
+}
 
-const Neighborhood = () => {
+const Neighborhood: FC<IProps> = () => {
   return (
     <div className="text-blue">
-      I am the beautiful Neighborhood
+      <h1 className="">Welcome to Your Neighborhood!</h1>
     </div>
   );
 };

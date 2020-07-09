@@ -1,7 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, FC } from 'react';
 import EditUserDetails from './EditUserDetails';
 
-const UserProfile = () => {
+interface IProps {
+  user:{
+    id: number,
+    nameFirst: string,
+    nameLast: string,
+    username: string,
+    email: string,
+    avatar: string,
+    googleId: string, }
+}
+
+const UserProfile: FC<IProps> = () => {
   // change this to use the passed in user object
   const [user, setUser] = useState({
     id: 1,
@@ -23,7 +34,7 @@ const UserProfile = () => {
   return (
     <div className="p-8">
       {showEditForm
-        ? <EditUserDetails user setShowEditForm />
+        ? <EditUserDetails user />
         : (
           <div className="container mx-auto px-4 m-8 grid grid-flowgrid-cols-2 gap-4">
             <div>
