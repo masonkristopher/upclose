@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, MouseEvent } from 'react';
 import axios from 'axios';
 
-const EditUserDetails = ({
-  // sets Edit state of Profile
-  setShowEditForm,
-  user,
-}) => {
+type CardProps = {
+    user: object,
+    setShowEditForm: any
+}
+
+const EditUserDetails = ({ setShowEditForm, user }: CardProps) => {
   const [username, setUsername] = useState(user.username);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [email, setEmail] = useState(user.email);
   const [avatar, setAvatar]: any = useState(user.avatar);
-  const changeUserDetails = (event) => {
+
+  const changeUserDetails = (event: MouseEvent) => {
     event.preventDefault();
     const userObj = {
         user.id,
