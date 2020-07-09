@@ -21,6 +21,7 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
   const [parties, setParties] = useState([{ name: 'hello', id: 1 }]);
 
   useEffect(() => {
+    // to do: *************************
     // on load, should populate the parties state
     // axios.get(`/party/all/${user.id}`)
     //   .then((response) => {

@@ -25,7 +25,7 @@ if (NODE_ENV === 'production') {
   sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
     host: 'localhost',
     dialect: 'mysql',
-    logging: true, // toggle logging SQL in console
+    logging: false, // toggle logging SQL in console
   });
 }
 

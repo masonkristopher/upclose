@@ -1,31 +1,46 @@
 import {
   Model,
+  Optional,
+  DataTypes,
+  Sequelize,
   HasManyGetAssociationsMixin,
   HasManyAddAssociationMixin,
   HasManyHasAssociationMixin,
   Association,
   HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
-  Optional,
-  DataTypes,
-  Sequelize,
 } from 'sequelize';
+
+import Message from './message';
+import { User } from './user';
 
 interface PartyAttributes {
   id: number
   name: string
   idLayout: number
+  createdAt: Date
+  updatedAt: Date
 }
 
 interface PartyCreationAttributes extends Optional<PartyAttributes, 'id'> { }
 
-class Party extends Model<PartyAttributes, PartyCreationAttributes>
+export class Party extends Model<PartyAttributes, PartyCreationAttributes>
   implements PartyAttributes {
-  public id!: number
+  public id!: number;
 
-  public name: string
+  public name: string;
 
-  public idLayout: number
+  public idLayout: number;
+
+  public readonly createdAt: Date;
+
+  public readonly updatedAt: Date;
+
+  public addUser!: HasManyAddAssociationMixin<User, number>;
+
+  public static associations: {
+    parties: Association<Party, User>
+  };
 }
 
 export function initParty(sequelize: Sequelize): void {
@@ -44,6 +59,14 @@ export function initParty(sequelize: Sequelize): void {
         type: new DataTypes.INTEGER(),
         allowNull: false,
       },
+      createdAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
     },
     {
       tableName: 'parties',
@@ -51,4 +74,11 @@ export function initParty(sequelize: Sequelize): void {
     },
   );
 }
-export default Party;
+
+export function associatePartyMessages(): void {
+  Party.hasMany(Message, {
+    sourceKey: 'id',
+    foreignKey: 'idParty',
+    as: 'messages',
+  });
+}

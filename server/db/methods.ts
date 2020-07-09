@@ -1,6 +1,11 @@
-import User from './models/user';
-import Party from './models/party';
+import { initUser, User } from './models/user';
+import sequelize from './index';
+import { UserParty, initUserParty } from './models/userParty';
+import { Party, initParty } from './models/party';
 
+initUser(sequelize);
+initParty(sequelize);
+initUserParty(sequelize);
 // ADD A USER
 const addUser = async (userObj) => {
   try {
@@ -25,13 +30,14 @@ const getAllParties = async (id) => {
   try {
     // ****************************** to do: **************************************
     // we need to query our user/party join table and return all parties that match the user's id
-    // JOINTABLE.findAll({where: {USER_ID: id}})
-      // .then((partyIds) => {
-      //   Party.findall({where: {id}});
-      // })
-      // .then((parties) => {
-      //   return parties;
-      // })
+    UserParty.findAll({ where: {idUser: id}})
+      .then((partyIds) => {
+        // check what this returns  ******************
+        Party.findAll({ where: { id } });
+      })
+      .then((parties) => {
+        return parties;
+      });
   } catch (err) {
     console.error(err);
   }
@@ -41,16 +47,26 @@ const getAllParties = async (id) => {
 const getParty = async (id) => {
   try {
     const party = Party.findOne({where: { id } });
-    console.log(party, 'in getParty in methods.ts****************')
+    console.log(party, 'in getParty in methods.ts****************');
     return party;
   } catch (err) {
     console.error(err);
   }
 };
 
+const addUserToParty = async (idUser, idParty) => {
+  try {
+    const party = await Party.findOne({ where: { id: idParty } });
+    const user = await User.findOne({ where: { id: idUser } });
+    party.addUser(user);
+  } catch (err) {
+    console.error(err);
+  }
+};
 export {
   addUser,
   getUser,
   getParty,
+  addUserToParty,
   getAllParties,
 };
