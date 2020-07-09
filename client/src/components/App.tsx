@@ -46,7 +46,10 @@ const App = () => {
     <div>
       <div>
         I am the almighty App
-        <Navbar user={user} setUser={setUser} />
+        <Navbar
+          user={user}
+          setUser={setUser}
+        />
         {/* <SampleVidChat /> */}
       </div>
     </div>

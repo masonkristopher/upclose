@@ -17,11 +17,13 @@ const Navbar = ({
   setUser,
   user,
 }: any) => {
-  // triggers when a user successfully logs out; should alert the user and hit our server?
+  // triggers when a user successfully logs out; should alert the user
   const logout = () => {
     setUser(null);
     console.log('logged out');
   };
+
+  const client_id = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
   // the response from google after the login
   const responseGoogle = (response: any) => {
@@ -39,7 +41,6 @@ const Navbar = ({
 
   return (
   // <UserContext.Consumer>
-
     <Router>
       <div className="flex-1 flex flex-col">
         <nav className="px-4 flex justify-between bg-white h-16 border-b-2">
@@ -108,15 +109,27 @@ const Navbar = ({
         </Route>
 
         <Route path="/neighborhood">
-          <Neighborhood
-            user={user}
-          />
+          {user && (
+            <Neighborhood
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>Please log in!</h1>
+          )}
         </Route>
         {/* <Route path="/logout"><Logout /></Route> */}
         <Route path="/messages">
-          <Messages
-            user={user}
-          />
+          {user && (
+            <Messages
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>
+              Please Log In to see your messages!
+            </h1>
+          )}
         </Route>
       </Switch>
     </Router>
