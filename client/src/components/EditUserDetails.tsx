@@ -1,7 +1,7 @@
 import React, { FC, useState, MouseEvent } from 'react';
 import axios from 'axios';
 
-interface IProps {
+interface EditUserDetailsProps {
   setShowEditForm: any,
   user:{
     id: number,
@@ -12,7 +12,7 @@ interface IProps {
     avatar: string,
     googleId: string, }
 }
-const EditUserDetails = ({ setShowEditForm, user }: IProps) => {
+const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user }) => {
   const [id, setId] = useState(user.id);
   const [username, setUsername] = useState(user.username);
   const [nameFirst, setNameFirst] = useState(user.nameFirst);
@@ -51,7 +51,7 @@ const EditUserDetails = ({ setShowEditForm, user }: IProps) => {
           <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
             First Name
           </label>
-          <textarea onChange={(e) => setNameFirst(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="text" value={nameFirst} />
+          <input onChange={(e) => setNameFirst(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="text" value={nameFirst} />
         </div>
       </div>
       <div className="flex flex-wrap -mx-3 mb-6">
