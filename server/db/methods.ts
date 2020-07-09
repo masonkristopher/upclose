@@ -17,12 +17,23 @@ const addUser = async (userObj) => {
 
 // RETRIEVE USER BY GOOGLEID
 const getUser = async (googleId) => {
-  // try {
-  //   const user = await User.findOne({where: { googleId } });
-  //   return user;
-  // } catch (err) {
-  //   console.error(err);
-  // }
+  try {
+    const user = await User.findOne({where: { googleId } });
+    return user;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// GET ALL A USER'S PARTIES, BY USERID
+const getAllParties = async (id) => {
+  try {
+    // ****************************** to do: **************************************
+    // we need to query our user/party join table and return all parties that match the user's id
+    // const parties =
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const addUserToParty = async (idUser, idParty) => {
@@ -38,4 +49,5 @@ export {
   addUser,
   getUser,
   addUserToParty,
+  getAllParties,
 };

@@ -17,25 +17,6 @@ import routes from './routes';
 
 dotenv.config();
 
-// const sess = {
-//   secret: `${process.env.SESSION_SECRET}`,
-//   cookie: {},
-//   resave: false,
-//   saveUninitialized: true,
-// };
-
-// const strategy = new Auth0Strategy(
-//   {
-//     clientID: process.env.GOOGLE_CLIENT_ID,
-//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//     callbackURL:
-//       process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/',
-//   },
-//   (accessToken, refreshToken, extraParams, profile, done) => {
-//     return done(null, profile);
-//   },
-// );
-
 class Server {
   private httpServer: HTTPServer;
 
@@ -49,11 +30,6 @@ class Server {
 
   constructor() {
     this.initialize();
-    // this.app.use(cookieparser());
-    // this.app.use(session(sess));
-    // passport.use(strategy);
-    // this.app.use(passport.initialize());
-    // this.app.use(passport.session());
 
     this.app.use('/', routes);
 

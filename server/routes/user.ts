@@ -1,18 +1,18 @@
 import express from 'express';
-import { addUser } from '../db/methods';
 import { OAuth2Client } from 'google-auth-library';
+import { addUser, getUser } from '../db/methods';
 
 const userRouter = express.Router();
 
 // send the id token to google to double check that it's real
 userRouter.post('/verify', (req, res) => {
-  const { id_token } = req.body;
-  console.log(id_token, 'id_token');
-  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  // console.log(req.body, 'beginning of userRoute');
+  const { id_token, userObj } = req.body;
+  const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
   async function verify() {
     const ticket = await client.verifyIdToken({
       idToken: id_token,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      audience: process.env.REACT_APP_GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
     const googleId = payload.sub;
@@ -24,21 +24,31 @@ userRouter.post('/verify', (req, res) => {
       // we want to query our database instead of sending this id
       // if the id matches someone in our database, send back that user
       // if it does not, create that user in the database and send backthat user
-      res.status(200).send(googleId);
+      return getUser(googleId);
+    })
+    .then((userData:any) => {
+      // console.log(userData, 'after getUser*****************');
+      // if the user is in our database
+      if (userData) {
+        // console.log(userData, 'if(userArray)******************');
+        res.send(userData);
+      } else {
+        // user is not in database, so let's add the user
+        const { Au, Bd, JU, MK, nU, nW } = userObj.Qt;
+        const user = {
+          nameFirst: nW,
+          nameLast: nU,
+          username: Bd,
+          email: Au,
+          avatar: MK,
+          googleId: JU,
+        };
+        // console.log(user, 'user not found ************');
+        addUser(user);
+        res.send(user);
+      }
     })
     .catch(console.error);
-});
-
-userRouter.post('/save', (req, res) => {
-  const userObj = req.body;
-  console.log(userObj);
-  addUser(userObj)
-    .then(() => {
-      res.send('User added');
-    })
-    .catch((err) => {
-      console.error(err);
-    });
 });
 
 export default userRouter;
