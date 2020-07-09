@@ -1,4 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
+import {
+  Link,
+} from 'react-router-dom';
 import axios from 'axios';
 import HouseParty from './HouseParty';
 // our landing page
@@ -15,7 +18,7 @@ interface NeighborhoodProps {
 }
 
 const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
-  const [parties, setParties] = useState({ name: 'hello' });
+  const [parties, setParties] = useState([{ name: 'hello', id: 1 }]);
 
   useEffect(() => {
     // on load, should populate the parties state
@@ -39,12 +42,12 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
               <button type="button" className="text-orange-100 bg-black p-1">Make a new party!</button>
             </h3>
           </div>
-          {[1, 2, 3].map((number) => {
+          {parties.map((number, index) => {
             return (
               <div className="relative flex">
                 <img src="https://www.clipartmax.com/png/small/76-767905_file-ios-open-house-icon.png" alt="File - Ios - Open House Icon@clipartmax.com" />
                 <h3 className="flex absolute inset-x-0 bottom-0 pb-10 pl-10">
-                  <button type="button" className="text-orange-100 bg-black p-1">{number}!</button>
+                  <h1 className="p-2 text-orange-100 bg-black"><Link to={`/party/${parties[index].id}`}>to the party profile page!</Link></h1>
                 </h3>
 
               </div>
