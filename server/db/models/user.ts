@@ -52,13 +52,6 @@ class User extends Model<UserAttributes, UserCreationAttributes>
   public readonly createdAt: Date;
 
   public readonly updatedAt: Date;
-
-
-  public getParties!: HasManyGetAssociationsMixin<Party>; // Note the null assertions!
-  public addParty!: HasManyAddAssociationMixin<Party, number>;
-  public hasParty!: HasManyHasAssociationMixin<Party, number>;
-  public countPParty!: HasManyCountAssociationsMixin;
-  public createParty!: HasManyCreateAssociationMixin<Party>;
 }
 
 export function initUser(sequelize: Sequelize): void {
