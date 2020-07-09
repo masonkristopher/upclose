@@ -21,7 +21,7 @@ const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user }) =>
   const [avatar, setAvatar]: any = useState(user.avatar);
 
   const changeUserDetails = (event: MouseEvent) => {
-    event.preventDefault();
+    // event.preventDefault();
     const userObj = {
       id,
       username,
@@ -30,10 +30,13 @@ const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user }) =>
       email,
       avatar,
     };
+    console.log(userObj);
     // make request to change user details
     axios.put(`/profile/edit/${user.id}`, { userObj })
       .then(() => setShowEditForm(false))
       .catch((err) => console.error(err));
+
+    setShowEditForm(false);
   };
 
   return (
@@ -78,6 +81,9 @@ const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user }) =>
           <input onChange={(e) => setAvatar(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" value={avatar} />
         </div>
       </div>
+      <button onClick={(e) => changeUserDetails(e)} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4" type="button">
+        Submit
+      </button>
     </div>
   );
 };
