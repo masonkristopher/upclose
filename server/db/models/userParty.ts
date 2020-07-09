@@ -33,6 +33,30 @@ class UserParty extends Model<UserPartyAttributes>
   public readonly createdAt: Date;
 
   public readonly updatedAt: Date;
+
+  public getParties!: HasManyGetAssociationsMixin<Party>; // Note the null assertions!
+
+  public addParty!: HasManyAddAssociationMixin<Party, number>;
+
+  public hasParty!: HasManyHasAssociationMixin<Party, number>;
+
+  public countParty!: HasManyCountAssociationsMixin;
+
+  public createParty!: HasManyCreateAssociationMixin<Party>
+
+  public getUsers!: HasManyGetAssociationsMixin<User>; // Note the null assertions!
+
+  public addUser!: HasManyAddAssociationMixin<User, number>;
+
+  public hasUser!: HasManyHasAssociationMixin<User, number>;
+
+  public countUser!: HasManyCountAssociationsMixin;
+
+  public createUser!: HasManyCreateAssociationMixin<User>
+
+  public static associations: {
+    projects: Association<User, Party>;
+  };
 }
 
 export function initUserParty(sequelize: Sequelize): void {
