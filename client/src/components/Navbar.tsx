@@ -27,19 +27,18 @@ const Navbar = ({
   const responseGoogle = (response: any) => {
     // after a user successfully signs in,
     // send the user's ID token to your server using HTTPS.
-    axios.post('/user/verify', {
+    return axios.post('/user/verify', {
+      userObj: user,
       id_token: response.tokenId,
     })
       .then((resp) => {
         console.log(resp);
         setUser(resp.data);
       });
-
-    console.log(response);
   };
 
   return (
-    // <UserContext.Consumer>
+  // <UserContext.Consumer>
 
     <Router>
       <div className="flex-1 flex flex-col">
@@ -78,7 +77,9 @@ const Navbar = ({
               {user && (
                 <div>
                   <div>
-                    Logged in as {user.username}
+                    Logged in as
+                    {' '}
+                    {user.username}
                   </div>
                   <img
                     className="rounded-full mx-auto h-6 w-6"
@@ -94,10 +95,18 @@ const Navbar = ({
 
       <Switch>
         <Route path="/profile">
-          <UserProfile
-            user={user}
-          />
+          {user && (
+            <UserProfile
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>
+              Loading user
+            </h1>
+          )}
         </Route>
+
         <Route path="/neighborhood">
           <Neighborhood
             user={user}
