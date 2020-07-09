@@ -10,8 +10,8 @@ import dotenv from 'dotenv';
 // import passport from 'passport';
 import sequelize from './db/index';
 import { initUser } from './db/models/user';
-import { initParty } from './db/models/party';
-import { initMessage } from './db/models/message';
+import { initParty, associatePartyMessages } from './db/models/party';
+import { initMessage, associateMessage } from './db/models/message';
 import { initUserParty, associateUserParty } from './db/models/userParty';
 import routes from './routes';
 
@@ -64,9 +64,10 @@ class Server {
     initMessage(sequelize);
     initUserParty(sequelize);
     associateUserParty();
+    associatePartyMessages();
+    associateMessage();
     // sequelize.sync({ force: true }); // if you need to drop the tables
     sequelize.sync(); // if you just need to update the tables
-
     // async function doStuffWithUser() {
     //   const newUser = await User.create({
     //     nameFirst: 'pop',

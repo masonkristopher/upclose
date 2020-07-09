@@ -3,8 +3,15 @@ import {
   Optional,
   DataTypes,
   Sequelize,
+  HasManyGetAssociationsMixin,
+  HasManyAddAssociationMixin,
+  HasManyHasAssociationMixin,
+  Association,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
 } from 'sequelize';
 
+import { Party } from './party';
 // import sequelize from '../index';
 // These are all the attributes in the User model
 interface UserAttributes {
@@ -16,12 +23,14 @@ interface UserAttributes {
   email: string
   avatar: string
   googleId: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 // Some attributes are optional in `User.build` and `User.create` calls
-interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'avatar' | 'nameLast'> { }
+interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'avatar' | 'nameLast' | 'googleId'> { }
 
-class User extends Model<UserAttributes, UserCreationAttributes>
+export class User extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes {
   public id!: number // Note that the `null assertion` `!` is required in strict mode.
 
@@ -40,9 +49,9 @@ class User extends Model<UserAttributes, UserCreationAttributes>
   public googleId!: string
 
   // timestamps!
-  public readonly createdAt!: Date;
+  public readonly createdAt: Date;
 
-  public readonly updatedAt!: Date;
+  public readonly updatedAt: Date;
 }
 
 export function initUser(sequelize: Sequelize): void {
@@ -82,6 +91,14 @@ export function initUser(sequelize: Sequelize): void {
         allowNull: false,
         unique: true,
       },
+      createdAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
     },
     {
       tableName: 'users',
@@ -89,5 +106,3 @@ export function initUser(sequelize: Sequelize): void {
     },
   );
 }
-
-export default User;

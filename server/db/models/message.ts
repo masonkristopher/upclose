@@ -11,12 +11,16 @@ import {
   Sequelize,
 } from 'sequelize';
 
+import { User } from './user';
+
 interface MessageAttributes {
   id: number
   idParty: string
   message: string
   idSender: number
   idRecipient: number
+  createdAt: Date
+  updatedAt: Date
 }
 
 interface MessageCreationAttributes extends Optional<MessageAttributes, 'id' | 'idParty'> { }
@@ -32,6 +36,10 @@ class Message extends Model<MessageAttributes, MessageCreationAttributes>
   public idSender: number
 
   public idRecipient: number
+
+  public readonly createdAt: Date;
+
+  public readonly updatedAt: Date;
 }
 
 export function initMessage(sequelize: Sequelize): void {
@@ -43,7 +51,7 @@ export function initMessage(sequelize: Sequelize): void {
         primaryKey: true,
       },
       idParty: {
-        type: new DataTypes.STRING(128),
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true,
       },
       message: {
@@ -51,12 +59,20 @@ export function initMessage(sequelize: Sequelize): void {
         allowNull: true,
       },
       idSender: {
-        type: new DataTypes.INTEGER(),
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
       },
       idRecipient: {
-        type: new DataTypes.INTEGER(),
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
     },
     {
@@ -64,6 +80,21 @@ export function initMessage(sequelize: Sequelize): void {
       sequelize, // passing the `sequelize` instance is required
     },
   );
+}
+export function associateMessage():
+  void {
+  Message.belongsTo(User, {
+    foreignKey: 'idSender',
+  });
+  User.hasMany(Message, {
+    foreignKey: 'id',
+  });
+  Message.belongsTo(User, {
+    foreignKey: 'idRecipient',
+  });
+  User.hasMany(Message, {
+    foreignKey: 'id',
+  });
 }
 
 export default Message;
