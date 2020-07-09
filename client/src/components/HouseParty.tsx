@@ -1,40 +1,53 @@
-import React, { FC, useState, ReactElement, MouseEvent } from 'react';
+import React, { FC, useState, ReactElement } from 'react';
+
+import House from './House';
 import VideoList from './VideoList';
 import ChatFeed from './ChatFeed';
 import ChatSend from './ChatSend';
 
 interface HousePartyProps {
-  partyName: string,
+  partyName: string;
 }
 
 const HouseParty: FC<HousePartyProps> = ({
   partyName,
 }): ReactElement => {
-  const [roomNumber, setRoomNumber] = useState();
+  const [roomNumber, setRoomNumber] = useState(1);
 
-  const handleClick1 = (event: MouseEvent) => {
-    event.preventDefault();
-    setRoomNumber(1);
+  const changeRoom = (room: number) => {
+    setRoomNumber(room);
   };
 
   return (
-    <div className="text-blue">
-      <h1>
-        Party Name:
-        {partyName}
-        You are in Room:
-        {roomNumber}
-      </h1>
-      <div>
-        <button type="submit" onClick={handleClick1}>Join Party 1</button>
-        <button type="submit">Join Party 2</button>
-        <button type="submit">Join Party 3</button>
-        <button type="submit">Join Party 4</button>
+    <div className="container">
+      {/* Header */}
+      <div className="">
+        {`Party Name: ${partyName} You are in Room: ${roomNumber}`}
       </div>
-      <div>
-        <VideoList />
+      <div className="">
+        {`You are in Room: ${roomNumber}`}
       </div>
-      <div>
+
+      {/* House */}
+      <div className="container mx-auto px-4">
+        <div className="">
+          <House roomNumber={roomNumber} changeRoom={changeRoom} />
+        </div>
+        <div className="bg-gray-500">
+          {/* Your Video */}
+          <div>
+            <VideoList />
+          </div>
+          {/* Other Videos */}
+          <div>
+            <VideoList />
+          </div>
+        </div>
+      </div>
+
+      {/* Right=Side Video Side Panel */}
+      {/* Underneath Chat Feature */}
+      <div className="container">
         <ChatFeed />
         <ChatSend />
       </div>
