@@ -10,9 +10,11 @@ interface EditUserDetailsProps {
     username: string,
     email: string,
     avatar: string,
-    googleId: string, }
+    googleId: string,
+  },
+  setUser: any
 }
-const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user }) => {
+const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user, setUser }) => {
   const [id, setId] = useState(user.id);
   const [username, setUsername] = useState(user.username);
   const [nameFirst, setNameFirst] = useState(user.nameFirst);
@@ -21,7 +23,7 @@ const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user }) =>
   const [avatar, setAvatar]: any = useState(user.avatar);
 
   const changeUserDetails = (event: MouseEvent) => {
-    // event.preventDefault();
+    event.preventDefault();
     const userObj = {
       id,
       username,
@@ -32,8 +34,11 @@ const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user }) =>
     };
     console.log(userObj);
     // make request to change user details
-    axios.put(`/profile/edit/${user.id}`, { userObj })
-      .then(() => setShowEditForm(false))
+    axios.put('/user/profile/edit', { userObj })
+      .then(() => {
+        setShowEditForm(false);
+        setUser(userObj);
+      })
       .catch((err) => console.error(err));
 
     setShowEditForm(false);

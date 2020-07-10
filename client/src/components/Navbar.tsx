@@ -99,6 +99,7 @@ const Navbar = ({
           {user && (
             <UserProfile
               user={user}
+              setUser={setUser}
             />
           )}
           {!user && (
