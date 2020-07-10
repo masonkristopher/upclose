@@ -1,13 +1,14 @@
 import { initUser, User } from './models/user';
 import sequelize from './index';
-import { initUserParty } from './models/userParty';
+import { UserParty, initUserParty } from './models/userParty';
 import { Party, initParty } from './models/party';
 
 initUser(sequelize);
 initParty(sequelize);
 initUserParty(sequelize);
-// ADD A USER
-const addUser = async (userObj) => {
+
+// CREATE A USER
+const createUser = async (userObj) => {
   try {
     await User.create(userObj);
   } catch (err) {
@@ -38,9 +39,26 @@ const updateUser = async (userObj) => {
 // GET ALL A USER'S PARTIES, BY USERID
 const getAllParties = async (id) => {
   try {
-    // ****************************** to do: **************************************
     // we need to query our user/party join table and return all parties that match the user's id
-    // const parties =
+    return UserParty.findAll({ where: { idUser: id }})
+      .then((joinedParties) => {
+        // now that we have all the parties a user is a part of, we find the actual party objects
+        const parties = joinedParties.map((joinedParty) => {
+          return Party.findOne({ where: { id: joinedParty.idParty } });
+        });
+        // promise.all ensures that all the findOnes have resolved before returning
+        return Promise.all(parties);
+      });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// GET ONE PARTY BY ID
+const getParty = async (id) => {
+  try {
+    const party = Party.findOne({where: { id } });
+    return party;
   } catch (err) {
     console.error(err);
   }
@@ -55,10 +73,21 @@ const addUserToParty = async (idUser, idParty) => {
     console.error(err);
   }
 };
+
+// CREATE A PARTY
+const createParty = async (party) => {
+  try {
+    Party.create(party);
+  } catch (err) {
+    console.error(err);
+  }
+}
 export {
-  addUser,
+  createUser,
   getUser,
   updateUser,
+  getParty,
   addUserToParty,
   getAllParties,
+  createParty,
 };
