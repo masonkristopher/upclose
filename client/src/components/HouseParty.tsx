@@ -22,34 +22,16 @@ const HouseParty: FC<HousePartyProps> = ({
   partyName,
   user,
 }): ReactElement => {
-  const [roomNumber, setRoomNumber] = useState(1);
-
-  const changeRoom = (room: number) => {
-    setRoomNumber(room);
-  };
-
-  const house = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (house.current !== null) {
-      console.log(house.current.getBoundingClientRect());
-    }
-  });
-
   return (
     <div className="container">
       {/* Header */}
       <div className="">
-        {`Party Name: ${partyName} You are in Room: ${roomNumber}`}
+        {`Party Name: ${partyName}`}
       </div>
-      <div className="">
-        {`You are in Room: ${roomNumber}`}
-      </div>
-
       {/* House */}
       <div className="container mx-auto px-4">
-        <div className="" ref={house}>
-          <House roomNumber={roomNumber} changeRoom={changeRoom} user={user} />
+        <div className="">
+          <House user={user} />
         </div>
         <div className="bg-gray-500">
           {/* Your Video */}
