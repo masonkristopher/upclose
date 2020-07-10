@@ -6,8 +6,9 @@ import { Party, initParty } from './models/party';
 initUser(sequelize);
 initParty(sequelize);
 initUserParty(sequelize);
-// ADD A USER
-const addUser = async (userObj) => {
+
+// CREATE A USER
+const createUser = async (userObj) => {
   try {
     await User.create(userObj);
   } catch (err) {
@@ -28,15 +29,15 @@ const getUser = async (googleId) => {
 // GET ALL A USER'S PARTIES, BY USERID
 const getAllParties = async (id) => {
   try {
-    // ****************************** to do: **************************************
     // we need to query our user/party join table and return all parties that match the user's id
-    UserParty.findAll({ where: {idUser: id}})
-      .then((partyIds) => {
-        // check what this returns  ******************
-        Party.findAll({ where: { id } });
-      })
-      .then((parties) => {
-        return parties;
+    return UserParty.findAll({ where: { idUser: id }})
+      .then((joinedParties) => {
+        // now that we have all the parties a user is a part of, we find the actual party objects
+        const parties = joinedParties.map((joinedParty) => {
+          return Party.findOne({ where: { id: joinedParty.idParty } });
+        });
+        // promise.all ensures that all the findOnes have resolved before returning
+        return Promise.all(parties);
       });
   } catch (err) {
     console.error(err);
@@ -47,7 +48,6 @@ const getAllParties = async (id) => {
 const getParty = async (id) => {
   try {
     const party = Party.findOne({where: { id } });
-    console.log(party, 'in getParty in methods.ts****************');
     return party;
   } catch (err) {
     console.error(err);
@@ -63,10 +63,20 @@ const addUserToParty = async (idUser, idParty) => {
     console.error(err);
   }
 };
+
+// CREATE A PARTY
+const createParty = async (party) => {
+  try {
+    Party.create(party);
+  } catch (err) {
+    console.error(err);
+  }
+}
 export {
-  addUser,
+  createUser,
   getUser,
   getParty,
   addUserToParty,
   getAllParties,
+  createParty,
 };
