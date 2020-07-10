@@ -1,6 +1,6 @@
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
-import { addUser, getUser } from '../db/methods';
+import { createUser, getUser, addUserToParty } from '../db/methods';
 
 const userRouter = express.Router();
 
@@ -44,11 +44,28 @@ userRouter.post('/verify', (req, res) => {
           googleId: JU,
         };
         // console.log(user, 'user not found ************');
-        addUser(user);
+        createUser(user);
         res.send(user);
       }
     })
     .catch(console.error);
+});
+
+userRouter.post('/:userId/joins/:partyId', (req, res) => {
+  const { userId, partyId } = req.params;
+  // console.log(req.params, '/userid/joins/partyid')
+  addUserToParty(userId, partyId)
+    .then(() => {
+      res.send('user added to party');
+    })
+    .catch((err) => console.error(err));
+});
+
+// dummy route to add users via postman
+userRouter.post('/add', (req, res) => {
+  const user = req.body;
+  createUser(user);
+  res.send(user);
 });
 
 export default userRouter;

@@ -1,4 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
+import {
+  Link,
+} from 'react-router-dom';
 import axios from 'axios';
 import HouseParty from './HouseParty';
 // our landing page
@@ -15,14 +18,16 @@ interface NeighborhoodProps {
 }
 
 const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
-  const [parties, setParties] = useState({ name: 'hello' });
+  // to do: ******************
+  // i want this useState to be empty or null, but typescript doesn't like that
+  const [parties, setParties] = useState([{ name: 'hello', id: 1 }]);
 
   useEffect(() => {
-    // on load, should populate the parties state
-    // axios.get(`/party/all/${user.id}`)
-    //   .then((response) => {
-    //     setParties(response.data);
-    //   });
+    // on load, should populate the parties state with all the user's parties
+    axios.get(`/party/all/${user.id}`)
+      .then((response) => {
+        setParties(response.data);
+      });
   }, []);
 
   return (
@@ -36,15 +41,16 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
           <div className="relative flex">
             <img src="https://www.clipartmax.com/png/small/76-767905_file-ios-open-house-icon.png" alt="File - Ios - Open House Icon@clipartmax.com" />
             <h3 className="flex absolute inset-x-0 bottom-0 pb-10 pl-10">
-              <button type="button" className="text-orange-100 bg-black p-1">Make a new party!</button>
+              <button type="button" className="text-orange-100 bg-black p-1">Make a new party</button>
             </h3>
           </div>
-          {[1, 2, 3].map((number) => {
+          {parties.map((number, index) => {
             return (
-              <div className="relative flex">
+              <div key={parties[index].name} className="relative flex">
                 <img src="https://www.clipartmax.com/png/small/76-767905_file-ios-open-house-icon.png" alt="File - Ios - Open House Icon@clipartmax.com" />
                 <h3 className="flex absolute inset-x-0 bottom-0 pb-10 pl-10">
-                  <button type="button" className="text-orange-100 bg-black p-1">{number}!</button>
+                  <p className="p-2 text-orange-100 bg-black">{parties[index].name}</p>
+                  <p className="p-2 text-orange-100 bg-black"><Link to={`/party/${parties[index].id}`}>Check this party out</Link></p>
                 </h3>
 
               </div>

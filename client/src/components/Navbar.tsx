@@ -10,6 +10,7 @@ import { GoogleLogout, GoogleLogin } from 'react-google-login';
 import UserProfile from './UserProfile';
 import Neighborhood from './Neighborhood';
 import Messages from './Messages';
+import PartyProfile from './PartyProfile';
 // import UserContext from './contexts/UserContext';
 
 const Navbar = ({
@@ -93,6 +94,18 @@ const Navbar = ({
       </div>
 
       <Switch>
+        <Route path="/party/:partyId">
+          {user && (
+            <PartyProfile
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>
+              Please Log In to see this party!
+            </h1>
+          )}
+        </Route>
         <Route path="/profile">
           {user && (
             <UserProfile
