@@ -26,6 +26,16 @@ const getUser = async (googleId) => {
   }
 };
 
+// UPDATE USER DATA
+const updateUser = async (userObj) => {
+  try {
+    await User.update(userObj,
+      { returning: true, where: { id: userObj.id } });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 // GET ALL A USER'S PARTIES, BY USERID
 const getAllParties = async (id) => {
   try {
@@ -75,6 +85,7 @@ const createParty = async (party) => {
 export {
   createUser,
   getUser,
+  updateUser,
   getParty,
   addUserToParty,
   getAllParties,
