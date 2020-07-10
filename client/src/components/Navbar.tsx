@@ -11,6 +11,7 @@ import UserProfile from './UserProfile';
 import Neighborhood from './Neighborhood';
 import Messages from './Messages';
 import HouseParty from './HouseParty';
+import PartyProfile from './PartyProfile';
 // import UserContext from './contexts/UserContext';
 
 const Navbar = ({
@@ -29,7 +30,7 @@ const Navbar = ({
   // the response from google after the login
   const responseGoogle = (response: any) => {
     // after a user successfully signs in,
-    // send the user's ID token to your server
+    // send the user's ID token to your server using HTTPS.
     return axios.post('/user/verify', {
       userObj: user,
       id_token: response.tokenId,
@@ -41,7 +42,7 @@ const Navbar = ({
   };
 
   return (
-    // <UserContext.Consumer>
+  // <UserContext.Consumer>
     <Router>
       <div className="flex-1 flex flex-col">
         <nav className="px-4 flex justify-between bg-white h-16 border-b-2">
@@ -80,7 +81,9 @@ const Navbar = ({
               {user && (
                 <div>
                   <div>
-                    Logged in as {user.username}
+                    Logged in as
+                    {' '}
+                    {user.username}
                   </div>
                   <img
                     className="rounded-full mx-auto h-6 w-6"
@@ -95,18 +98,32 @@ const Navbar = ({
       </div>
 
       <Switch>
-        <Route path="/profile">
+        <Route path="/party/:partyId">
           {user && (
-            <UserProfile
+            <PartyProfile
               user={user}
             />
           )}
           {!user && (
             <h1>
-              Please Log In to see your profile!
+              Please Log In to see this party!
             </h1>
           )}
         </Route>
+        <Route path="/profile">
+          {user && (
+            <UserProfile
+              user={user}
+              setUser={setUser}
+            />
+          )}
+          {!user && (
+            <h1>
+              Loading user
+            </h1>
+          )}
+        </Route>
+
         <Route path="/neighborhood">
           {user && (
             <Neighborhood
