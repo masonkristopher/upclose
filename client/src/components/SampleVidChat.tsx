@@ -76,7 +76,6 @@ const SampleVidChat = () => {
   });
 
   socket.on('call-made', async (data: any) => {
-    debugger;
     if (getCalled) {
       // eslint-disable-next-line no-alert, no-restricted-globals
       const confirmed = confirm(`User "Socket: ${data.socket}" wants to call you. Do accept this call?`);
