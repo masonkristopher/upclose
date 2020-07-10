@@ -10,6 +10,7 @@ import { GoogleLogout, GoogleLogin } from 'react-google-login';
 import UserProfile from './UserProfile';
 import Neighborhood from './Neighborhood';
 import Messages from './Messages';
+import HouseParty from './HouseParty';
 import PartyProfile from './PartyProfile';
 // import UserContext from './contexts/UserContext';
 
@@ -50,6 +51,7 @@ const Navbar = ({
             <li className="p-2"><Link to="/profile">Profile</Link></li>
             <li className="p-2"><Link to="/neighborhood">Neighborhood</Link></li>
             <li className="p-2"><Link to="/messages">Messages</Link></li>
+            <li className="p-2"><Link to="/testParty">Test Party</Link></li>
           </ul>
 
           <ul className="flex items-center">
@@ -137,6 +139,19 @@ const Navbar = ({
           {user && (
             <Messages
               user={user}
+            />
+          )}
+          {!user && (
+            <h1>
+              Please Log In to see your messages!
+            </h1>
+          )}
+        </Route>
+        <Route path="/testParty">
+          {user && (
+            <HouseParty
+              user={user}
+              partyName="testParty"
             />
           )}
           {!user && (

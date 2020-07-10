@@ -3,7 +3,6 @@ import {
   Link,
 } from 'react-router-dom';
 import axios from 'axios';
-import HouseParty from './HouseParty';
 // our landing page
 interface NeighborhoodProps {
   user: {
@@ -34,7 +33,6 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
     <div className="text-blue flex flex-wrap">
       <h1 className="">
         Welcome to Your Neighborhood, {user.username}!
-        {/* <HouseParty partyName="testParty" /> */}
       </h1>
       {parties && (
         <div>
