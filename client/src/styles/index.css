@@ -107,3 +107,7 @@ body {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.h-half {
+  height: 50%;
+}

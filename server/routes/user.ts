@@ -1,6 +1,6 @@
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
-import { addUser, getUser } from '../db/methods';
+import {createUser, addUserToParty, getUser, updateUser } from '../db/methods';
 
 const userRouter = express.Router();
 
@@ -34,7 +34,9 @@ userRouter.post('/verify', (req, res) => {
         res.send(userData);
       } else {
         // user is not in database, so let's add the user
-        const { Au, Bd, JU, MK, nU, nW } = userObj.Qt;
+        const {
+          Au, Bd, JU, MK, nU, nW,
+        } = userObj.Qt;
         const user = {
           nameFirst: nW,
           nameLast: nU,
@@ -44,11 +46,39 @@ userRouter.post('/verify', (req, res) => {
           googleId: JU,
         };
         // console.log(user, 'user not found ************');
-        addUser(user);
+        createUser(user);
         res.send(user);
       }
     })
     .catch(console.error);
+});
+
+userRouter.put('/profile/edit', (req, res) => {
+  console.log(req.body);
+  const { userObj } = req.body;
+  updateUser(userObj)
+    .then((data) => {
+      console.log(data);
+      res.send('changed user data');
+    })
+    .catch((error) => console.log(error));
+});
+
+userRouter.post('/:userId/joins/:partyId', (req, res) => {
+  const { userId, partyId } = req.params;
+  // console.log(req.params, '/userid/joins/partyid')
+  addUserToParty(userId, partyId)
+    .then(() => {
+      res.send('user added to party');
+    })
+    .catch((err) => console.error(err));
+});
+
+// dummy route to add users via postman
+userRouter.post('/add', (req, res) => {
+  const user = req.body;
+  createUser(user);
+  res.send(user);
 });
 
 export default userRouter;

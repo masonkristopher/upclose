@@ -12,14 +12,18 @@ const App = () => {
     // in public/index.html creates it
     (window as any).gapi.load('auth2', () => {
       // initializes the GoogleAuth object, which has all the fun methods we need
-      (window as any).gapi.auth2.init({
-        client_id: '619935015421-c9vv4mlcuabiotbke4dpnc2ehp760l3a.apps.googleusercontent.com',
-      })
+      (window as any).gapi.auth2
+        .init({
+          client_id:
+            '619935015421-c9vv4mlcuabiotbke4dpnc2ehp760l3a.apps.googleusercontent.com',
+        })
         .then(() => {
           // accesses GoogleAuth object and checks if someone is signed in. returns boolean
           if ((window as any).gapi.auth2.getAuthInstance().isSignedIn.get()) {
             // if someone is signed, get that user object
-            const userObj = (window as any).gapi.auth2.getAuthInstance().currentUser.get();
+            const userObj = (window as any).gapi.auth2
+              .getAuthInstance()
+              .currentUser.get();
             // send the token to our server, which will verify it and give us the user from database
             return axios.post('/user/verify', {
               userObj,
@@ -39,7 +43,6 @@ const App = () => {
   }, []);
 
   return (
-
     <div>
       <div>
         I am the almighty App
@@ -49,7 +52,6 @@ const App = () => {
         />
         {/* <SampleVidChat /> */}
       </div>
-
     </div>
   );
 };

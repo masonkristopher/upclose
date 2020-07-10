@@ -10,6 +10,8 @@ import { GoogleLogout, GoogleLogin } from 'react-google-login';
 import UserProfile from './UserProfile';
 import Neighborhood from './Neighborhood';
 import Messages from './Messages';
+import HouseParty from './HouseParty';
+import PartyProfile from './PartyProfile';
 // import UserContext from './contexts/UserContext';
 
 const Navbar = ({
@@ -17,30 +19,30 @@ const Navbar = ({
   setUser,
   user,
 }: any) => {
-  // triggers when a user successfully logs out; should alert the user and hit our server?
+  // triggers when a user successfully logs out; should alert the user
   const logout = () => {
     setUser(null);
     console.log('logged out');
   };
 
+  const client_id = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
   // the response from google after the login
   const responseGoogle = (response: any) => {
     // after a user successfully signs in,
     // send the user's ID token to your server using HTTPS.
-    axios.post('/user/verify', {
+    return axios.post('/user/verify', {
+      userObj: user,
       id_token: response.tokenId,
     })
       .then((resp) => {
         console.log(resp);
         setUser(resp.data);
       });
-
-    console.log(response);
   };
 
   return (
-    // <UserContext.Consumer>
-
+  // <UserContext.Consumer>
     <Router>
       <div className="flex-1 flex flex-col">
         <nav className="px-4 flex justify-between bg-white h-16 border-b-2">
@@ -49,6 +51,7 @@ const Navbar = ({
             <li className="p-2"><Link to="/profile">Profile</Link></li>
             <li className="p-2"><Link to="/neighborhood">Neighborhood</Link></li>
             <li className="p-2"><Link to="/messages">Messages</Link></li>
+            <li className="p-2"><Link to="/testParty">Test Party</Link></li>
           </ul>
 
           <ul className="flex items-center">
@@ -78,7 +81,9 @@ const Navbar = ({
               {user && (
                 <div>
                   <div>
-                    Logged in as {user.username}
+                    Logged in as
+                    {' '}
+                    {user.username}
                   </div>
                   <img
                     className="rounded-full mx-auto h-6 w-6"
@@ -93,21 +98,67 @@ const Navbar = ({
       </div>
 
       <Switch>
-        <Route path="/profile">
-          <UserProfile
-            user={user}
-          />
+        <Route path="/party/:partyId">
+          {user && (
+            <PartyProfile
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>
+              Please Log In to see this party!
+            </h1>
+          )}
         </Route>
+        <Route path="/profile">
+          {user && (
+            <UserProfile
+              user={user}
+              setUser={setUser}
+            />
+          )}
+          {!user && (
+            <h1>
+              Loading user
+            </h1>
+          )}
+        </Route>
+
         <Route path="/neighborhood">
-          <Neighborhood
-            user={user}
-          />
+          {user && (
+            <Neighborhood
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>Please log in!</h1>
+          )}
         </Route>
         {/* <Route path="/logout"><Logout /></Route> */}
         <Route path="/messages">
-          <Messages
-            user={user}
-          />
+          {user && (
+            <Messages
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>
+              Please Log In to see your messages!
+            </h1>
+          )}
+        </Route>
+        <Route path="/testParty">
+          {user && (
+            <HouseParty
+              user={user}
+              partyName="testParty"
+            />
+          )}
+          {!user && (
+            <h1>
+              Please Log In to see your messages!
+            </h1>
+          )}
         </Route>
       </Switch>
     </Router>

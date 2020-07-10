@@ -11,22 +11,52 @@ import {
   Sequelize,
 } from 'sequelize';
 
-import User from './user';
-import Party from './party';
+import { User } from './user';
+import { Party } from './party';
 
 interface UserPartyAttributes {
   id: number
   idUser: number
   idParty: number
+  createdAt: Date
+  updatedAt: Date
 }
 
-class UserParty extends Model<UserPartyAttributes>
+export class UserParty extends Model<UserPartyAttributes>
   implements UserPartyAttributes {
   public id!: number
 
   public idUser: number
 
   public idParty: number
+
+  public readonly createdAt: Date;
+
+  public readonly updatedAt: Date;
+
+  public getParties!: HasManyGetAssociationsMixin<Party>; // Note the null assertions!
+
+  public addParty!: HasManyAddAssociationMixin<Party, number>;
+
+  public hasParty!: HasManyHasAssociationMixin<Party, number>;
+
+  public countParty!: HasManyCountAssociationsMixin;
+
+  public createParty!: HasManyCreateAssociationMixin<Party>
+
+  public getUsers!: HasManyGetAssociationsMixin<User>; // Note the null assertions!
+
+  public addUser!: HasManyAddAssociationMixin<User, number>;
+
+  public hasUser!: HasManyHasAssociationMixin<User, number>;
+
+  public countUser!: HasManyCountAssociationsMixin;
+
+  public createUser!: HasManyCreateAssociationMixin<User>
+
+  public static associations: {
+    projects: Association<User, Party>;
+  };
 }
 
 export function initUserParty(sequelize: Sequelize): void {
@@ -46,6 +76,14 @@ export function initUserParty(sequelize: Sequelize): void {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      createdAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE(),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
     },
     {
       tableName: 'userParties',
@@ -54,9 +92,7 @@ export function initUserParty(sequelize: Sequelize): void {
   );
 }
 
-export function associateUserParty() {
+export function associateUserParty(): void {
   User.belongsToMany(Party, { through: 'UserParty', foreignKey: 'idUser' });
   Party.belongsToMany(User, { through: 'UserParty', foreignKey: 'idParty' });
 }
-
-export default UserParty;

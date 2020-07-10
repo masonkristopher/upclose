@@ -1,6 +1,5 @@
-import React, {
-  FC, useState, ReactElement, useRef, useEffect,
-} from 'react';
+import React, { FC, ReactElement, useState, useEffect, useRef } from 'react';
+
 import House from './House';
 import VideoList from './VideoList';
 import Video from './Video';
@@ -9,10 +8,20 @@ import ChatSend from './ChatSend';
 
 interface HousePartyProps {
   partyName: string;
+  user: {
+    id: number,
+    nameFirst: string,
+    nameLast: string,
+    username: string,
+    email: string,
+    avatar: string,
+    googleId: string,
+  };
 }
 
 const HouseParty: FC<HousePartyProps> = ({
   partyName,
+  user,
 }): ReactElement => {
   const [roomNumber, setRoomNumber] = useState(1);
   const [peers, setPeers]: any = useState([]);
@@ -27,7 +36,13 @@ const HouseParty: FC<HousePartyProps> = ({
     setRoomNumber(room);
   };
 
+  const house = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    if (house.current !== null) {
+      console.log(house.current.getBoundingClientRect());
+    }
+
     navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true })
       .then(stream => {
         userVideo.current.srcObject = stream;
@@ -45,9 +60,9 @@ const HouseParty: FC<HousePartyProps> = ({
       </div>
 
       {/* House */}
-      <div className="container mx-auto px-4 float-left">
-        <div className="">
-          <House roomNumber={roomNumber} changeRoom={changeRoom} />
+      <div className="container mx-auto px-4">
+        <div className="" ref={house}>
+          <House roomNumber={roomNumber} changeRoom={changeRoom} user={user} />
         </div>
 
         {/* Right=Side Video Side Panel */}
