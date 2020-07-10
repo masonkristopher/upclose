@@ -1,6 +1,7 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
 import Popup from 'reactjs-popup';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, Image, DotGroup } from 'pure-react-carousel';
+import axios from 'axios';
 // to do: does this need to go somewhere else???
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
@@ -21,9 +22,8 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
 }): ReactElement => {
   // in this useState, should I make an interface of this object instead?
   const [partyDetails, setPartyDetails] = useState({
-    partyName: '',
-    layout: 0,
-    guests: [],
+    name: '',
+    idLayout: 0,
   });
   const [popUp, setPopup] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -32,31 +32,41 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
 
   useEffect(() => {
   });
-
+  // sets partyDetails state to have the party's name
   const setPartyName = (e: any): void => {
     const copy = { ...partyDetails };
-    copy.partyName = e.target.value;
+    copy.name = e.target.value;
     setPartyDetails(copy);
   };
-
+  // sets partyDetails state to have the party's layout
   const setPartyLayout = (e: number): void => {
     const copy = { ...partyDetails };
-    copy.layout = e;
+    copy.idLayout = e;
     setPartyDetails(copy);
   };
-
+  // sets the active slide when the back button is clicked
   const handleBack = () => {
     setActiveSlide(activeSlide - 1);
     if (activeSlide <= 0) {
       setActiveSlide(0);
     }
   };
-
+  // setst he active slide when the next button is clicked
   const handleNext = () => {
     setActiveSlide(activeSlide + 1);
     if (activeSlide >= totalSlides - 1) {
       setActiveSlide(totalSlides);
     }
+  };
+  // sends request to server to save the party, sending party details
+  const saveParty = () => {
+    axios.post('/party/create', {
+      ...partyDetails,
+    })
+      .then((response) => {
+      // redirect to party profile page
+      console.log(response, 'from save party');
+    });
   };
 
   return (
@@ -127,7 +137,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
         </div>
       )}
       {popUp === 2 && (
-        // this popup will be replace with component for inviting people
+        // this popup will be replaced with component for inviting people
         <div className="flex p-8 bg-indigo-300">
           <button type="button" className="close absolute top-0 right-0" onClick={() => { setPopup(0); }}>
             &times;
@@ -135,7 +145,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           <div>
             <h4 className="absolute left-0 top-0 pl-2 pt-2 font-bold">Invite people</h4>
             <p> Let us put an invite componnent here</p>
-            <button type="button" className="absolute bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { setPopup(0); }}>Confirm party layout</button>
+            <button type="button" className="absolute bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { saveParty(); setPopup(0); }}>Confirm party layout</button>
           </div>
         </div>
       )}

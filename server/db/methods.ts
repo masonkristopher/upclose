@@ -64,6 +64,7 @@ const getParty = async (id) => {
   }
 };
 
+// ADDS A USER AND PARTY TO THE USERPARTY JOIN TABLE
 const addUserToParty = async (idUser, idParty) => {
   try {
     const party = await Party.findOne({ where: { id: idParty } });

@@ -18,6 +18,7 @@ interface PartyAttributes {
   id: number
   name: string
   idLayout: number
+  idCreator: number
   createdAt: Date
   updatedAt: Date
 }
@@ -31,6 +32,8 @@ export class Party extends Model<PartyAttributes, PartyCreationAttributes>
   public name: string;
 
   public idLayout: number;
+
+  public idCreator: number;
 
   public readonly createdAt: Date;
 
@@ -59,6 +62,10 @@ export function initParty(sequelize: Sequelize): void {
         type: new DataTypes.INTEGER(),
         allowNull: false,
       },
+      idCreator: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+      },
       createdAt: {
         type: DataTypes.DATE(),
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
@@ -80,5 +87,12 @@ export function associatePartyMessages(): void {
     sourceKey: 'id',
     foreignKey: 'idParty',
     as: 'messages',
+  });
+}
+
+export function associateIdCreator(): void {
+  User.hasMany(Party, {
+    sourceKey: 'id',
+    foreignKey: 'idCreator',
   });
 }
