@@ -1,4 +1,4 @@
-import React, { FC, useState, ReactElement } from 'react';
+import React, { FC, ReactElement, useState, useEffect, useRef } from 'react';
 
 import House from './House';
 import VideoList from './VideoList';
@@ -7,16 +7,34 @@ import ChatSend from './ChatSend';
 
 interface HousePartyProps {
   partyName: string;
+  user: {
+    id: number,
+    nameFirst: string,
+    nameLast: string,
+    username: string,
+    email: string,
+    avatar: string,
+    googleId: string,
+  };
 }
 
 const HouseParty: FC<HousePartyProps> = ({
   partyName,
+  user,
 }): ReactElement => {
   const [roomNumber, setRoomNumber] = useState(1);
 
   const changeRoom = (room: number) => {
     setRoomNumber(room);
   };
+
+  const house = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (house.current !== null) {
+      console.log(house.current.getBoundingClientRect());
+    }
+  });
 
   return (
     <div className="container">
@@ -30,8 +48,8 @@ const HouseParty: FC<HousePartyProps> = ({
 
       {/* House */}
       <div className="container mx-auto px-4">
-        <div className="">
-          <House roomNumber={roomNumber} changeRoom={changeRoom} />
+        <div className="" ref={house}>
+          <House roomNumber={roomNumber} changeRoom={changeRoom} user={user} />
         </div>
         <div className="bg-gray-500">
           {/* Your Video */}
