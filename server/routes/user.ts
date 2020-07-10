@@ -1,6 +1,6 @@
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
-import { addUser, getUser } from '../db/methods';
+import { addUser, getUser, updateUser } from '../db/methods';
 
 const userRouter = express.Router();
 
@@ -34,7 +34,9 @@ userRouter.post('/verify', (req, res) => {
         res.send(userData);
       } else {
         // user is not in database, so let's add the user
-        const { Au, Bd, JU, MK, nU, nW } = userObj.Qt;
+        const {
+          Au, Bd, JU, MK, nU, nW,
+        } = userObj.Qt;
         const user = {
           nameFirst: nW,
           nameLast: nU,
@@ -49,6 +51,17 @@ userRouter.post('/verify', (req, res) => {
       }
     })
     .catch(console.error);
+});
+
+userRouter.put('/profile/edit', (req, res) => {
+  console.log(req.body);
+  const { userObj } = req.body;
+  updateUser(userObj)
+    .then((data) => {
+      console.log(data);
+      res.send('changed user data');
+    })
+    .catch((error) => console.log(error));
 });
 
 export default userRouter;
