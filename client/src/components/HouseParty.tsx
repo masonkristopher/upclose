@@ -32,17 +32,7 @@ const HouseParty: FC<HousePartyProps> = ({
     height: 180,
   };
 
-  const changeRoom = (room: number) => {
-    setRoomNumber(room);
-  };
-
-  const house = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (house.current !== null) {
-      console.log(house.current.getBoundingClientRect());
-    }
-
     navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true })
       .then(stream => {
         userVideo.current.srcObject = stream;
@@ -53,16 +43,12 @@ const HouseParty: FC<HousePartyProps> = ({
     <div className="container mx-auto grid grid-cols-3">
       {/* Header */}
       <div className="">
-        {`Party Name: ${partyName} You are in Room: ${roomNumber}`}
+        {`Party Name: ${partyName}`}
       </div>
-      <div className="">
-        {`You are in Room: ${roomNumber}`}
-      </div>
-
       {/* House */}
       <div className="container mx-auto px-4 col-span-2">
-        <div className="" ref={house}>
-          <House roomNumber={roomNumber} changeRoom={changeRoom} user={user} />
+        <div className="">
+          <House user={user} />
         </div>
       </div>
 

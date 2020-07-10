@@ -1,11 +1,27 @@
 /* eslint-disable max-len */
-import React, { FC, ReactElement, useState, MutableRefObject } from 'react';
+import React, { FC, ReactElement, useState, useEffect, useRef } from 'react';
 import PartyGoer from './PartyGoer';
 import Player from './Player';
+import Room from './Room';
+
+// type layout = 'red' | 'green' | 'blue' | 'yellow';
+type dir = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN';
+type layout = 'red' | 'green' | 'blue' | 'yellow';
+
+interface iRoom {
+  name: layout,
+  xChange: layout,
+  yChange: layout,
+}
+
+interface iHouse {
+  red: iRoom,
+  blue: iRoom,
+  green: iRoom,
+  yellow: iRoom,
+}
 
 interface HouseProps {
-  roomNumber: number;
-  changeRoom: (room: number) => void;
   user: {
     id: number,
     nameFirst: string,
@@ -17,66 +33,54 @@ interface HouseProps {
   };
 }
 
-interface direction {
-  top: 0 | 1,
-  left: 0 | 1,
-  dir: 'LEFT' | 'UP' | 'RIGHT' | 'DOWN',
-}
-
 const House: FC<HouseProps> = ({
-  // roomNumber,
-  changeRoom,
   user,
 }): ReactElement => {
-  const [playerPosition, setPlayerPosition] = useState({ top: 0, left: 0 });
+  const [rooms, setRooms] = useState<iHouse>({
+    red: {
+      name: 'red',
+      xChange: 'blue',
+      yChange: 'green',
+    },
+    blue: {
+      name: 'blue',
+      xChange: 'red',
+      yChange: 'yellow',
+    },
+    green: {
+      name: 'green',
+      xChange: 'yellow',
+      yChange: 'red',
+    },
+    yellow: {
+      name: 'yellow',
+      xChange: 'green',
+      yChange: 'blue',
+    },
+  });
 
-  const handlePlayerMovement = (direction: direction) => {
-    const { top, left } = playerPosition;
+  const [users, setUsers] = useState([]);
 
-    // // eslint-disable-next-line default-case
-    // switch (direction.dir) {
-    //   case 'UP':
-    //     if (top === 0) return;
-    //     break;
-    //   case 'DOWN':
-    //     if (top >= maxDim - player) return;
-    //     break;
-    //   case 'LEFT':
-    //     if (left === 0) return;
-    //     break;
-    //   case 'RIGHT':
-    //     if (left >= maxDim - player) return;
-    //     break;
-    setPlayerPosition({
-      top: top + 5 * direction.top,
-      left: left + 5 * direction.left,
-    });
+  const [currRoom, setCurrRoom] = useState(rooms.red);
+
+  const changeRoom = (dir: dir) => {
+    if (dir === 'UP' || dir === 'DOWN') {
+      setCurrRoom(rooms[currRoom.yChange]);
+    } else if (dir === 'LEFT' || dir === 'RIGHT') {
+      setCurrRoom(rooms[currRoom.xChange]);
+    }
   };
 
   return (
     <div className="">
-      <Player user={user} position={playerPosition} handlePlayerMovement={handlePlayerMovement} />
-      <div className="bg-gray-200 p-2 h-screen" id="house-container">
-        <div className="h-half ">
-          <div className="inline-block w-1/2 h-full bg-red-300 p-4">
-            {/* {roomNumber !== 1 && <button type="button" onClick={() => changeRoom(1)}>Join Room 1</button>} */}
-            <button type="button" onClick={() => changeRoom(1)}>Join Room 1</button>
-          </div>
-          <div className="inline-block w-1/2 h-full bg-blue-300 p-4">
-            {/* {roomNumber !== 2 && <button type="button" onClick={() => changeRoom(2)}>Join Room 2</button>} */}
-            <button type="button" onClick={() => changeRoom(2)}>Join Room 2</button>
-          </div>
-        </div>
-        <div className="h-half">
-          <div className="inline-block w-1/2 h-full bg-green-300 p-4">
-            {/* {roomNumber !== 3 && <button type="button" onClick={() => changeRoom(3)}>Join Room 3</button>} */}
-            <button type="button" onClick={() => changeRoom(3)}>Join Room 3</button>
-          </div>
-          <div className=" inline-block w-1/2 h-full bg-yellow-300 p-4">
-            {/* {roomNumber !== 4 && <button type="button" onClick={() => changeRoom(4)}>Join Room 4</button>} */}
-            <button type="button" onClick={() => changeRoom(4)}>Join Room 4</button>
-          </div>
-        </div>
+      <div className="">
+        {`Player is in Room: ${currRoom.name}`}
+      </div>
+      <div className="mx-auto bg-gray-200 h-500 w-500 border-solid border-black" id="house-container">
+        <Room name="Room 1" layout={currRoom.name} user={user} changeRoom={changeRoom} />
+        {/* <Room name="2" layout="blue" user={user} changeRoom={changeRoom} />
+        <Room name="3" layout="green" user={user} changeRoom={changeRoom} />
+        <Room name="4" layout="yellow" user={user} changeRoom={changeRoom} /> */}
       </div>
     </div>
   );

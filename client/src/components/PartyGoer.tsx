@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 interface position {
   top: number,
@@ -23,8 +23,6 @@ const PartyGoer: FC<PartyGoerProps> = ({
   user,
   position,
 }): ReactElement => {
-  // const [currPosition, setCurrPosition] = useState(position);
-
   const assignPosition = (position: position) => {
     return {
       top: `${position.top}px`,
@@ -35,7 +33,7 @@ const PartyGoer: FC<PartyGoerProps> = ({
   return (
     <div className="">
       <img
-        className="absolute rounded-full h-10 w-10 z-10"
+        className="relative rounded-full h-10 w-10 z-10"
         style={assignPosition(position)}
         src={user.avatar}
         alt="party goer"
