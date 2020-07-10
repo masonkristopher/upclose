@@ -18,7 +18,7 @@ interface PartyProfileProps {
 // party profile is rendered when the route matches /party/partyId
 // clicking a house in the neighborhood will take you here, with the partyId
 const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
-  const [party, setParty] = useState({});
+  const [party, setParty]:any = useState({});
   // access the partyId from the route using useParams.
   const { partyId } = useParams();
 
@@ -35,7 +35,11 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   return (
     <div>
       <div className="text-blue">
-        I am the beautiful PartyProfile
+        {party && (
+          <h4> 
+            party name is: {party.name}
+          </h4>
+        )}
       </div>
       <button type="button">Change House layout</button>
       <button type="button">Change Party Settings</button>
