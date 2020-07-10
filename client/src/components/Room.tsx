@@ -1,9 +1,14 @@
-/* eslint-disable max-len */
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useState, useEffect, useRef } from 'react';
+
+import Player from './Player';
+
+type layout = 'red' | 'green' | 'blue' | 'yellow';
+type dir = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN';
 
 interface RoomProps {
-  roomNumber: number;
-  changeRoom: (room: number) => void;
+  name: string;
+  layout: layout;
+  changeRoom: (dir: dir) => void;
   user: {
     id: number,
     nameFirst: string,
@@ -15,31 +20,98 @@ interface RoomProps {
   };
 }
 
+interface direction {
+  top: 0 | 1,
+  left: 0 | 1,
+  dir: dir,
+}
+
+enum layoutRef {
+  red = 'bg-red-300',
+  green = 'bg-green-300',
+  blue = 'bg-blue-300',
+  yellow = 'bg-yellow-300',
+}
+
 const Room: FC<RoomProps> = ({
-  // roomNumber,
+  name,
+  layout,
+  user,
   changeRoom,
 }): ReactElement => {
+  // const half = Math.floor(roomSize / 2)
+  const [playerPosition, setPlayerPosition] = useState({
+    top: Math.random() * 500,
+    left: Math.random() * 500,
+  });
+
+  const maxDim = 500;
+
+  const handlePlayerMovement = (direction: direction) => {
+    const { top, left } = playerPosition;
+    // eslint-disable-next-line default-case
+    switch (direction.dir) {
+      case 'UP':
+        if (top <= 0) {
+          changeRoom('UP');
+          setPlayerPosition({
+            top: top + 500,
+            left,
+          });
+          return;
+        }
+        break;
+      case 'DOWN':
+        if (top >= maxDim - 40) {
+          changeRoom('DOWN');
+          setPlayerPosition({
+            top: top - 500,
+            left,
+          });
+          return;
+        }
+        break;
+      case 'LEFT':
+        if (left <= 0) {
+          changeRoom('LEFT');
+          setPlayerPosition({
+            top,
+            left: left + 500,
+          });
+          return;
+        }
+        break;
+      case 'RIGHT':
+        if (left >= maxDim - 40) {
+          // change room right
+          changeRoom('RIGHT');
+          setPlayerPosition({
+            top,
+            left: left - 500,
+          });
+          return;
+        }
+        break;
+    }
+    setPlayerPosition({
+      top: top + 5 * direction.top,
+      left: left + 5 * direction.left,
+    });
+  };
+
+  const roomDiv = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (roomDiv.current !== null) {
+      console.log(roomDiv.current.getBoundingClientRect());
+    }
+  });
+
   return (
-    <div className="">
-      <div className="bg-gray-200 p-2 min-h-screen">
-        <div className="">
-          <div className="inline-block w-1/2 bg-red-300 p-4">
-            {/* {roomNumber !== 1 && <button type="button" onClick={() => changeRoom(1)}>Join Room 1</button>} */}
-            <button type="button" onClick={() => changeRoom(1)}>Join Room 1</button>
-          </div>
-          <div className="inline-block w-1/2 bg-blue-300 p-4">
-            {/* {roomNumber !== 2 && <button type="button" onClick={() => changeRoom(2)}>Join Room 2</button>} */}
-            <button type="button" onClick={() => changeRoom(2)}>Join Room 2</button>
-          </div>
-        </div>
-        <div className="inline-block w-1/2 bg-green-300 p-4">
-          {/* {roomNumber !== 3 && <button type="button" onClick={() => changeRoom(3)}>Join Room 3</button>} */}
-          <button type="button" onClick={() => changeRoom(3)}>Join Room 3</button>
-        </div>
-        <div className=" inline-block w-1/2 bg-yellow-300 p-4">
-          {/* {roomNumber !== 4 && <button type="button" onClick={() => changeRoom(4)}>Join Room 4</button>} */}
-          <button type="button" onClick={() => changeRoom(4)}>Join Room 4</button>
-        </div>
+    <div className={`relative w-full h-full inline-block ${layoutRef[layout]}`} ref={roomDiv}>
+      <Player user={user} position={playerPosition} handlePlayerMovement={handlePlayerMovement} />
+      <div className="text-gray-800 mx-auto">
+        {name}
       </div>
     </div>
   );

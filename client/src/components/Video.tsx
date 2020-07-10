@@ -1,9 +1,17 @@
-import React from 'react';
+import React, {
+  FC, useState, ReactElement, useRef,
+} from 'react';
 
-const Video = () => {
+interface VideoProps {
+  userVideo: any;
+}
+
+const Video: FC<VideoProps> = ({ userVideo }) => {
   return (
     <div className="text-blue">
-      <h1>Video</h1>
+      <video ref={userVideo} playsInline autoPlay>
+        <track></track>
+      </video>
     </div>
   );
 };
