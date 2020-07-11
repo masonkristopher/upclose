@@ -99,16 +99,17 @@ const Room: FC<RoomProps> = ({
     });
   };
 
-  const roomDiv = useRef<HTMLDivElement>(null);
+  // const roomDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (roomDiv.current !== null) {
-      console.log(roomDiv.current.getBoundingClientRect());
-    }
+    // if (roomDiv.current !== null) {
+    //   console.log(roomDiv.current.getBoundingClientRect());
+    // }
+    console.log('Room useEffect ran');
   });
 
   return (
-    <div className={`relative w-full h-full inline-block ${layoutRef[layout]}`} ref={roomDiv}>
+    <div className={`relative w-full h-full inline-block ${layoutRef[layout]}`}>
       <Player user={user} position={playerPosition} handlePlayerMovement={handlePlayerMovement} />
       <div className="text-gray-800 mx-auto">
         {name}
