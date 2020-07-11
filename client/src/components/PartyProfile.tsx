@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import PartySettings from './PartySettings';
 import HouseLayout from './HouseLayout';
+import Search from "./Search";
 
 interface PartyProfileProps {
   user:{
@@ -41,17 +42,15 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   return (
     <div>
       <div className="text-blue">
-        {party && (
-          <h4>
-            party name is: {party.name}
-          </h4>
-        )}
+        {party && <h4>party name is: {party.name}</h4>}
         {users && (
           <h4>
             Users involved in this party:
             <ul>
-              {users.map((userInParty:any) => {
-                return (<li key={userInParty.username}>{userInParty.username}</li>);
+              {users.map((userInParty: any) => {
+                return (
+                  <li key={userInParty.username}>{userInParty.username}</li>
+                );
               })}
             </ul>
           </h4>
@@ -62,7 +61,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       )} */}
       <button type="button">Change House layout</button>
       <button type="button">Change Party Settings</button>
-
+      <Search partyId={partyId} />
     </div>
   );
 };
