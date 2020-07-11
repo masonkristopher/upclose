@@ -37,17 +37,21 @@ const videoConstraints = {
 };
 
 // @ts-ignore
-const TestRoom = (props) => {
+const TestRoom = () => {
   const [peers, setPeers] = useState([]);
   const socketRef = useRef();
   const userVideo = useRef();
   const peersRef = useRef([]);
-  const { roomID } = props.match.params;
+  // const { roomID } = props.match.params;
+  const roomID = '1';
 
   useEffect(() => {
     // debugger;
     socketRef.current = io.connect('/');
-    navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
+    navigator.mediaDevices.getUserMedia({
+      video: videoConstraints,
+      audio: true,
+    }).then(stream => {
       userVideo.current.srcObject = stream;
       socketRef.current.emit('join room', roomID);
       socketRef.current.on('all users', users => {
@@ -90,8 +94,6 @@ const TestRoom = (props) => {
       stream,
     });
 
-    // peer._debug = console.log;
-
     peer.on('signal', signal => {
       socketRef.current.emit('sending signal', { userToSignal, callerID, signal });
     });
@@ -107,7 +109,6 @@ const TestRoom = (props) => {
       stream,
     });
 
-    // peer._debug = console.log;
     peer.on('signal', signal => {
       socketRef.current.emit('returning signal', { signal, callerID });
     });
