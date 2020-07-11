@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Fuse from 'fuse.js';
 
 const Search = ({ partyId, setPartyUpdate, update }: any) => {
   const [input, setInput] = useState('');
   const [users, setUsers] = useState([]);
   const [matches, setMatches]: any = useState([]);
+
+  const fuse = new Fuse(users, {
+    keys: ['username', 'nameFirst', 'nameLast'],
+  });
 
   const getAllUsers = () => {
     return axios
@@ -18,6 +23,8 @@ const Search = ({ partyId, setPartyUpdate, update }: any) => {
   }, []);
 
   const handleMatches = () => {
+    const results: any = fuse.search(input);
+    setMatches(results);
   };
 
   const inviteUser = (user: any) => {
