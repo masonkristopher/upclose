@@ -57,7 +57,7 @@ const Navbar = ({
           <ul className="flex items-center">
             {/* in the middle */}
             <li>
-              <h1 className="pl-5 lg:pl-0 text-gray-700">Im in the middle</h1>
+              <li className="p-2"><Link to="/">Home</Link></li>
             </li>
           </ul>
           {/* <!-- to the right  --> */}
@@ -156,7 +156,7 @@ const Navbar = ({
           )}
           {!user && (
             <h1>
-              Please Log In to see your messages!
+              Please Log In to go to the party!
             </h1>
           )}
         </Route>

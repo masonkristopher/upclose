@@ -4,12 +4,13 @@
   "description": "A hip online house party app",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node server/index.ts",
+    "start": "node build/index.js",
+    "server": "ts-node server/index.ts",
     "build": "rm -rf build && tsc --watch",
     "client": "npm --prefix client run start",
     "build:client": "npm --prefix client run build",
     "iall": "npm i && npm --prefix client i",
-    "startboth": "npm run start & npm run client"
+    "startboth": "npm run server & npm run client"
   },
   "repository": {
     "type": "git",
