@@ -3,6 +3,8 @@ import {
   Link,
 } from 'react-router-dom';
 import axios from 'axios';
+import CreatePartyPopup from './CreatePartyPopup';
+
 // our landing page
 interface NeighborhoodProps {
   user: {
@@ -39,7 +41,9 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
           <div className="relative flex">
             <img src="https://www.clipartmax.com/png/small/76-767905_file-ios-open-house-icon.png" alt="File - Ios - Open House Icon@clipartmax.com" />
             <h3 className="flex absolute inset-x-0 bottom-0 pb-10 pl-10">
-              <button type="button" className="text-orange-100 bg-black p-1">Make a new party</button>
+              <CreatePartyPopup
+                user={user}
+              />
             </h3>
           </div>
           {parties.map((number, index) => {

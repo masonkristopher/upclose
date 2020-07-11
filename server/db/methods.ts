@@ -10,7 +10,7 @@ initUserParty(sequelize);
 // CREATE A USER
 const createUser = async (userObj) => {
   try {
-    await User.create(userObj);
+    return await User.create(userObj);
   } catch (err) {
     console.error(err);
   }
@@ -52,7 +52,7 @@ const updateUser = async (userObj) => {
 const getAllParties = async (id) => {
   try {
     // we need to query our user/party join table and return all parties that match the user's id
-    return UserParty.findAll({ where: { idUser: id }})
+    return UserParty.findAll({ where: { idUser: id } })
       .then((joinedParties) => {
         // now that we have all the parties a user is a part of, we find the actual party objects
         const parties = joinedParties.map((joinedParty) => {
@@ -60,6 +60,24 @@ const getAllParties = async (id) => {
         });
         // promise.all ensures that all the findOnes have resolved before returning
         return Promise.all(parties);
+      });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// GET ALL USERS THAT HAVE JOINED A PARTY
+const getUsersInParty = async (idParty) => {
+  try {
+    // query join table to find all parties that match a given party id
+    return UserParty.findAll({ where: { idParty } })
+      .then((joinedParties) => {
+        // now that we have all those parties, we match the user's ids to actual user objects
+        const users = joinedParties.map((joinedParty) => {
+          return User.findOne({ where: { id: joinedParty.idUser } });
+        });
+        // promise.all ensures that all the findOnes have resolved before returning
+        return Promise.all(users);
       });
   } catch (err) {
     console.error(err);
@@ -76,6 +94,7 @@ const getParty = async (id) => {
   }
 };
 
+// ADDS A USER AND PARTY TO THE USERPARTY JOIN TABLE
 const addUserToParty = async (idUser, idParty) => {
   try {
     const party = await Party.findOne({ where: { id: idParty } });
@@ -89,7 +108,7 @@ const addUserToParty = async (idUser, idParty) => {
 // CREATE A PARTY
 const createParty = async (party) => {
   try {
-    Party.create(party);
+    return Party.create(party);
   } catch (err) {
     console.error(err);
   }
@@ -101,6 +120,7 @@ export {
   updateUser,
   getParty,
   addUserToParty,
+  getUsersInParty,
   getAllParties,
   createParty,
 };

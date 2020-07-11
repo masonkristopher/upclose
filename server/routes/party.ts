@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllParties, getParty, createParty } from '../db/methods';
+import { getAllParties, getParty, createParty, getUsersInParty } from '../db/methods';
 
 const partyRouter = express.Router();
 
@@ -9,8 +9,17 @@ partyRouter.get('/all/:id', (req, res) => {
   const { id } = req.params;
   getAllParties(id)
     .then((parties) => {
-      console.log(parties, 'last    party.ts, before sending to server ********');
       res.send(parties);
+    })
+    .catch(err => console.error(err));
+});
+
+// retrieve all users in a specific party
+partyRouter.get('/getUsers/:idParty', (req, res) => {
+  const { idParty } = req.params;
+  getUsersInParty(idParty)
+    .then((users) => {
+      res.send(users);
     })
     .catch(err => console.error(err));
 });
@@ -36,7 +45,7 @@ partyRouter.post('/create', (req, res) => {
     .then((response) => {
       // to do: **************************************
       // make party.create send back a response?
-      res.send(party);
+      res.send(response);
     })
     .catch(err => console.error(err));
 });

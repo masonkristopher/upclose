@@ -27,19 +27,22 @@ const House: FC<PlayerProps> = ({
   handlePlayerMovement,
 }): ReactElement => {
   const handleKeyDown = (event: KeyboardEvent) => {
-    event.preventDefault();
     let newDirection;
     switch (event.keyCode) {
       case 37:
+        event.preventDefault();
         newDirection = { top: 0, left: -1, dir: 'LEFT' };
         break;
       case 38:
+        event.preventDefault();
         newDirection = { top: -1, left: 0, dir: 'UP' };
         break;
       case 39:
+        event.preventDefault();
         newDirection = { top: 0, left: 1, dir: 'RIGHT' };
         break;
       case 40:
+        event.preventDefault();
         newDirection = { top: 1, left: 0, dir: 'DOWN' };
         break;
       default:
