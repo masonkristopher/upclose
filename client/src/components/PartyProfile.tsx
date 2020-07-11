@@ -3,31 +3,34 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import PartySettings from './PartySettings';
 import HouseLayout from './HouseLayout';
+import Search from './Search';
 
 interface PartyProfileProps {
-  user:{
-    id: number,
-    nameFirst: string,
-    nameLast: string,
-    username: string,
-    email: string,
-    avatar: string,
-    googleId: string,
-  }
+  user: {
+    id: number;
+    nameFirst: string;
+    nameLast: string;
+    username: string;
+    email: string;
+    avatar: string;
+    googleId: string;
+  };
 }
 // party profile is rendered when the route matches /party/partyId
 // clicking a house in the neighborhood will take you here, with the partyId
 const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
-  const [party, setParty]:any = useState({});
-  const [users, setUsers]:any = useState([]);
+  const [party, setParty]: any = useState({});
+  const [users, setUsers]: any = useState([]);
+  const [update, setUpdate]: any = useState(true);
   // access the partyId from the route using useParams.
-  const { partyId } = useParams();
+  const { partyId }: any = useParams();
 
   useEffect(() => {
     // should query the database and find the party we need on render
-    axios.get(`/party/${partyId}`)
+    axios
+      .get(`/party/${partyId}`)
       .then((response) => {
-      // then use setParty to put the party's info into state
+        // then use setParty to put the party's info into state
         setParty(response.data);
         // should get all users that have joined this party
         return axios.get(`/party/getUsers/${partyId}`);
@@ -36,22 +39,25 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
         setUsers(response.data);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [update]);
 
   return (
     <div>
       <div className="text-blue">
         {party && (
-          <h4>
-            party name is: {party.name}
-          </h4>
+        <h4>
+          party name is:
+          {party.name}
+        </h4>
         )}
         {users && (
           <h4>
             Users involved in this party:
             <ul>
-              {users.map((userInParty:any) => {
-                return (<li key={userInParty.username}>{userInParty.username}</li>);
+              {users.map((userInParty: any) => {
+                return (
+                  <li key={userInParty.username}>{userInParty.username}</li>
+                );
               })}
             </ul>
           </h4>
@@ -62,7 +68,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       )} */}
       <button type="button">Change House layout</button>
       <button type="button">Change Party Settings</button>
-
+      <Search partyId={partyId} setPartyUpdate={setUpdate} update={update} />
     </div>
   );
 };
