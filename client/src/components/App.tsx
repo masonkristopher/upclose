@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
-import TestCreateRoom from './TestCreateRoom';
 import TestRoom from './TestRoom';
 // import UserContext from './contexts/UserContext';
 // import SampleVidChat from './SampleVidChat';
@@ -55,7 +54,6 @@ const App = () => {
         {/* <SampleVidChat /> */}
         <BrowserRouter>
           <Switch>
-            <Route path="/" exact component={TestCreateRoom} />
             <Route path="/room/:roomID" component={TestRoom} />
           </Switch>
         </BrowserRouter>

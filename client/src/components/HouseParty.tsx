@@ -1,6 +1,8 @@
 import React, { FC, ReactElement, useState, useEffect, useRef, useLayoutEffect } from 'react';
 import io from 'socket.io-client';
 import Peer from 'simple-peer';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 import House from './House';
 import VideoList from './VideoList';
@@ -9,7 +11,6 @@ import ChatFeed from './ChatFeed';
 import ChatSend from './ChatSend';
 
 interface HousePartyProps {
-  partyName: string;
   user: {
     id: number,
     nameFirst: string,
@@ -20,13 +21,18 @@ interface HousePartyProps {
     googleId: string,
   };
 }
-
+// this component will be rendered from the partyProfile page
+// its route will be /party/partyId
 const HouseParty: FC<HousePartyProps> = ({
-  partyName,
   user,
 }): ReactElement => {
   const [roomID, setRoomID] = useState('red');
   const [peers, setPeers]: any = useState([]);
+  const [party, setParty]: any = useState({});
+  const [users, setUsers]: any = useState([]);
+  // access the partyId from the route using useParams.
+  const { partyId }: any = useParams();
+
   const socketRef: any = useRef();
   const userVideo: any = useRef();
   const peersRef: any = useRef([]);
@@ -126,6 +132,18 @@ const HouseParty: FC<HousePartyProps> = ({
 
   useEffect(() => {
     socketConnect();
+    // should query the database and find the party we need on render
+    axios.get(`/party/${partyId}`)
+      .then((response) => {
+        // then use setParty to put the party's info into state
+        setParty(response.data);
+        // should get all users that have joined this party
+        return axios.get(`/party/getUsers/${partyId}`);
+      })
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((err) => console.error(err));
     console.log('HouseParty useEffect ran');
   }, []);
 
@@ -133,7 +151,7 @@ const HouseParty: FC<HousePartyProps> = ({
     <div className="container p-4">
       {/* Header */}
       <div className="px-4">
-        {`Party Name: ${partyName} ${roomID}`}
+        {`Party Name: ${party.name} ${roomID}`}
       </div>
       {/* House */}
       <div className="px-4 float-left">

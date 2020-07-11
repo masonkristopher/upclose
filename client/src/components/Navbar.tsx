@@ -51,7 +51,7 @@ const Navbar = ({
             <li className="p-2"><Link to="/profile">Profile</Link></li>
             <li className="p-2"><Link to="/neighborhood">Neighborhood</Link></li>
             <li className="p-2"><Link to="/messages">Messages</Link></li>
-            <li className="p-2"><Link to="/testParty">Test Party</Link></li>
+            <li className="p-2"><Link to="/testParty/1">Test Party</Link></li>
           </ul>
 
           <ul className="flex items-center">
@@ -98,7 +98,7 @@ const Navbar = ({
       </div>
 
       <Switch>
-        <Route path="/party/:partyId">
+        <Route path="/partyProfile/:partyId">
           {user && (
             <PartyProfile
               user={user}
@@ -134,7 +134,18 @@ const Navbar = ({
             <h1>Please log in!</h1>
           )}
         </Route>
-        {/* <Route path="/logout"><Logout /></Route> */}
+
+        <Route path="/party/:partyId">
+          {user && (
+            <HouseParty
+              user={user}
+            />
+          )}
+          {!user && (
+            <h1>Please log in!</h1>
+          )}
+        </Route>
+
         <Route path="/messages">
           {user && (
             <Messages
@@ -147,11 +158,10 @@ const Navbar = ({
             </h1>
           )}
         </Route>
-        <Route path="/testParty">
+        <Route path="/testParty/:idParty">
           {user && (
             <HouseParty
               user={user}
-              partyName="testParty"
             />
           )}
           {!user && (
