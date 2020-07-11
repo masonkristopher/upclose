@@ -21,6 +21,7 @@ interface PartyProfileProps {
 const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   const [party, setParty]:any = useState({});
   const [users, setUsers]:any = useState([]);
+  const [update, setUpdate]: any = useState(true);
   // access the partyId from the route using useParams.
   const { partyId } = useParams();
 
@@ -61,7 +62,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       )} */}
       <button type="button">Change House layout</button>
       <button type="button">Change Party Settings</button>
-      <Search partyId={partyId} />
+      <Search partyId={partyId} setPartyUpdate={setUpdate} update={update} />
     </div>
   );
 };
