@@ -1,7 +1,6 @@
-import React, { FC, ReactElement, useState, useEffect, useRef } from 'react';
+import React, { FC, ReactElement, useState, useEffect, useRef, useLayoutEffect } from 'react';
 import io from 'socket.io-client';
 import Peer from 'simple-peer';
-import styled from 'styled-components';
 
 import House from './House';
 import VideoList from './VideoList';
@@ -26,12 +25,12 @@ const HouseParty: FC<HousePartyProps> = ({
   partyName,
   user,
 }): ReactElement => {
-  const [roomNumber, setRoomNumber] = useState(1);
+  const [roomID, setRoomID] = useState('red');
   const [peers, setPeers]: any = useState([]);
   const socketRef: any = useRef();
   const userVideo: any = useRef();
   const peersRef: any = useRef([]);
-  const roomID = 1;
+  // const roomID = 1;
   let videoSwitch = true;
   let audioSwitch = true;
 
@@ -41,7 +40,6 @@ const HouseParty: FC<HousePartyProps> = ({
   };
 
   function createPeer(userToSignal: any, callerID: any, stream: any) {
-    // debugger;
     const peer: any = new Peer({
       initiator: true,
       trickle: false,
@@ -56,7 +54,6 @@ const HouseParty: FC<HousePartyProps> = ({
   }
 
   function addPeer(incomingSignal: any, callerID: any, stream: any) {
-    // debugger;
     const peer = new Peer({
       initiator: false,
       trickle: false,
@@ -72,21 +69,12 @@ const HouseParty: FC<HousePartyProps> = ({
     return peer;
   }
 
-  function pauseVideo() {
-    videoSwitch = !videoSwitch;
-    userVideo.current.srcObject.getVideoTracks()[0].enabled = videoSwitch;
-  }
-
-  function mute() {
-    audioSwitch = !audioSwitch;
-    userVideo.current.srcObject.getAudioTracks()[0].enabled = audioSwitch;
-  }
-
-  useEffect(() => {
+  function socketConnect() {
     socketRef.current = io.connect('/');
     navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
       userVideo.current.srcObject = stream;
       socketRef.current.emit('join room', roomID);
+      console.log('****join room emit****', roomID);
       socketRef.current.on('all users', (users: any) => {
         const peersArray: any = [];
         users.forEach((userID: any) => {
@@ -101,7 +89,6 @@ const HouseParty: FC<HousePartyProps> = ({
       });
 
       socketRef.current.on('user joined', (payload: any) => {
-        // debugger;
         const peer = addPeer(payload.signal, payload.callerID, stream);
         peersRef.current.push({
           peerID: payload.callerID,
@@ -116,18 +103,42 @@ const HouseParty: FC<HousePartyProps> = ({
         item.peer.signal(payload.signal);
       });
     });
+  }
+
+  function pauseVideo() {
+    if (userVideo.current.srcObject) {
+      videoSwitch = !videoSwitch;
+      userVideo.current.srcObject.getVideoTracks()[0].enabled = videoSwitch;
+    }
+  }
+
+  function mute() {
+    if (userVideo.current.srcObject) {
+      audioSwitch = !audioSwitch;
+      userVideo.current.srcObject.getAudioTracks()[0].enabled = audioSwitch;
+    }
+  }
+
+  // useLayoutEffect(() => {
+  //   socketConnect();
+  //   console.log('HouseParty useLayoutEffect ran');
+  // }, [roomID]);
+
+  useEffect(() => {
+    socketConnect();
+    console.log('HouseParty useEffect ran');
   }, []);
 
   return (
     <div className="container p-4">
       {/* Header */}
       <div className="px-4">
-        {`Party Name: ${partyName}`}
+        {`Party Name: ${partyName} ${roomID}`}
       </div>
       {/* House */}
       <div className="px-4 float-left">
         <div className="">
-          <House user={user} />
+          <House user={user} setRoomID={setRoomID} />
         </div>
       </div>
 
