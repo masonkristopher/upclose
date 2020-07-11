@@ -126,7 +126,7 @@ const HouseParty: FC<HousePartyProps> = ({
 
   useEffect(() => {
     socketConnect();
-    console.log('HouseParty useEffect ran');
+    // console.log('HouseParty useEffect ran');
   }, []);
 
   return (
@@ -176,8 +176,7 @@ const HouseParty: FC<HousePartyProps> = ({
 
       {/* Underneath Chat Feature */}
       <div className="float-left m-6">
-        <ChatFeed />
-        <ChatSend />
+        <ChatSend key={user.id} user={user} partyName={partyName} />
       </div>
     </div>
   );
