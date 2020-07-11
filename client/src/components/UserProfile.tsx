@@ -18,13 +18,13 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
   const [showEditForm, setShowEditForm]: any = useState(false);
 
   return (
-    <div className="p-8">
+    <div className="p-8 content-center">
       {showEditForm ? (
         <EditUserDetails setShowEditForm={setShowEditForm} user={user} setUser={setUser} />
       ) : (
-        <div>
+        <div className="">
           <img
-            className="flex-col object-cover rounded-full mx-auto h-6 w-6 sm:w-full sm:h-64 md:w-full md:h-64 lg:w-2/5 lg:h-auto xl:w-2/5 xl:h-auto"
+            className="flex-col object-cover rounded-full p-4"
             src={user.avatar}
             alt={user.username}
           />

@@ -105,7 +105,7 @@ const Room: FC<RoomProps> = ({
     // if (roomDiv.current !== null) {
     //   console.log(roomDiv.current.getBoundingClientRect());
     // }
-    console.log('Room useEffect ran');
+    // console.log('Room useEffect ran');
   });
 
   return (
