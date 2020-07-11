@@ -10,7 +10,7 @@ initUserParty(sequelize);
 // CREATE A USER
 const createUser = async (userObj) => {
   try {
-    await User.create(userObj);
+    return await User.create(userObj);
   } catch (err) {
     console.error(err);
   }
@@ -78,7 +78,7 @@ const addUserToParty = async (idUser, idParty) => {
 // CREATE A PARTY
 const createParty = async (party) => {
   try {
-    Party.create(party);
+    return Party.create(party);
   } catch (err) {
     console.error(err);
   }

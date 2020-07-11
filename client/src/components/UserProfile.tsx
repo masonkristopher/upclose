@@ -17,7 +17,6 @@ interface UserProfileProps {
 const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
   const [showEditForm, setShowEditForm]: any = useState(false);
 
-  console.log(user);
   return (
     <div className="p-8">
       {showEditForm ? (

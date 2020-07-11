@@ -48,7 +48,6 @@ const App = () => {
   return (
     <div>
       <div>
-        I am the almighty App
         <Navbar
           user={user}
           setUser={setUser}
