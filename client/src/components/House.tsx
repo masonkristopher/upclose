@@ -74,7 +74,7 @@ const House: FC<HouseProps> = ({
   return (
     <div className="">
       <div className="">
-        {`Player is in Room: ${currRoom.name}`}
+        {`${user.username} is in Room: ${currRoom.name}`}
       </div>
       <div className="mx-auto bg-gray-200 h-500 w-500 border-solid border-black" id="house-container">
         <Room name="Room 1" layout={currRoom.name} user={user} changeRoom={changeRoom} />

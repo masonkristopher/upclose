@@ -1,15 +1,24 @@
 import React, {
-  FC, useState, ReactElement, useRef,
+  FC, useState, ReactElement, useRef, useEffect,
 } from 'react';
 
 interface VideoProps {
-  userVideo: any;
+  peer: any;
 }
 
-const Video: FC<VideoProps> = ({ userVideo }) => {
+const Video: FC<VideoProps> = ({ peer }) => {
+
+  const ref: any = useRef();
+
+  useEffect(() => {
+    peer.on('stream', (stream: any) => {
+      ref.current.srcObject = stream;
+    });
+  }, []);
+
   return (
-    <div className="text-blue">
-      <video ref={userVideo} playsInline autoPlay>
+    <div className="text-blue mt-4">
+      <video ref={ref} playsInline autoPlay>
         <track></track>
       </video>
     </div>

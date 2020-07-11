@@ -26,6 +26,7 @@
     "react-google-login": "^5.1.20",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "reactjs-popup": "^1.5.0",
     "simple-peer": "9.6.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
