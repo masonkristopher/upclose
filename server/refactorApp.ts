@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import socket from 'socket.io';
+import socketConnect from 'socket.io';
 import http from 'http';
 import path from 'path';
 import cors from 'cors';
@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const io = socket(server);
+const io = socketConnect(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,6 +29,11 @@ const users = {};
 const socketToRoom = {};
 
 io.on('connection', socket => {
+  socket.on('chat message', msg => {
+    console.log(msg);
+    io.emit('sending chat message', msg);
+  });
+
   socket.on('join room', roomID => {
     if (users[roomID]) {
       const { length } = users[roomID];
