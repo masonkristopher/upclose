@@ -38,7 +38,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
         setUsers(response.data);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [update]);
 
   return (
     <div>
