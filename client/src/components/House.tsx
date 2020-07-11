@@ -31,10 +31,14 @@ interface HouseProps {
     avatar: string,
     googleId: string,
   };
+  setRoomID: any;
+  // roomID: any;
 }
 
 const House: FC<HouseProps> = ({
   user,
+  setRoomID,
+  // roomID,
 }): ReactElement => {
   const [rooms, setRooms] = useState<iHouse>({
     red: {
@@ -59,15 +63,19 @@ const House: FC<HouseProps> = ({
     },
   });
 
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
 
   const [currRoom, setCurrRoom] = useState(rooms.red);
 
   const changeRoom = (dir: dir) => {
     if (dir === 'UP' || dir === 'DOWN') {
-      setCurrRoom(rooms[currRoom.yChange]);
+      const { yChange } = currRoom;
+      setCurrRoom(rooms[yChange]);
+      setRoomID(yChange);
     } else if (dir === 'LEFT' || dir === 'RIGHT') {
-      setCurrRoom(rooms[currRoom.xChange]);
+      const { xChange } = currRoom;
+      setCurrRoom(rooms[xChange]);
+      setRoomID(xChange);
     }
   };
 
