@@ -1,6 +1,8 @@
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
-import {createUser, addUserToParty, getUser, updateUser } from '../db/methods';
+import {
+  createUser, addUserToParty, getUser, updateUser, getAllUsers,
+} from '../db/methods';
 
 const userRouter = express.Router();
 
@@ -79,6 +81,15 @@ userRouter.post('/add', (req, res) => {
   const user = req.body;
   createUser(user);
   res.send(user);
+});
+
+// Get all user from db
+userRouter.get('/all', (req, res) => {
+  getAllUsers()
+    .then((users) => {
+      res.send(users);
+    })
+    .catch(error => console.log(error));
 });
 
 export default userRouter;

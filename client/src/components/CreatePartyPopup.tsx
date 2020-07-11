@@ -76,7 +76,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
       })
       .then((id) => {
         // redirect to party profile page
-        history.push(`/party/${id}`);
+        history.push(`/partyProfile/${id}`);
       });
   };
 

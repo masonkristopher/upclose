@@ -16,6 +16,18 @@ const createUser = async (userObj) => {
   }
 };
 
+//  GET ALL USERS
+const getAllUsers = async () => {
+  try {
+    const users = await User.findAll({
+      raw: true,
+    });
+    return users;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 // RETRIEVE USER BY GOOGLEID
 const getUser = async (googleId) => {
   try {
@@ -103,6 +115,7 @@ const createParty = async (party) => {
 }
 export {
   createUser,
+  getAllUsers,
   getUser,
   updateUser,
   getParty,
