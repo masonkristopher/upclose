@@ -10,7 +10,7 @@ initUserParty(sequelize);
 // CREATE A USER
 const createUser = async (userObj) => {
   try {
-    await User.create(userObj);
+    return await User.create(userObj);
   } catch (err) {
     console.error(err);
   }
@@ -64,6 +64,7 @@ const getParty = async (id) => {
   }
 };
 
+// ADDS A USER AND PARTY TO THE USERPARTY JOIN TABLE
 const addUserToParty = async (idUser, idParty) => {
   try {
     const party = await Party.findOne({ where: { id: idParty } });
@@ -77,7 +78,7 @@ const addUserToParty = async (idUser, idParty) => {
 // CREATE A PARTY
 const createParty = async (party) => {
   try {
-    Party.create(party);
+    return Party.create(party);
   } catch (err) {
     console.error(err);
   }

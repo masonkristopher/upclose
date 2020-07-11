@@ -36,7 +36,7 @@ partyRouter.post('/create', (req, res) => {
     .then((response) => {
       // to do: **************************************
       // make party.create send back a response?
-      res.send(party);
+      res.send(response);
     })
     .catch(err => console.error(err));
 });
