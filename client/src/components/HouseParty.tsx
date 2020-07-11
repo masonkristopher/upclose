@@ -121,14 +121,21 @@ const HouseParty: FC<HousePartyProps> = ({
   return (
     <div className="container p-4">
       {/* Header */}
-      <div className="px-4">
-        {`Party Name: ${partyName}`}
-      </div>
-      {/* House */}
-      <div className="px-4 float-left">
-        <div className="">
-          <House user={user} />
+      <div className="flex">
+        <div className="px-4 flex">
+          {`Party Name: ${partyName}`}
+          {/* layout will go here */}
+          <img className="flex w-full pr-6" alt="layout" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cartesian_coordinates_2D.svg/1200px-Cartesian_coordinates_2D.svg.png" />
         </div>
+        {/* House */}
+        {/* <div className="px-4 float-left">
+        <div className=""> */}
+        <div className="container mx-auto px-4 flex">
+          <div className="max-w-sm ">
+            <House user={user} />
+          </div>
+        </div>
+
       </div>
 
       {/* Right=Side Video Side Panel */}

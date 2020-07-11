@@ -156,7 +156,7 @@ const Navbar = ({
           )}
           {!user && (
             <h1>
-              Please Log In to see your messages!
+              Please Log In to go to the party!
             </h1>
           )}
         </Route>
