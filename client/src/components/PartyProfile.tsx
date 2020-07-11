@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import PartySettings from './PartySettings';
 import HouseLayout from './HouseLayout';
@@ -24,6 +24,12 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   const [update, setUpdate]: any = useState(true);
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
+  // useHistory allows us to redirect by pushing onto the url
+  const history = useHistory();
+
+  const goToParty = () => {
+    history.replace(`/party/${partyId}`);
+  };
 
   useEffect(() => {
     // should query the database and find the party we need on render
@@ -45,10 +51,10 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
     <div>
       <div className="text-blue">
         {party && (
-        <h4>
-          party name is:
-          {party.name}
-        </h4>
+          <h4>
+            party name is:
+            {party.name}
+          </h4>
         )}
         {users && (
           <h4>
@@ -68,6 +74,8 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       )} */}
       <button type="button">Change House layout</button>
       <button type="button">Change Party Settings</button>
+      <button onClick={goToParty} type="button">Go to this party!</button>
+
       <Search partyId={partyId} setPartyUpdate={setUpdate} update={update} />
     </div>
   );
