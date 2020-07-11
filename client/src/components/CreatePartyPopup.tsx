@@ -1,4 +1,5 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, Image, DotGroup } from 'pure-react-carousel';
 import axios from 'axios';
@@ -20,15 +21,18 @@ interface CreatePartyPopupProps {
 const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
   user,
 }): ReactElement => {
-  // in this useState, should I make an interface of this object instead?
+  // to do:  in this useState, should I make an interface of this object instead?
   const [partyDetails, setPartyDetails] = useState({
     name: '',
     idLayout: 0,
+    idCreator: user.id,
   });
   const [popUp, setPopup] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
-  // this should equal how many layouts we have
+  // this should equal how many layouts we have  **************
   const [totalSlides, setTotalSlides] = useState(2);
+  // useHistory allows us to redirect by pushing onto the url
+  const history = useHistory();
 
   useEffect(() => {
   });
@@ -51,7 +55,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
       setActiveSlide(0);
     }
   };
-  // setst he active slide when the next button is clicked
+  // sets the active slide when the next button is clicked
   const handleNext = () => {
     setActiveSlide(activeSlide + 1);
     if (activeSlide >= totalSlides - 1) {
@@ -64,9 +68,16 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
       ...partyDetails,
     })
       .then((response) => {
-      // redirect to party profile page
-      console.log(response, 'from save party');
-    });
+        // party's id
+        const { id } = response.data;
+        // add to UserParty join table
+        axios.post(`user/${user.id}/joins/${id}`);
+        return id;
+      })
+      .then((id) => {
+        // redirect to party profile page
+        history.push(`/party/${id}`);
+      });
   };
 
   return (

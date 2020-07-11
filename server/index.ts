@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import sequelize from './db/index';
 import { initUser } from './db/models/user';
-import { initParty, associatePartyMessages } from './db/models/party';
+import { initParty, associatePartyMessages, associateIdCreator } from './db/models/party';
 import { initMessage, associateMessage } from './db/models/message';
 import { initUserParty, associateUserParty } from './db/models/userParty';
 import server from './refactorApp';
@@ -30,6 +30,7 @@ server.listen(port, () => {
   associateUserParty();
   associatePartyMessages();
   associateMessage();
+  associateIdCreator();
   // sequelize.sync({ force: true }); // if you need to drop the tables
   sequelize.sync(); // if you just need to update the tables
 });
