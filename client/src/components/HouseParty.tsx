@@ -80,7 +80,7 @@ const HouseParty: FC<HousePartyProps> = ({
     navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
       userVideo.current.srcObject = stream;
       socketRef.current.emit('join room', roomID);
-      console.log('****join room emit****', roomID);
+      // console.log('****join room emit****', roomID);
       socketRef.current.on('all users', (users: any) => {
         const peersArray: any = [];
         users.forEach((userID: any) => {
@@ -193,7 +193,7 @@ const HouseParty: FC<HousePartyProps> = ({
 
       {/* Underneath Chat Feature */}
       <div className="float-left m-6">
-        <ChatSend key={user.id} user={user} partyName={partyName} />
+        <ChatSend key={user.id} user={user} />
       </div>
     </div>
   );

@@ -2,7 +2,6 @@ import React, { FC, ReactElement, useState, MouseEvent, KeyboardEvent, useEffect
 import io from 'socket.io-client';
 
 interface ChatSendProps {
-  partyName: string;
   user: {
     id: number,
     nameFirst: string,
@@ -14,7 +13,7 @@ interface ChatSendProps {
   };
 }
 
-const ChatSend: FC<ChatSendProps> = ({ partyName, user }) => {
+const ChatSend: FC<ChatSendProps> = ({ user }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages]: any = useState([]);
   const [messageCount, setMessageCount] = useState(0);
@@ -27,7 +26,6 @@ const ChatSend: FC<ChatSendProps> = ({ partyName, user }) => {
       messageCount,
       message,
       user,
-      partyName,
     };
     socket.emit('chat message', messageObj);
     setMessage(''); // clear the input
