@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 import TestRoom from './TestRoom';
+import UserProfile from './UserProfile';
 // import UserContext from './contexts/UserContext';
 // import SampleVidChat from './SampleVidChat';
 
@@ -55,7 +56,20 @@ const App = () => {
         <BrowserRouter>
           <Switch>
             <Route path="/room/:roomID" component={TestRoom} />
+            {user && (
+              <Route
+                path="/profile"
+                render={() => (
+                  <UserProfile
+                    // @ts-ignore
+                    user={user}
+                    setUser={setUser}
+                  />
+                )}
+              />
+            )}
           </Switch>
+          {user && <Redirect to="/profile" />}
         </BrowserRouter>
       </div>
     </div>

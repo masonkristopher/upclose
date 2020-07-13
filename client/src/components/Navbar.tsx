@@ -48,10 +48,10 @@ const Navbar = ({
         <nav className="px-4 flex justify-between bg-white h-16 border-b-2">
           {/* <!-- top bar left --> */}
           <ul className="flex items-center">
-            <li className="p-2"><Link to="/profile">Profile</Link></li>
-            <li className="p-2"><Link to="/neighborhood">Neighborhood</Link></li>
-            <li className="p-2"><Link to="/messages">Messages</Link></li>
-            <li className="p-2"><Link to="/testParty/1">Test Party</Link></li>
+            {user && (<li className="p-2"><Link to="/profile">Profile</Link></li>)}
+            {user && (<li className="p-2"><Link to="/neighborhood">Neighborhood</Link></li>)}
+            {user && (<li className="p-2"><Link to="/messages">Messages</Link></li>)}
+            {user && (<li className="p-2"><Link to="/testParty/1">Test Party</Link></li>)}
           </ul>
 
           <ul className="flex items-center">
@@ -62,21 +62,25 @@ const Navbar = ({
           </ul>
           {/* <!-- to the right  --> */}
           <ul className="flex items-center">
-            <li className="pr-2">
-              <GoogleLogout
-                clientId="619935015421-c9vv4mlcuabiotbke4dpnc2ehp760l3a.apps.googleusercontent.com"
-                buttonText="Logout"
-                onLogoutSuccess={logout}
-              />
-            </li>
-            <li className="pl-2">
-              <GoogleLogin
-                clientId="619935015421-c9vv4mlcuabiotbke4dpnc2ehp760l3a.apps.googleusercontent.com"
-                buttonText="Login"
-                onSuccess={responseGoogle}
-                onFailure={responseGoogle}
-              />
-            </li>
+            {user && (
+              <li className="pr-2">
+                <GoogleLogout
+                  clientId="619935015421-c9vv4mlcuabiotbke4dpnc2ehp760l3a.apps.googleusercontent.com"
+                  buttonText="Logout"
+                  onLogoutSuccess={logout}
+                />
+              </li>
+            )}
+            {!user && (
+              <li className="pl-2">
+                <GoogleLogin
+                  clientId="619935015421-c9vv4mlcuabiotbke4dpnc2ehp760l3a.apps.googleusercontent.com"
+                  buttonText="Login"
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
+                />
+              </li>
+            )}
             <li className="p-2">
               {user && (
                 <div>
