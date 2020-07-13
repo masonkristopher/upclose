@@ -19,6 +19,11 @@ const ChatSend: FC<ChatSendProps> = ({ user }) => {
   const [messageCount, setMessageCount] = useState(0);
   const { current: socket } = useRef(io());
 
+  const randomKey = () => {
+    return Math.random().toString(36).substring(2, 15)
+      + Math.random().toString(36).substring(2, 15);
+  };
+
   const sendChat = (event: MouseEvent | KeyboardEvent) => {
     event.preventDefault();
     setMessageCount(messageCount + 1);
@@ -34,17 +39,20 @@ const ChatSend: FC<ChatSendProps> = ({ user }) => {
   const onKeyPress = (event: KeyboardEvent) => {
     if (event.which === 13) sendChat(event);
   };
-
+  
+  // @ts-ignore
   useEffect(() => {
     socket.on('sending chat message', (msg: any) => {
       setMessages((msgs: any) => [...msgs, msg]);
     });
+
+    return () => socket.disconnect();
   }, []);
 
   return (
     <div className="text-blue border rounded p-4 bg-gray-200">
       {messages.map((msg: any) => {
-        const key = msg.messageCount + msg.user.id;
+        const key = msg.messageCount + msg.user.id + randomKey();
         return (
           <div key={key}>
             <p>
