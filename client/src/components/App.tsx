@@ -56,6 +56,18 @@ const App = () => {
         <BrowserRouter>
           <Switch>
             <Route path="/room/:roomID" component={TestRoom} />
+            {user && (
+              <Route
+                path="/profile"
+                render={() => (
+                  <UserProfile
+                    // @ts-ignore
+                    user={user}
+                    setUser={setUser}
+                  />
+                )}
+              />
+            )}
           </Switch>
           {user && <Redirect to="/profile" />}
         </BrowserRouter>
