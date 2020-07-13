@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllParties, getParty, createParty, getUsersInParty } from '../db/methods';
+import { getAllParties, getParty, createParty, getUsersInParty, deleteParty } from '../db/methods';
 
 const partyRouter = express.Router();
 
@@ -30,7 +30,6 @@ partyRouter.get('/:id', (req, res) => {
   const { id } = req.params;
   getParty(id)
     .then((party) => {
-      console.log(party, 'after getParty in party.ts *********')
       res.send(party);
     })
     .catch(err => console.error(err));
@@ -40,12 +39,21 @@ partyRouter.get('/:id', (req, res) => {
 partyRouter.post('/create', (req, res) => {
   // party object
   const party = req.body;
-  console.log(req.body, 'req.body *****************')
   createParty(party)
     .then((response) => {
       // to do: **************************************
       // make party.create send back a response?
       res.send(response);
+    })
+    .catch(err => console.error(err));
+});
+
+// delete a party
+partyRouter.delete('/:idParty', (req, res) => {
+  const { idParty } = req.params;
+  deleteParty(idParty)
+    .then(() => {
+      res.send('party deleted');
     })
     .catch(err => console.error(err));
 });

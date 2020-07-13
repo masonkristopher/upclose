@@ -31,7 +31,7 @@ const getAllUsers = async () => {
 // RETRIEVE USER BY GOOGLEID
 const getUser = async (googleId) => {
   try {
-    const user = await User.findOne({where: { googleId } });
+    const user = await User.findOne({ where: { googleId } });
     return user;
   } catch (err) {
     console.error(err);
@@ -87,7 +87,7 @@ const getUsersInParty = async (idParty) => {
 // GET ONE PARTY BY ID
 const getParty = async (id) => {
   try {
-    const party = Party.findOne({where: { id } });
+    const party = Party.findOne({ where: { id } });
     return party;
   } catch (err) {
     console.error(err);
@@ -112,6 +112,18 @@ const createParty = async (party) => {
   } catch (err) {
     console.error(err);
   }
+};
+
+// DELETE A PARTY
+const deleteParty = async (idParty) => {
+  try {
+    // delete party from party table
+    Party.destroy({ where: { id: idParty } });
+    // then delete all the reference in UserParty table
+    UserParty.destroy({ where: { idParty } });
+  } catch (err) {
+    console.error(err);
+  }
 }
 export {
   createUser,
@@ -123,4 +135,5 @@ export {
   getUsersInParty,
   getAllParties,
   createParty,
+  deleteParty,
 };

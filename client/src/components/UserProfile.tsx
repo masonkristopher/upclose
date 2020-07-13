@@ -34,6 +34,14 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
     history.replace(`/partyProfile/${partyId}`);
   };
 
+  const deleteParty = (partyId: number) => {
+    console.log('click')
+    axios.delete(`/party/${partyId}`);
+    // .then(() => {
+    //   // set the parties state
+    // })
+  };
+
   return (
     <div className="grid grid-cols-2">
       <div className="p-8 content-center flex">
@@ -76,9 +84,12 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
             Your parties:
             <ul>
               {parties.map((party: any) => (
-                <li>
-                  <button type="button" onClick={() => { toParty(party.id); }}>{party.name}</button>
-                </li>
+                <div className="grid grid-cols-2">
+                  <li>
+                    <button type="button" onClick={() => { toParty(party.id); }}>{party.name}</button>
+                  </li>
+                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { deleteParty(party.id); }}>Delete party</button>
+                </div>
               ))}
             </ul>
           </h1>
