@@ -29,7 +29,6 @@ const HouseParty: FC<HousePartyProps> = ({
   const [roomID, setRoomID] = useState('red');
   const [peers, setPeers]: any = useState([]);
   const [party, setParty]: any = useState({});
-  const [users, setUsers]: any = useState([]);
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
 
@@ -137,11 +136,6 @@ const HouseParty: FC<HousePartyProps> = ({
       .then((response) => {
         // then use setParty to put the party's info into state
         setParty(response.data);
-        // should get all users that have joined this party
-        return axios.get(`/party/getUsers/${partyId}`);
-      })
-      .then((response) => {
-        setUsers(response.data);
       })
       .catch((err) => console.error(err));
   }, []);
