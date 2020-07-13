@@ -35,11 +35,7 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
   };
 
   const deleteParty = (partyId: number) => {
-    console.log('click')
     axios.delete(`/party/${partyId}`);
-    // .then(() => {
-    //   // set the parties state
-    // })
   };
 
   return (

@@ -29,7 +29,11 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
       .then((response) => {
         setParties(response.data);
       });
-  }, []);
+  });
+
+  const deleteParty = (partyId: number) => {
+    axios.delete(`/party/${partyId}`);
+  };
 
   return (
     <div className="text-blue flex flex-wrap">
@@ -53,6 +57,7 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
                 <h3 className="flex absolute inset-x-0 bottom-0 pb-10 pl-10">
                   <p className="p-2 text-orange-100 bg-red-800">{parties[index].name}</p>
                   <p className="p-2 text-orange-100 bg-black"><Link to={`/partyProfile/${parties[index].id}`}>Check this party out</Link></p>
+                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { deleteParty(parties[index].id); }}>Delete party</button>
                 </h3>
 
               </div>
