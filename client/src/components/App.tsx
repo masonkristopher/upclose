@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 import TestRoom from './TestRoom';
+import UserProfile from './UserProfile';
 // import UserContext from './contexts/UserContext';
 // import SampleVidChat from './SampleVidChat';
 
@@ -56,6 +57,7 @@ const App = () => {
           <Switch>
             <Route path="/room/:roomID" component={TestRoom} />
           </Switch>
+          {user && <Redirect to="/profile" />}
         </BrowserRouter>
       </div>
     </div>
