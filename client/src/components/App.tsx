@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect, } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 import TestRoom from './TestRoom';
@@ -53,7 +53,7 @@ const App = () => {
           setUser={setUser}
         />
         {/* <SampleVidChat /> */}
-        <BrowserRouter>
+        {/* <BrowserRouter>
           <Switch>
             <Route path="/room/:roomID" component={TestRoom} />
             {user && (
@@ -69,8 +69,8 @@ const App = () => {
               />
             )}
           </Switch>
-          {user && <Redirect to="/profile" />}
-        </BrowserRouter>
+        {user && <Redirect to="/profile" />}
+        </BrowserRouter> */}
       </div>
     </div>
   );
