@@ -2,7 +2,7 @@ import React, { FC, ReactElement, useState, useEffect } from 'react';
 import UserDetails from './UserDetails';
 
 interface InboxListItemProps {
-  // user: {
+  // // user: {
   //   id: number,
   //   nameFirst: string,
   //   nameLast: string,
@@ -10,22 +10,34 @@ interface InboxListItemProps {
   //   email: string,
   //   avatar: string,
   //   googleId: string,
-  // },
+  // // },
   thread: {
-    someStuff: number
-
+    id: number,
+    nameFirst: string,
+    nameLast: string,
+    username: string,
+    email: string,
+    avatar: string,
+    googleId: string,
   }
 }
 
-const Template: FC<InboxListItemProps> = ({
+const InboxListItem: FC<InboxListItemProps> = ({
   // user,
   thread,
 }): ReactElement => {
   return (
     <div className="">
-      {thread.someStuff}
+      <img
+        className="relative rounded-full h-10 w-10 z-10"
+        src={thread.avatar}
+        alt=""
+      />
+      <ul>
+        {thread.username}
+      </ul>
     </div>
   );
 };
 
-export default Template;
+export default InboxListItem;
