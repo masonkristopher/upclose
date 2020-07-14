@@ -53,7 +53,7 @@ const App = () => {
           setUser={setUser}
         />
         {/* <SampleVidChat /> */}
-        <BrowserRouter>
+        {/* <BrowserRouter>
           <Switch>
             <Route path="/room/:roomID" component={TestRoom} />
             {user && (
@@ -70,7 +70,7 @@ const App = () => {
             )}
           </Switch>
           {user && <Redirect to="/profile" />}
-        </BrowserRouter>
+        </BrowserRouter> */}
       </div>
     </div>
   );
