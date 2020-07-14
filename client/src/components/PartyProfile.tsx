@@ -22,6 +22,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   const [party, setParty]: any = useState({});
   const [users, setUsers]: any = useState([]);
   const [update, setUpdate]: any = useState(true);
+  const [invited, setInvited]: any = useState(false);
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
   // useHistory allows us to redirect by pushing onto the url
@@ -39,21 +40,41 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       });
   };
 
+  // runs once, on load
   useEffect(() => {
     // should query the database and find the party we need on render
-    axios
-      .get(`/party/${partyId}`)
+    axios.get(`/party/${partyId}`)
       .then((response) => {
         // then use setParty to put the party's info into state
         setParty(response.data);
-        // should get all users that have joined this party
-        return axios.get(`/party/getUsers/${partyId}`);
+        return axios.get(`/party/getUsers/${partyId}`)
       })
       .then((response) => {
         setUsers(response.data);
       })
       .catch((err) => console.error(err));
+  }, []);
+
+  // runs whenever update is changed, which happens in other components
+  useEffect(() => {
+    // get all users that have joined this party and set them in state
+    axios.get(`/party/getUsers/${partyId}`)
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((err) => console.error(err));
   }, [update]);
+
+  // watches users for changes, then checks that the logged in user is an invited user
+  useEffect(() => {
+    users.forEach((invitedUser: any, index: number) => {
+      if (invitedUser.id === user.id) {
+        setInvited(true);
+      } else if (index === users.length - 1) {
+        setInvited(false);
+      }
+    });
+  }, [users]);
 
   return (
     <div>
@@ -99,7 +120,9 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       )} */}
       <button type="button">Change House layout</button>
       <button type="button">Change Party Settings</button>
-      <button onClick={goToParty} type="button">Go to this party!</button>
+      {(party.inviteOnly === false || (invited === true)) && (
+        <button onClick={goToParty} type="button">Go to this party!</button>
+      )}
 
       <Search
         partyId={partyId}
