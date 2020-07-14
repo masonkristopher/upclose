@@ -1,6 +1,5 @@
 import { initUser, User } from './models/user';
 import sequelize from './index';
-import { Op } from 'sequelize';
 import { UserParty, initUserParty } from './models/userParty';
 import { Party, initParty } from './models/party';
 import { Message, initMessage } from './models/message';
@@ -36,6 +35,14 @@ const getUser = async (googleId) => {
   try {
     const user = await User.findOne({ where: { googleId } });
     return user;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getUserById = async (id) => {
+  try {
+    return await User.findOne({ where: { id } });
   } catch (err) {
     console.error(err);
   }
@@ -142,32 +149,78 @@ const deleteFromParty = async (idUser, idParty) => {
   }
 };
 
-const getUserMessages = async (idUser: number) => {
+const getMessagesWithOneUser = async (idSender, idRecipient) => {
   try {
-    const sender = await Message.findAll({
+    return await Message.findAll({
       where:
         {
-          idSender: idUser,
+          idSender,
+          idRecipient,
         },
     });
-    const recipient = await Message.findAll({
-      where:
-        {
-          idRecipient: idUser,
-        },
-    });
-    return sender.concat(recipient);
   } catch (err) {
     console.error(err);
   }
 };
 
-getUserMessages(1);
+const getUsersSendersIds = async (idRecipient) => {
+  try {
+    const senders = await Message.findAll({
+      where: {
+        idRecipient,
+      },
+      attributes: [
+        'idSender',
+      ],
+    });
+    return senders.map(sender => {
+      return sender.getDataValue('idSender');
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+const getUsersRecipientsIds = async (idSender) => {
+  try {
+    const recipients = await Message.findAll({
+      where: {
+        idSender,
+      },
+      attributes: [
+        'idRecipient',
+      ],
+    });
+    return recipients.map(recipient => {
+      return recipient.getDataValue('idRecipient');
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
 
+const getAllUsersThreads = async (userId) => {
+  try {
+    const recipients = await getUsersSendersIds(userId);
+    const senders = await getUsersRecipientsIds(userId);
+    const allUsersThreadsUsersIds = [];
+    recipients.concat(senders).forEach(id => {
+      if (!allUsersThreadsUsersIds.includes(id)) {
+        allUsersThreadsUsersIds.push(id);
+      }
+    });
+    // console.log(allUsersThreadsUsersIds);
+    return allUsersThreadsUsersIds;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+getAllUsersThreads(1);
 export {
   createUser,
   getAllUsers,
   getUser,
+  getUserById,
   updateUser,
   getParty,
   addUserToParty,
@@ -176,5 +229,8 @@ export {
   createParty,
   deleteParty,
   deleteFromParty,
-  getUserMessages,
+  getMessagesWithOneUser,
+  getUsersSendersIds,
+  getUsersRecipientsIds,
+  getAllUsersThreads,
 };
