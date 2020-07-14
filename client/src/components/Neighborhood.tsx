@@ -21,7 +21,8 @@ interface NeighborhoodProps {
 const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
   // to do: ******************
   // i want this useState to be empty or null, but typescript doesn't like that
-  const [parties, setParties] = useState([{ name: 'hello', id: 1 }]);
+  const [parties, setParties] = useState([{ name: '', id: 1 }]);
+  const [partyChange, setPartyChange]: any = useState(false);
 
   useEffect(() => {
     // on load, should populate the parties state with all the user's parties
@@ -29,7 +30,14 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
       .then((response) => {
         setParties(response.data);
       });
-  }, []);
+  }, [partyChange]);
+
+  const deleteParty = (partyId: number) => {
+    axios.delete(`/party/${partyId}`)
+      .then(() => {
+        setPartyChange(!partyChange);
+      })
+  };
 
   return (
     <div className="text-blue flex flex-wrap">
@@ -53,6 +61,7 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
                 <h3 className="flex absolute inset-x-0 bottom-0 pb-10 pl-10">
                   <p className="p-2 text-orange-100 bg-red-800">{parties[index].name}</p>
                   <p className="p-2 text-orange-100 bg-black"><Link to={`/partyProfile/${parties[index].id}`}>Check this party out</Link></p>
+                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { deleteParty(parties[index].id); }}>Delete party</button>
                 </h3>
 
               </div>

@@ -1,7 +1,7 @@
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import {
-  createUser, addUserToParty, getUser, updateUser, getAllUsers,
+  createUser, addUserToParty, getUser, updateUser, getAllUsers, deleteFromParty,
 } from '../db/methods';
 
 const userRouter = express.Router();
@@ -66,10 +66,10 @@ userRouter.put('/profile/edit', (req, res) => {
     .catch((error) => console.log(error));
 });
 
-userRouter.post('/:userId/joins/:partyId', (req, res) => {
-  const { userId, partyId } = req.params;
+userRouter.post('/:idUser/joins/:idParty', (req, res) => {
+  const { idUser, idParty } = req.params;
   // console.log(req.params, '/userid/joins/partyid')
-  addUserToParty(userId, partyId)
+  addUserToParty(idUser, idParty)
     .then(() => {
       res.send('user added to party');
     })
@@ -89,7 +89,17 @@ userRouter.get('/all', (req, res) => {
     .then((users) => {
       res.send(users);
     })
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
+});
+
+// delete user from UserParty table
+userRouter.delete('/userParty/:idUser/:idParty', (req, res) => {
+  const { idUser, idParty } = req.params;
+  deleteFromParty(idUser, idParty)
+    .then(() => {
+      res.send('user deleted');
+    })
+    .catch(error => console.error(error));
 });
 
 export default userRouter;

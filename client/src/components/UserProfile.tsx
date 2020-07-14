@@ -19,6 +19,7 @@ interface UserProfileProps {
 const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
   const [showEditForm, setShowEditForm]: any = useState(false);
   const [parties, setParties]: any = useState([]);
+  const [partyChange, setPartyChange]: any = useState(false);
 
   const history = useHistory();
 
@@ -28,10 +29,17 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
         setParties(response.data);
       })
       .catch(err => console.error(err));
-  });
+  }, [partyChange]);
 
   const toParty = (partyId: number) => {
     history.replace(`/partyProfile/${partyId}`);
+  };
+
+  const deleteParty = (partyId: number) => {
+    axios.delete(`/party/${partyId}`)
+      .then(() => {
+        setPartyChange(!partyChange);
+      });
   };
 
   return (
@@ -76,9 +84,12 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
             Your parties:
             <ul>
               {parties.map((party: any) => (
-                <li>
-                  <button type="button" onClick={() => { toParty(party.id); }}>{party.name}</button>
-                </li>
+                <div className="grid grid-cols-2">
+                  <li>
+                    <button type="button" onClick={() => { toParty(party.id); }}>{party.name}</button>
+                  </li>
+                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { deleteParty(party.id); }}>Delete party</button>
+                </div>
               ))}
             </ul>
           </h1>
