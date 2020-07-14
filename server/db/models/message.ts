@@ -25,7 +25,7 @@ interface MessageAttributes {
 
 interface MessageCreationAttributes extends Optional<MessageAttributes, 'id' | 'idParty'> { }
 
-class Message extends Model<MessageAttributes, MessageCreationAttributes>
+export class Message extends Model<MessageAttributes, MessageCreationAttributes>
   implements MessageAttributes {
   public id!: number
 
@@ -87,14 +87,12 @@ export function associateMessage():
     foreignKey: 'idSender',
   });
   User.hasMany(Message, {
-    foreignKey: 'id',
+    foreignKey: 'idSender',
   });
   Message.belongsTo(User, {
     foreignKey: 'idRecipient',
   });
   User.hasMany(Message, {
-    foreignKey: 'id',
+    foreignKey: 'idSender',
   });
 }
-
-export default Message;
