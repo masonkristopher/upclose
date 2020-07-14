@@ -25,26 +25,28 @@ app.get('*', (req: Request, res: Response): void => {
 });
 
 io.on('connection', socket => {
+  // if user joins room
+  socket.on('join room', (newRoom: string) => {
+    socket.join(newRoom, () => {
+      console.log(`${socket.id} joined room ${newRoom}`);
+      io.to(newRoom).emit('user joined room', socket.id);
+    });
+  });
   // if user switches room
   socket.on('switch room', (oldRoom: string, newRoom: string) => {
-    if (oldRoom !== null) { // exclude initial case
-      socket.leave(oldRoom, () => {
-        console.log(`${socket.id} left room ${oldRoom}`);
-        io.to(oldRoom).emit('user left room', socket.id);
-        socket.join(newRoom, () => {
-          console.log(`${socket.id} joined room ${newRoom}`);
-          io.to(newRoom).emit('user joined room', socket.id);
-        });
-      });
-    } else { // initial case
+    socket.leave(oldRoom, () => {
+      console.log(`${socket.id} left room ${oldRoom}`);
+      io.to(oldRoom).emit('user left room', socket.id);
       socket.join(newRoom, () => {
-        console.log(`${socket.id} joined room ${newRoom}`);
+        console.log(`${socket.id} switched room ${newRoom}`);
         io.to(newRoom).emit('user joined room', socket.id);
       });
-    }
+    });
   });
 
   socket.on('created peer signal', payload => {
+    console.log('callerID: ', payload.callerID, ' | userToSignal: ', payload.userToSignal);
+    console.log('^^^ created peer signal payload ^^^');
     io.to(payload.userToSignal).emit('connection requested', { signal: payload.signal, callerID: payload.callerID });
   });
 
@@ -53,6 +55,7 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
+    // emit back to last room that you left
     console.log(`user disconnected: ${socket.id}`);
   });
 });
