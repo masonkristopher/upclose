@@ -1,11 +1,14 @@
 import { initUser, User } from './models/user';
 import sequelize from './index';
+import { Op } from 'sequelize';
 import { UserParty, initUserParty } from './models/userParty';
 import { Party, initParty } from './models/party';
+import { Message, initMessage } from './models/message';
 
 initUser(sequelize);
 initParty(sequelize);
 initUserParty(sequelize);
+initMessage(sequelize);
 
 // CREATE A USER
 const createUser = async (userObj) => {
@@ -128,7 +131,7 @@ const deleteParty = async (idParty) => {
 
 const deleteFromParty = async (idUser, idParty) => {
   try {
-    UserParty.destroy({ 
+    UserParty.destroy({
       where: {
         idUser,
         idParty,
@@ -138,6 +141,28 @@ const deleteFromParty = async (idUser, idParty) => {
     console.error(err);
   }
 };
+
+const getUserMessages = async (idUser: number) => {
+  try {
+    const sender = await Message.findAll({
+      where:
+        {
+          idSender: idUser,
+        },
+    });
+    const recipient = await Message.findAll({
+      where:
+        {
+          idRecipient: idUser,
+        },
+    });
+    return sender.concat(recipient);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+getUserMessages(1);
 
 export {
   createUser,
@@ -151,4 +176,5 @@ export {
   createParty,
   deleteParty,
   deleteFromParty,
+  getUserMessages,
 };
