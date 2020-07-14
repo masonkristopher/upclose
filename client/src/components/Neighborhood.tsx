@@ -21,7 +21,8 @@ interface NeighborhoodProps {
 const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
   // to do: ******************
   // i want this useState to be empty or null, but typescript doesn't like that
-  const [parties, setParties] = useState([{ name: 'hello', id: 1 }]);
+  const [parties, setParties] = useState([{ name: '', id: 1 }]);
+  const [partyChange, setPartyChange]: any = useState(false);
 
   useEffect(() => {
     // on load, should populate the parties state with all the user's parties
@@ -29,10 +30,13 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
       .then((response) => {
         setParties(response.data);
       });
-  });
+  }, [partyChange]);
 
   const deleteParty = (partyId: number) => {
-    axios.delete(`/party/${partyId}`);
+    axios.delete(`/party/${partyId}`)
+      .then(() => {
+        setPartyChange(!partyChange);
+      })
   };
 
   return (

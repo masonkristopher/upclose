@@ -19,6 +19,7 @@ interface UserProfileProps {
 const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
   const [showEditForm, setShowEditForm]: any = useState(false);
   const [parties, setParties]: any = useState([]);
+  const [partyChange, setPartyChange]: any = useState(false);
 
   const history = useHistory();
 
@@ -28,14 +29,17 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
         setParties(response.data);
       })
       .catch(err => console.error(err));
-  });
+  }, [partyChange]);
 
   const toParty = (partyId: number) => {
     history.replace(`/partyProfile/${partyId}`);
   };
 
   const deleteParty = (partyId: number) => {
-    axios.delete(`/party/${partyId}`);
+    axios.delete(`/party/${partyId}`)
+      .then(() => {
+        setPartyChange(!partyChange);
+      });
   };
 
   return (

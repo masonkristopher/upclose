@@ -124,7 +124,21 @@ const deleteParty = async (idParty) => {
   } catch (err) {
     console.error(err);
   }
-}
+};
+
+const deleteFromParty = async (idUser, idParty) => {
+  try {
+    UserParty.destroy({ 
+      where: {
+        idUser,
+        idParty,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export {
   createUser,
   getAllUsers,
@@ -136,4 +150,5 @@ export {
   getAllParties,
   createParty,
   deleteParty,
+  deleteFromParty,
 };
