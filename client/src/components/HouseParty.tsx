@@ -1,14 +1,22 @@
-import React, { FC, ReactElement, useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
 import io from 'socket.io-client';
 import Peer from 'simple-peer';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 import House from './House';
-import VideoList from './VideoList';
+// import VideoList from './VideoList';
 import Video from './Video';
-import ChatFeed from './ChatFeed';
+// import ChatFeed from './ChatFeed';
 import ChatSend from './ChatSend';
+
+const socket = io.connect('/');
 
 interface HousePartyProps {
   user: {
@@ -21,21 +29,23 @@ interface HousePartyProps {
     googleId: string,
   };
 }
+
 // this component will be rendered from the partyProfile page
 // its route will be /party/partyId
 const HouseParty: FC<HousePartyProps> = ({
   user,
 }): ReactElement => {
-  const [roomID, setRoomID] = useState('red');
-  const [peers, setPeers]: any = useState([]);
+  const [roomID, setRoomID] = useState({ oldRoom: null, newRoom: 'red' });
+  // const [peers, setPeers]: any = useState([]);
+  const [others, setOthers]: any = useState([]); // [{ id, peer, position }]
   const [party, setParty]: any = useState({});
+  // const [users, setUsers]: any = useState([]);
+
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
 
-  const socketRef: any = useRef();
   const userVideo: any = useRef();
-  const peersRef: any = useRef([]);
-  // const roomID = 1;
+  // const peersRef: any = useRef([]);
   let videoSwitch = true;
   let audioSwitch = true;
 
@@ -44,107 +54,148 @@ const HouseParty: FC<HousePartyProps> = ({
     height: 180,
   };
 
-  function createPeer(userToSignal: any, callerID: any, stream: any) {
-    const peer: any = new Peer({
+  const createPeer = (
+    userToSignal: string,
+    callerID: string,
+    stream: MediaStream,
+  ): Peer.Instance => {
+    const peer = new Peer({
       initiator: true,
       trickle: false,
       stream,
     });
-
-    peer.on('signal', (signal: any) => {
-      socketRef.current.emit('sending signal', { userToSignal, callerID, signal });
+    peer.on('signal', (signal: string) => {
+      socket.emit('created peer signal', { userToSignal, callerID, signal });
     });
-    console.log('create peer: ', peer);
     return peer;
-  }
+  };
 
-  function addPeer(incomingSignal: any, callerID: any, stream: any) {
+  const addPeer = (
+    incomingSignal: string,
+    callerID: string,
+    stream: MediaStream,
+  ): Peer.Instance => {
     const peer = new Peer({
       initiator: false,
       trickle: false,
       stream,
     });
-
-    peer.on('signal', signal => {
-      socketRef.current.emit('returning signal', { signal, callerID });
+    peer.on('signal', (signal: string) => {
+      socket.emit('returning signal', { signal, callerID });
     });
-
     peer.signal(incomingSignal);
-    console.log('add peer: ', peer);
     return peer;
-  }
+  };
 
-  function socketConnect() {
-    socketRef.current = io.connect('/');
-    navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
-      userVideo.current.srcObject = stream;
-      socketRef.current.emit('join room', roomID);
-      // console.log('****join room emit****', roomID);
-      socketRef.current.on('all users', (users: any) => {
-        const peersArray: any = [];
-        users.forEach((userID: any) => {
-          const peer: any = createPeer(userID, socketRef.current.id, stream);
-          peersRef.current.push({
-            peerID: userID,
-            peer,
+  const switchRoom = () => {
+    if (roomID.oldRoom === null) {
+      console.log('new here');
+    } else {
+      console.log('switching rooms');
+    }
+    setOthers([]);
+    socket.emit('switch room', roomID.oldRoom, roomID.newRoom);
+  };
+
+  const joinParty = () => {
+    navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true })
+      .then(stream => {
+        userVideo.current.srcObject = stream;
+        switchRoom();
+
+        // remove user from peers
+        socket.on('user left room', (leavingUserId: string) => {
+          console.log(`user ${leavingUserId} left the room, removing from users`);
+          const othersWithoutUser = others.filter((other: any) => {
+            return other.id !== leavingUserId;
           });
-          peersArray.push(peer);
-        });
-        setPeers(peersArray);
-      });
-
-      socketRef.current.on('user joined', (payload: any) => {
-        const peer = addPeer(payload.signal, payload.callerID, stream);
-        peersRef.current.push({
-          peerID: payload.callerID,
-          peer,
+          setOthers(othersWithoutUser);
         });
 
-        setPeers((users: any) => [...users, peer]);
-      });
+        // create new peer for new user
+        socket.on('user joined room', (joiningUserId: string) => {
+          if (joiningUserId !== socket.id) {
+            const other = {
+              id: joiningUserId,
+              peer: createPeer(joiningUserId, socket.id, stream),
+            };
+            console.log(`user ${joiningUserId} joined the room, adding to users:`, other);
+            const existingOthers = others;
+            existingOthers.push(other);
+            setOthers(existingOthers);
+          }
+        });
 
-      socketRef.current.on('receiving returned signal', (payload: any) => {
-        const item = peersRef.current.find((p: any) => p.peerID === payload.id);
-        item.peer.signal(payload.signal);
-      });
-    });
-  }
+        // add peer that is requesting connection
+        socket.on('connection requested', (payload: any) => {
+          const other = {
+            id: payload.callerId,
+            peer: addPeer(payload.signal, payload.callerID, stream),
+          };
+          const existingOthers = others;
+          existingOthers.push(other);
+          setOthers([...others, other]);
+        });
 
-  function pauseVideo() {
+        socket.on('receiving returned signal', (payload: any) => {
+          console.log('received return signal. others:', others);
+
+          if (others.length) {
+            const { peer } = others.find((other: any) => other.id === payload.id);
+            console.log(peer);
+            peer.signal(payload.signal);
+          }
+        });
+      });
+  };
+
+  const pauseVideo = () => {
     if (userVideo.current.srcObject) {
       videoSwitch = !videoSwitch;
       userVideo.current.srcObject.getVideoTracks()[0].enabled = videoSwitch;
     }
-  }
+  };
 
-  function mute() {
+  const mute = () => {
     if (userVideo.current.srcObject) {
       audioSwitch = !audioSwitch;
       userVideo.current.srcObject.getAudioTracks()[0].enabled = audioSwitch;
     }
-  }
-
-  // useLayoutEffect(() => {
-  //   socketConnect();
-  //   console.log('HouseParty useLayoutEffect ran');
-  // }, [roomID]);
+  };
 
   useEffect(() => {
-    socketConnect();
-    // should query the database and find the party we need on render
-    axios.get(`/party/${partyId}`)
-      .then((response) => {
-        // then use setParty to put the party's info into state
-        setParty(response.data);
-      })
-      .catch((err) => console.error(err));
+    console.log('others updated:', others);
+  }, [others]);
+
+  // Runs once when HouseParty component initially renders
+  useEffect(() => {
+    console.log(`user ${socket.id} joined party`);
+    joinParty();
+
+    // // should query the database and find the party we need on render
+    // axios.get(`/party/${partyId}`)
+    //   .then((response) => {
+    //     // then use setParty to put the party's info into state
+    //     setParty(response.data);
+    //     // should get all users that have joined this party
+    //     return axios.get(`/party/getUsers/${partyId}`);
+    //   })
+    //   .then((response) => {
+    //     setUsers(response.data);
+    //   })
+    //   .catch((err) => console.error(err));
   }, []);
+
+  useEffect(() => {
+    console.log(`user: ${socket.id} switched from ${roomID.oldRoom} to ${roomID.newRoom}`);
+    switchRoom();
+  }, [roomID]);
 
   return (
     <div className="container p-4">
       {/* Header */}
       <div className="px-4">
-        {`Party Name: ${party.name} ${roomID}`}
+        {`Party Name: ${party.name} ${roomID.newRoom}`}
       </div>
       {/* House */}
       <div className="px-4 float-left">
@@ -176,10 +227,10 @@ const HouseParty: FC<HousePartyProps> = ({
 
         {/* Other Videos */}
         <div className="mt-6">
-          {peers.map((peer: any) => {
-            const { userID }: any = peer;
+          {others.map((other: any) => {
+            const { userID }: any = other.peer;
             return (
-              <Video key={userID} peer={peer} />
+              <Video key={userID} peer={other.peer} />
             );
           })}
         </div>
@@ -187,7 +238,7 @@ const HouseParty: FC<HousePartyProps> = ({
 
       {/* Underneath Chat Feature */}
       <div className="float-left m-6">
-        <ChatSend key={user.id} user={user} />
+        {/* <ChatSend key={user.id} user={user} /> */}
       </div>
     </div>
   );
