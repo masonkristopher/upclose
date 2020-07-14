@@ -27,10 +27,12 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
     name: '',
     idLayout: 0,
     idCreator: user.id,
+    inviteOnly: true,
   });
   const [invitees, setInvitees]: any = useState([]);
-  const [popUp, setPopup]: any = useState(0);
+  const [popUpNumber, setPopupNumber]: any = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isChecked, setIsChecked] = useState(true);
   // this should equal how many layouts we have  **************
   const [totalSlides, setTotalSlides] = useState(2);
   // useHistory allows us to redirect by pushing onto the url
@@ -62,6 +64,13 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
       setActiveSlide(totalSlides);
     }
   };
+
+  const toggleChecked = () => {
+    setIsChecked(!isChecked);
+    const newPartyDetails = { ...partyDetails };
+    newPartyDetails.inviteOnly = !newPartyDetails.inviteOnly;
+    setPartyDetails(newPartyDetails);
+  }
   // sends request to server to save the party, sending party details
   const saveParty = () => {
     axios.post('/party/create', {
@@ -86,80 +95,76 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
 
   return (
     <>
-      <Popup trigger={<button type="button" className="text-orange-100 bg-black p-1">Make a new party</button>} position="top left">
-        {close => (
-          // to do:  *************** make all this stuff responsive and sized well
-          <div className="flex p-8">
-            <button type="button" className="close absolute top-0 right-0" onClick={() => { close(); setPopup(0); setInvitees([]); }}>
-              &times;
+      <button type="button" onClick={() => { setPopupNumber(0); setPopupNumber(1) }} className="bg-black text-orange-400">Make a new party!</button>
+      <Popup onClose={() => { setInvitees([]); }} open={popUpNumber === 1}>
+        <div className="p-8 flex">
+          <button type="button" className="close absolute top-0 right-0" onClick={() => { setPopupNumber(0); setInvitees([]); }}>
+            &times;
             </button>
-            {popUp === 0 && (
-              <>
-                <h4 className="absolute left-0 top-0 pl-2 pt-2">Create a Party</h4>
-                <input onChange={setPartyName} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Party Name?" />
-                <button type="button" className="absolute bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { setPopup(1); }}>Confirm party name</button>
-              </>
-            )}
-            {popUp === 1 && (
-              <>
-                <h4 className="relative left-0 top-0 pl-2 pt-2 font-bold">Select a layout</h4>
-                <CarouselProvider
-                  className="max-w-full max-h-full"
-                  naturalSlideWidth={100}
-                  naturalSlideHeight={125}
-                  totalSlides={totalSlides}
-                >
-                  <Slider
-                    className="slider"
-                  >
-                    <Slide
-                      index={0}
-                    >
-                      <Image
-                        hasMasterSpinner={false}
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cartesian_coordinates_2D.svg/1200px-Cartesian_coordinates_2D.svg.png"
-                        className="max-w-full max-h-full"
-                      />
-                    </Slide>
-                    <Slide
-                      index={1}
-                    >
-                      <Image
-                        hasMasterSpinner={false}
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cartesian_coordinates_2D.svg/1200px-Cartesian_coordinates_2D.svg.png"
-                        className="max-w-full max-h-full"
-                      />
-                    </Slide>
-                  </Slider>
-                  <DotGroup />
-                  <ButtonBack
-                    onClick={handleBack}
-                  >
-                    Back
-                  </ButtonBack>
-                  <ButtonNext
-                    onClick={handleNext}
-                  >
-                    Next
-                  </ButtonNext>
-                </CarouselProvider>
-                <button type="button" className="relative bottom-0 border border-solid border-1 bg-blue-600 text-orange-300" onClick={() => { setPartyLayout(activeSlide); setPopup(2); }}>Confirm party layout</button>
-              </>
-            )}
-            {popUp === 2 && (
-              <>
-                <div>
-                  <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
-                  <SearchPopup
-                    user={user}
-                    setInvitees={setInvitees}
-                  />
-                  <button type="button" className="relative bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { saveParty(); setPopup(0); }}>Confirm Invites</button>
-                </div>
-              </>
-            )}
+          <h4 className="absolute left-0 top-0 pl-2 pt-2">Create a Party</h4>
+          <div className="flex">
+            <input onChange={setPartyName} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Party Name?" />
+            <input className="float-right" checked={isChecked} onChange={toggleChecked} type="checkbox" />
+            <p className="float-left">Invite only?</p>
           </div>
-        )}
+          <button type="button" className="absolute bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { setPopupNumber(2); }}>Confirm party name</button>
+        </div>
+      </Popup>
+      <Popup open={popUpNumber === 2}>
+        <>
+          <h4 className="relative left-0 top-0 pl-2 pt-2 font-bold">Select a layout</h4>
+          <CarouselProvider
+            className="max-w-full max-h-full"
+            naturalSlideWidth={100}
+            naturalSlideHeight={125}
+            totalSlides={totalSlides}
+          >
+            <Slider
+              className="slider"
+            >
+              <Slide
+                index={0}
+              >
+                <Image
+                  hasMasterSpinner={false}
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cartesian_coordinates_2D.svg/1200px-Cartesian_coordinates_2D.svg.png"
+                  className="max-w-full max-h-full"
+                />
+              </Slide>
+              <Slide
+                index={1}
+              >
+                <Image
+                  hasMasterSpinner={false}
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cartesian_coordinates_2D.svg/1200px-Cartesian_coordinates_2D.svg.png"
+                  className="max-w-full max-h-full"
+                />
+              </Slide>
+            </Slider>
+            <DotGroup />
+            <ButtonBack
+              onClick={handleBack}
+            >
+              Back
+            </ButtonBack>
+            <ButtonNext
+              onClick={handleNext}
+            >
+              Next
+            </ButtonNext>
+          </CarouselProvider>
+          <button type="button" className="relative bottom-0 border border-solid border-1 bg-blue-600 text-orange-300" onClick={() => { setPartyLayout(activeSlide); setPopupNumber(3); }}>Confirm party layout</button>
+        </>
+      </Popup>
+      <Popup open={popUpNumber === 3}>
+        <div>
+          <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
+          <SearchPopup
+            user={user}
+            setInvitees={setInvitees}
+          />
+          <button type="button" className="relative bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { saveParty(); setPopupNumber(0); }}>Confirm Invites</button>
+        </div>
       </Popup>
     </>
   );
