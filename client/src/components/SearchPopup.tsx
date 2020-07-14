@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 
-const SearchPopup = ({ setInvitees, user }:any) => {
+const SearchPopup = ({ setInvitees, user }: any) => {
   const [input, setInput] = useState('');
   const [users, setUsers] = useState([]);
   const [matches, setMatches]: any = useState([]);
@@ -31,8 +31,10 @@ const SearchPopup = ({ setInvitees, user }:any) => {
   const inviteUser = (invitee: any) => {
     // add the user to CreatePartyPopup's state, but only if it's not there already
     if (!tempInvitees.includes(invitee) && user !== invitee) {
-      setTempInvitees(tempInvitees.concat(invitee));
-      setInvitees(tempInvitees);
+      console.log('click');
+      const array = tempInvitees.concat(invitee);
+      setTempInvitees(array);
+      setInvitees(array);
     }
   };
 

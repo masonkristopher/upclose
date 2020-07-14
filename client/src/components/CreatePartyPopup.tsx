@@ -136,12 +136,12 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
                     onClick={handleBack}
                   >
                     Back
-                    </ButtonBack>
+                  </ButtonBack>
                   <ButtonNext
                     onClick={handleNext}
                   >
                     Next
-                    </ButtonNext>
+                  </ButtonNext>
                 </CarouselProvider>
                 <button type="button" className="relative bottom-0 border border-solid border-1 bg-blue-600 text-orange-300" onClick={() => { setPartyLayout(activeSlide); setPopup(2); }}>Confirm party layout</button>
               </>
