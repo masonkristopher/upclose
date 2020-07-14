@@ -26,7 +26,6 @@ const Messages: FC<IProps> = ({ user }) => {
     googleId: 'google ID here',
   });
   const [messageView, setMessageView] = useState(false);
-  // const [] = useState();
 
   return (
     <div>
