@@ -30,9 +30,19 @@ const Messages: FC<IProps> = ({ user }) => {
   const [threads, setThreads]: any = useState([]);
 
   useEffect(() => {
-    // axios.......
-    setThreads([]);
-  });
+    axios
+      .get(`messages/threads/${user.id}`)
+      .then(response => {
+        console.log(response);
+        // response.data.forEach((id: number) => {
+        //   axios
+        //     .get(`user/${id}`)
+        //     .then(userObj => {
+        //       threads.push(userObj);
+        //     })
+        // })
+      });
+  }, []);
 
   return (
     <div>
