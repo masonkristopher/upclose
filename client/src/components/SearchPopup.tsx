@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 
-const Search = ({ partyId, setPartyUpdate, update }: any) => {
+const SearchPopup = ({ setInvitees, user }: any) => {
   const [input, setInput] = useState('');
   const [users, setUsers] = useState([]);
   const [matches, setMatches]: any = useState([]);
+  const [tempInvitees, setTempInvitees]: any = useState([]);
 
   const fuse = new Fuse(users, {
     keys: ['username', 'nameFirst', 'nameLast'],
@@ -27,14 +28,14 @@ const Search = ({ partyId, setPartyUpdate, update }: any) => {
     setMatches(results);
   };
 
-  const inviteUser = (user: any) => {
-    axios
-      .post(`/user/${user.id}/joins/${partyId}`)
-      .then(() => {
-        // show user that they have joined in some way
-        setPartyUpdate(!update);
-      })
-      .catch((error) => console.error(error));
+  const inviteUser = (invitee: any) => {
+    // add the user to CreatePartyPopup's state, but only if it's not there already
+    if (!tempInvitees.includes(invitee) && user !== invitee) {
+      console.log('click');
+      const array = tempInvitees.concat(invitee);
+      setTempInvitees(array);
+      setInvitees(array);
+    }
   };
 
   return (
@@ -82,4 +83,4 @@ const Search = ({ partyId, setPartyUpdate, update }: any) => {
   );
 };
 
-export default Search;
+export default SearchPopup;
