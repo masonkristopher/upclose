@@ -14,6 +14,18 @@ import HouseParty from './HouseParty';
 import PartyProfile from './PartyProfile';
 // import UserContext from './contexts/UserContext';
 
+// interface NavbarProps {
+//   user: {
+//     id: number;
+//     nameFirst: string;
+//     nameLast: string;
+//     username: string;
+//     email: string;
+//     avatar: string;
+//     googleId: string;
+//   };
+// }
+
 const Navbar = ({
   // these come from App, and will alter App's user
   setUser,
@@ -54,9 +66,7 @@ const Navbar = ({
 
           <ul className="flex items-center">
             {/* in the middle */}
-            <li>
-              <li className="p-2"><Link to="/">Home</Link></li>
-            </li>
+            <li className="p-2"><Link to="/">Home</Link></li>
           </ul>
           {/* <!-- to the right  --> */}
           <ul className="flex items-center">

@@ -30,7 +30,7 @@ interface HousePartyProps {
   };
 }
 
-// this component will be rendered from the partyProfile page
+// this component will be rendered from the Navbar, via a link in the PartyProfile page
 // its route will be /party/partyId
 const HouseParty: FC<HousePartyProps> = ({
   user,
@@ -40,8 +40,8 @@ const HouseParty: FC<HousePartyProps> = ({
   const [others, setOthers]: any = useState([]); // [{ id, peer }]
   const [peersCount, setPeersCount] = useState(0);
   const [party, setParty]: any = useState({});
-  // const [users, setUsers]: any = useState([]);
-
+  const [users, setUsers]: any = useState([]);
+  const [invited, setInvited]: any = useState(null);
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
 
@@ -214,19 +214,17 @@ const HouseParty: FC<HousePartyProps> = ({
       joinParty();
       console.log(`user ${socket.id} joined party`);
     }
-
-    // // should query the database and find the party we need on render
-    // axios.get(`/party/${partyId}`)
-    //   .then((response) => {
-    //     // then use setParty to put the party's info into state
-    //     setParty(response.data);
-    //     // should get all users that have joined this party
-    //     return axios.get(`/party/getUsers/${partyId}`);
-    //   })
-    //   .then((response) => {
-    //     setUsers(response.data);
-    //   })
-    //   .catch((err) => console.error(err));
+    // should query the database and find the party we need on render
+    axios.get(`/party/${partyId}`)
+      .then((response) => {
+        // then use setParty to put the party's info into state
+        setParty(response.data);
+        return axios.get(`/party/getUsers/${partyId}`);
+      })
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   useEffect(() => {
@@ -236,6 +234,29 @@ const HouseParty: FC<HousePartyProps> = ({
     }
   }, [roomID]);
 
+  // watches users for changes, then checks that the logged in user is an invited user
+  useEffect(() => {
+    users.forEach((invitedUser: any, index: number) => {
+      if (invitedUser.id === user.id) {
+        setInvited(true);
+      } else if (index === users.length - 1) {
+        setInvited(false);
+      }
+    });
+  }, [users]);
+
+  // watches invited for changes; if the user was invited, begin socketConnect
+  // useEffect(() => {
+  //   if (party.inviteOnly === false || (invited === true)) {
+  //     console.log(invited, 'inside if statement');
+  //     if (roomID.oldRoom === null) {
+  //       joinParty();
+  //       console.log(`user ${socket.id} joined party`);
+  //     }
+  //   }
+  // }, [invited]);
+
+  // to do: make all this render only if a user is invited
   return (
     <div className="container p-4">
       {/* Header */}
@@ -273,7 +294,7 @@ const HouseParty: FC<HousePartyProps> = ({
         {/* Other Videos */}
         <div className="mt-6">
           {others.map((other: any) => {
-            const { id } = other.id;
+            const { id } = other;
             return (
               <Video key={id} peer={other.peer} />
             );

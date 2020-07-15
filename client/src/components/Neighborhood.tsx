@@ -18,6 +18,7 @@ interface NeighborhoodProps {
   }
 }
 
+
 const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
   // to do: ******************
   // i want this useState to be empty or null, but typescript doesn't like that
