@@ -8,13 +8,19 @@ interface VideoProps {
 
 const Video: FC<VideoProps> = ({ peer }) => {
   const ref = useRef<HTMLVideoElement>(null);
+  const audioCtx = new AudioContext();
+  const gainNode = audioCtx.createGain();
+  const [gain, setGain]: any = useState(1);
 
   useEffect(() => {
     peer.on('stream', (stream: any) => {
       if (ref.current !== null) {
         ref.current.srcObject = stream;
         // new WebAudio context
-        // do some shit to the stream here
+        const source = audioCtx.createMediaStreamSource(stream);
+        source.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
       }
     });
   }, []);
@@ -24,7 +30,8 @@ const Video: FC<VideoProps> = ({ peer }) => {
       <video ref={ref} playsInline autoPlay>
         <track />
       </video>
-      {/* rendering some audio controls here */}
+      <button type="button" className="bg-white hover:bg-pink-100 text-gray-800 font-semibold p-1 border border-gray-400 rounded shadow float-right" onClick={() => { gainNode.gain.setValueAtTime(0, audioCtx.currentTime); }}>WEBAUDIOMUTE</button>
+      <button type="button" className="bg-white hover:bg-pink-100 text-gray-800 font-semibold p-1 border border-gray-400 rounded shadow float-right" onClick={() => { gainNode.gain.setValueAtTime(1, audioCtx.currentTime); }}>webaudioUNmute</button>
     </div>
   );
 };
