@@ -13,6 +13,8 @@ const Video: FC<VideoProps> = ({ peer }) => {
     peer.on('stream', (stream: any) => {
       if (ref.current !== null) {
         ref.current.srcObject = stream;
+        // new WebAudio context
+        // do some shit to the stream here
       }
     });
   }, []);
@@ -22,6 +24,7 @@ const Video: FC<VideoProps> = ({ peer }) => {
       <video ref={ref} playsInline autoPlay>
         <track />
       </video>
+      {/* rendering some audio controls here */}
     </div>
   );
 };
