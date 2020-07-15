@@ -31,6 +31,14 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
     history.replace(`/party/${partyId}`);
   };
 
+  const removeUser = (userId: number) => {
+    // remove a user from the UserParty table and re-render
+    axios.delete(`/user/userParty/${userId}/${party.id}`)
+      .then(() => {
+        setUpdate(!setUpdate);
+      });
+  };
+
   useEffect(() => {
     // should query the database and find the party we need on render
     axios
@@ -56,7 +64,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
             {party.name}
           </h4>
         )}
-        {users && (
+        {users && user.id !== party.idCreator && (
           <h4>
             Users involved in this party:
             <ul>
@@ -68,6 +76,23 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
             </ul>
           </h4>
         )}
+        {users && user.id === party.idCreator && (
+          <div>
+            <h4>
+              Users involved in this party:
+              <ul>
+                {users.map((userInParty: any) => {
+                  return (
+                    <div className="grid-cols-2 grid">
+                      <li key={userInParty.username}>{userInParty.username}</li>
+                      <button onClick={() => { removeUser(userInParty.id); }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button">Remove from party</button>
+                    </div>
+                  );
+                })}
+              </ul>
+            </h4>
+          </div>
+        )}
       </div>
       {/* {users.includes(user) === false && (
         <button type="button"> Would you like to join this party?</button>
@@ -76,7 +101,11 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       <button type="button">Change Party Settings</button>
       <button onClick={goToParty} type="button">Go to this party!</button>
 
-      <Search partyId={partyId} setPartyUpdate={setUpdate} update={update} />
+      <Search
+        partyId={partyId}
+        setPartyUpdate={setUpdate}
+        update={update}
+      />
     </div>
   );
 };

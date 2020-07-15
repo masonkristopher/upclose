@@ -11,7 +11,7 @@ import {
   HasManyCreateAssociationMixin,
 } from 'sequelize';
 
-import Message from './message';
+import { Message } from './message';
 import { User } from './user';
 
 interface PartyAttributes {
@@ -19,6 +19,7 @@ interface PartyAttributes {
   name: string
   idLayout: number
   idCreator: number
+  inviteOnly: boolean
   createdAt: Date
   updatedAt: Date
 }
@@ -34,6 +35,8 @@ export class Party extends Model<PartyAttributes, PartyCreationAttributes>
   public idLayout: number;
 
   public idCreator: number;
+
+  public inviteOnly!: boolean;
 
   public readonly createdAt: Date;
 
@@ -64,6 +67,10 @@ export function initParty(sequelize: Sequelize): void {
       },
       idCreator: {
         type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+      },
+      inviteOnly: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
       },
       createdAt: {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect, } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 import TestRoom from './TestRoom';
@@ -69,7 +69,7 @@ const App = () => {
               />
             )}
           </Switch>
-          {user && <Redirect to="/profile" />}
+        {user && <Redirect to="/profile" />}
         </BrowserRouter> */}
       </div>
     </div>

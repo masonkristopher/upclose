@@ -1,7 +1,13 @@
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import {
-  createUser, addUserToParty, getUser, updateUser, getAllUsers,
+  createUser,
+  addUserToParty,
+  getUser,
+  getUserById,
+  updateUser,
+  getAllUsers,
+  deleteFromParty,
 } from '../db/methods';
 
 const userRouter = express.Router();
@@ -28,7 +34,7 @@ userRouter.post('/verify', (req, res) => {
       // if it does not, create that user in the database and send backthat user
       return getUser(googleId);
     })
-    .then((userData:any) => {
+    .then((userData: any) => {
       // console.log(userData, 'after getUser*****************');
       // if the user is in our database
       if (userData) {
@@ -66,10 +72,10 @@ userRouter.put('/profile/edit', (req, res) => {
     .catch((error) => console.log(error));
 });
 
-userRouter.post('/:userId/joins/:partyId', (req, res) => {
-  const { userId, partyId } = req.params;
+userRouter.post('/:idUser/joins/:idParty', (req, res) => {
+  const { idUser, idParty } = req.params;
   // console.log(req.params, '/userid/joins/partyid')
-  addUserToParty(userId, partyId)
+  addUserToParty(idUser, idParty)
     .then(() => {
       res.send('user added to party');
     })
@@ -89,7 +95,26 @@ userRouter.get('/all', (req, res) => {
     .then((users) => {
       res.send(users);
     })
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
+});
+
+userRouter.get('/:id', (req, res) => {
+  const { id } = req.params;
+  getUserById(id)
+    .then((user) => {
+      res.send(user);
+    })
+    .catch(error => console.error(error));
+});
+
+// delete user from UserParty table
+userRouter.delete('/userParty/:idUser/:idParty', (req, res) => {
+  const { idUser, idParty } = req.params;
+  deleteFromParty(idUser, idParty)
+    .then(() => {
+      res.send('user deleted');
+    })
+    .catch(error => console.error(error));
 });
 
 export default userRouter;

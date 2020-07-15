@@ -2,10 +2,12 @@ import { initUser, User } from './models/user';
 import sequelize from './index';
 import { UserParty, initUserParty } from './models/userParty';
 import { Party, initParty } from './models/party';
+import { Message, initMessage } from './models/message';
 
 initUser(sequelize);
 initParty(sequelize);
 initUserParty(sequelize);
+initMessage(sequelize);
 
 // CREATE A USER
 const createUser = async (userObj) => {
@@ -31,8 +33,16 @@ const getAllUsers = async () => {
 // RETRIEVE USER BY GOOGLEID
 const getUser = async (googleId) => {
   try {
-    const user = await User.findOne({where: { googleId } });
+    const user = await User.findOne({ where: { googleId } });
     return user;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getUserById = async (id) => {
+  try {
+    return await User.findOne({ where: { id } });
   } catch (err) {
     console.error(err);
   }
@@ -87,7 +97,7 @@ const getUsersInParty = async (idParty) => {
 // GET ONE PARTY BY ID
 const getParty = async (id) => {
   try {
-    const party = Party.findOne({where: { id } });
+    const party = Party.findOne({ where: { id } });
     return party;
   } catch (err) {
     console.error(err);
@@ -112,15 +122,115 @@ const createParty = async (party) => {
   } catch (err) {
     console.error(err);
   }
-}
+};
+
+// DELETE A PARTY
+const deleteParty = async (idParty) => {
+  try {
+    // delete party from party table
+    Party.destroy({ where: { id: idParty } });
+    // then delete all the reference in UserParty table
+    UserParty.destroy({ where: { idParty } });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const deleteFromParty = async (idUser, idParty) => {
+  try {
+    UserParty.destroy({
+      where: {
+        idUser,
+        idParty,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getMessagesWithOneUser = async (idSender, idRecipient) => {
+  try {
+    return await Message.findAll({
+      where:
+        {
+          idSender,
+          idRecipient,
+        },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getUsersSendersIds = async (idRecipient) => {
+  try {
+    const senders = await Message.findAll({
+      where: {
+        idRecipient,
+      },
+      attributes: [
+        'idSender',
+      ],
+    });
+    return senders.map(sender => {
+      return sender.getDataValue('idSender');
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+const getUsersRecipientsIds = async (idSender) => {
+  try {
+    const recipients = await Message.findAll({
+      where: {
+        idSender,
+      },
+      attributes: [
+        'idRecipient',
+      ],
+    });
+    return recipients.map(recipient => {
+      return recipient.getDataValue('idRecipient');
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getAllUsersThreads = async (userId) => {
+  try {
+    const recipients = await getUsersSendersIds(userId);
+    const senders = await getUsersRecipientsIds(userId);
+    const allUsersThreadsUsersIds = [];
+    recipients.concat(senders).forEach(id => {
+      if (!allUsersThreadsUsersIds.includes(id)) {
+        allUsersThreadsUsersIds.push(id);
+      }
+    });
+    // console.log(allUsersThreadsUsersIds);
+    return allUsersThreadsUsersIds;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+getAllUsersThreads(1);
 export {
   createUser,
   getAllUsers,
   getUser,
+  getUserById,
   updateUser,
   getParty,
   addUserToParty,
   getUsersInParty,
   getAllParties,
   createParty,
+  deleteParty,
+  deleteFromParty,
+  getMessagesWithOneUser,
+  getUsersSendersIds,
+  getUsersRecipientsIds,
+  getAllUsersThreads,
 };

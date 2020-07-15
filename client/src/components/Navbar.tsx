@@ -9,7 +9,7 @@ import {
 import { GoogleLogout, GoogleLogin } from 'react-google-login';
 import UserProfile from './UserProfile';
 import Neighborhood from './Neighborhood';
-import Messages from './Messages';
+import Messages from './InboxList';
 import HouseParty from './HouseParty';
 import PartyProfile from './PartyProfile';
 // import UserContext from './contexts/UserContext';
@@ -36,13 +36,11 @@ const Navbar = ({
       id_token: response.tokenId,
     })
       .then((resp) => {
-        console.log(resp);
         setUser(resp.data);
       });
   };
 
   return (
-  // <UserContext.Consumer>
     <Router>
       <div className="flex-1 flex flex-col">
         <nav className="px-4 flex justify-between bg-white h-16 border-b-2">
@@ -176,7 +174,6 @@ const Navbar = ({
         </Route>
       </Switch>
     </Router>
-    // </UserContext.Consumer>
   );
 };
 

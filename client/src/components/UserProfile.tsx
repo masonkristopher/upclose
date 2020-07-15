@@ -19,6 +19,7 @@ interface UserProfileProps {
 const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
   const [showEditForm, setShowEditForm]: any = useState(false);
   const [parties, setParties]: any = useState([]);
+  const [partyChange, setPartyChange]: any = useState(false);
 
   const history = useHistory();
 
@@ -28,10 +29,17 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
         setParties(response.data);
       })
       .catch(err => console.error(err));
-  });
+  }, [partyChange]);
 
   const toParty = (partyId: number) => {
     history.replace(`/partyProfile/${partyId}`);
+  };
+
+  const deleteParty = (partyId: number) => {
+    axios.delete(`/party/${partyId}`)
+      .then(() => {
+        setPartyChange(!partyChange);
+      });
   };
 
   return (
@@ -40,35 +48,35 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
         {showEditForm ? (
           <EditUserDetails setShowEditForm={setShowEditForm} user={user} setUser={setUser} />
         ) : (
-            <div>
-              <img
-                className="flex-col object-cover rounded-full p-4 max-w-sm max-h-sm"
-                src={user.avatar}
-                alt={user.username}
-              />
-              <h3>Username</h3>
-              <p className="text-gray-900 font-bold text-xl mb-2">
-                {user.username}
-              </p>
-              <h3>First Name</h3>
-              <p className="text-gray-900 font-bold text-xl mb-2">
-                {user.nameFirst}
-              </p>
-              <h3>Last Name</h3>
-              <p className="text-gray-900 font-bold text-xl mb-2">
-                {user.nameLast}
-              </p>
-              <h3>Email</h3>
-              <p className="text-gray-900 font-bold text-xl mb-2">{user.email}</p>
-              <button
-                onClick={() => setShowEditForm(!showEditForm)}
-                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
-                type="button"
-              >
-                Edit User Details
-              </button>
-            </div>
-          )}
+          <div>
+            <img
+              className="flex-col object-cover rounded-full p-4 max-w-sm max-h-sm"
+              src={user.avatar}
+              alt={user.username}
+            />
+            <h3>Username</h3>
+            <p className="text-gray-900 font-bold text-xl mb-2">
+              {user.username}
+            </p>
+            <h3>First Name</h3>
+            <p className="text-gray-900 font-bold text-xl mb-2">
+              {user.nameFirst}
+            </p>
+            <h3>Last Name</h3>
+            <p className="text-gray-900 font-bold text-xl mb-2">
+              {user.nameLast}
+            </p>
+            <h3>Email</h3>
+            <p className="text-gray-900 font-bold text-xl mb-2">{user.email}</p>
+            <button
+              onClick={() => setShowEditForm(!showEditForm)}
+              className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
+              type="button"
+            >
+              Edit User Details
+            </button>
+          </div>
+        )}
       </div>
       <div>
         {parties && (
@@ -76,9 +84,12 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
             Your parties:
             <ul>
               {parties.map((party: any) => (
-                <li>
-                  <button type="button" onClick={() => { toParty(party.id); }}>{party.name}</button>
-                </li>
+                <div className="grid grid-cols-2">
+                  <li>
+                    <button type="button" onClick={() => { toParty(party.id); }}>{party.name}</button>
+                  </li>
+                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { deleteParty(party.id); }}>Delete party</button>
+                </div>
               ))}
             </ul>
           </h1>
