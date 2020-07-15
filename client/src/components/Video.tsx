@@ -7,19 +7,20 @@ interface VideoProps {
 }
 
 const Video: FC<VideoProps> = ({ peer }) => {
-
-  const ref: any = useRef();
+  const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     peer.on('stream', (stream: any) => {
-      ref.current.srcObject = stream;
+      if (ref.current !== null) {
+        ref.current.srcObject = stream;
+      }
     });
   }, []);
 
   return (
     <div className="text-blue mt-4">
       <video ref={ref} playsInline autoPlay>
-        <track></track>
+        <track />
       </video>
     </div>
   );
