@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import { BrowserRouter, Switch, Route, Redirect, } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
@@ -7,7 +7,7 @@ import UserProfile from './UserProfile';
 // import UserContext from './contexts/UserContext';
 // import SampleVidChat from './SampleVidChat';
 
-const App = () => {
+const App:FC = () => {
   const [user, setUser] = useState(null);
   // when the app loads, check if the user is logged in with google
   useEffect(() => {
