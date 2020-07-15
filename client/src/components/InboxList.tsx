@@ -1,8 +1,8 @@
 import React, { FC, useState, useEffect } from 'react';
 import axios from 'axios';
+import { any } from 'bluebird';
 import MessagesView from './MessagesView';
 import InboxListItem from './InboxListItem';
-import { any } from 'bluebird';
 
 // maybe I am a popup, maybe a dropdown menu thing, maybe a separate page
 interface IProps {
@@ -19,17 +19,9 @@ interface IProps {
 
 const Messages: FC<IProps> = ({ user }) => {
   // get rid of hard coded clickedUser
-  const [clickedUser, setClickedUser]: any = useState({
-    id: 2,
-    nameFirst: 'Travis',
-    nameLast: 'Scott',
-    username: 'AstroJack',
-    email: 'JackBoys@gmail.com',
-    avatar: 'https://i1.sndcdn.com/avatars-000701366305-hu9f0i-t500x500.jpg',
-    googleId: 'google ID here',
-  });
+  const [clickedUser, setClickedUser]: any = useState({});
   const [threads, setThreads]: any = useState([]);
-
+  const [showMessages, setShowMessages]: any = useState(clickedUser !== {});
   useEffect(() => {
     axios
       .get(`messages/threads/${user.id}`)
@@ -46,18 +38,29 @@ const Messages: FC<IProps> = ({ user }) => {
       });
   }, []);
 
+  const handleMessageView = (thread: any) => {
+    console.log(thread);
+    setClickedUser(thread);
+    setShowMessages(!showMessages);
+  };
+
   return (
     <div>
-      {threads.map((thread: any) => {
-        return (
-          <InboxListItem
-            thread={thread}
-            key={thread.id}
-            setClickedUser={setClickedUser}
-          />
-        );
-      })}
-      {/* <MessagesView clickedUser={clickedUser} user={user} /> */}
+      {!showMessages
+        ? (<div><MessagesView clickedUser={clickedUser} user={user} showMessages={showMessages} setShowMessages={setShowMessages} /></div>)
+        : (
+          <div>
+            {threads.map((thread: any) => {
+              return (
+                <InboxListItem
+                  thread={thread}
+                  key={thread.id}
+                  handleMessageView={handleMessageView}
+                />
+              );
+            })}
+          </div>
+        )}
     </div>
   );
 };

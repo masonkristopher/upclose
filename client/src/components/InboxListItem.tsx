@@ -20,13 +20,13 @@ interface InboxListItemProps {
     avatar: string,
     googleId: string,
   },
-  setClickedUser: any,
+  handleMessageView: any,
 }
 
 const InboxListItem: FC<InboxListItemProps> = ({
   // user,
   thread,
-  setClickedUser,
+  handleMessageView,
 }): ReactElement => {
   return (
     <div className="">
@@ -35,7 +35,7 @@ const InboxListItem: FC<InboxListItemProps> = ({
         src={thread.avatar}
         alt=""
       />
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { setClickedUser(thread); }}>{ thread.username }</button>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { handleMessageView(thread); }}>{ thread.username }</button>
       {/* <ul onClick={onCLick}>
         {thread.username}
       </ul> */}
