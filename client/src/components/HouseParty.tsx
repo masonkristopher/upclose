@@ -38,6 +38,7 @@ const HouseParty: FC<HousePartyProps> = ({
   const [roomID, setRoomID] = useState({ oldRoom: null, newRoom: 'red' });
   // const [peers, setPeers]: any = useState([]);
   const [others, setOthers]: any = useState([]); // [{ id, peer, position }]
+  const [peersCount, setPeersCount] = useState(0);
   const [party, setParty]: any = useState({});
   // const [users, setUsers]: any = useState([]);
 
@@ -65,13 +66,11 @@ const HouseParty: FC<HousePartyProps> = ({
       trickle: false,
       stream,
     });
-    // wtf is a signal?
     peer.on('signal', (signal: any) => {
       socket.emit('created peer signal', { userToSignal, callerID, signal });
     });
     peer.on('close', () => {
-      console.log('peer destroyed', peer);
-      // socket.emit('peer destroyed', other.peer);
+      console.log('peer destroyed (by non-initiator)', peer);
     });
     return peer;
   };
@@ -91,8 +90,7 @@ const HouseParty: FC<HousePartyProps> = ({
       socket.emit('returning signal', { signal, callerID });
     });
     peer.on('close', () => {
-      console.log('peer destroyed', peer);
-      // socket.emit('peer destroyed', other.peer);
+      console.log('peer destroyed (by initiator)', peer);
     });
     peer.signal(incomingSignal);
     return peer;
@@ -106,13 +104,11 @@ const HouseParty: FC<HousePartyProps> = ({
   const switchRoom = () => {
     console.log('switching rooms');
     // destroy each peer in the others array
-    others.forEach((other: any) => {
-      other.peer.destroy();
-      // other.peer.on('close', () => {
-      //   // socket.emit('peer destroyed', other.peer);
-      // });
-    });
+    // others.forEach((other: any) => {
+      // other.peer.destroy();
+    // });
     // reset others array
+    setPeersCount(0);
     setOthers([]);
     socket.emit('switch room', roomID.oldRoom, roomID.newRoom);
   };
@@ -124,31 +120,43 @@ const HouseParty: FC<HousePartyProps> = ({
         joinRoom();
 
         // remove user from peers
-        socket.on('user left room', (leavingUserId: string) => {
+        socket.on('user left room', (leavingUserId: string, newRoomId: string) => {
           console.log(`user ${leavingUserId} left the room, removing from users`);
-          // destroy the peer
-          others.find((other: any) => other.id === leavingUserId).peer.destroy();
-          // remove peer from others array
-          const othersWithoutUser = others.filter((other: any) => {
-            return other.id !== leavingUserId;
-          });
-          setOthers(othersWithoutUser);
+          if (roomID.newRoom !== newRoomId) {
+            const othersWithoutUser = others.filter((other: any) => {
+              return other.id !== leavingUserId;
+            });
+            console.log('othersWithoutUser:', othersWithoutUser);
+            setOthers(othersWithoutUser);
+            setPeersCount(peersCount - 1);
+          }
         });
 
         // create new peer for new other users in room
         socket.on('user joined room', (joiningUserId: string) => {
+          const existingOthers = others;
+          let indexOfJoiningUser;
+          existingOthers.forEach((other: any, i: number) => {
+            if (other.id === joiningUserId) {
+              indexOfJoiningUser = i;
+            }
+          });
+
+          if (indexOfJoiningUser !== undefined) {
+            existingOthers.splice(indexOfJoiningUser, 1);
+          }
+
           if (joiningUserId !== socket.id) {
+            console.log('others when new user joined:', others);
             const other = {
               id: joiningUserId,
               peer: createPeer(joiningUserId, socket.id, stream),
             };
-            console.log(`user ${joiningUserId} joined the room, adding to others:`, other);
-            const existingOthers = others;
-            // consider filtering so same socket id can't be added
+            // console.log(`user ${joiningUserId} joined the room, adding to others:`, other);
             existingOthers.push(other);
             console.log(existingOthers);
             setOthers(existingOthers);
-            // setOthers((others: any) => [...others, other]);
+            setPeersCount(peersCount + 1);
           }
         });
 
@@ -158,16 +166,17 @@ const HouseParty: FC<HousePartyProps> = ({
             id: payload.callerID,
             peer: addPeer(payload.signal, payload.callerID, stream),
           };
-          // maybe debug here to check the other obj (async?)
-          const existingOthers = others;
-          existingOthers.push(other);
-          console.log('connection requested listener - other', other);
-          setOthers(existingOthers);
+          // console.log('connection requested listener - other', other);
+
+          // const existingOthers = others;
+          // existingOthers.push(other);
+          // setOthers(existingOthers);
+          setOthers((others: any) => [...others, other]);
+          setPeersCount(peersCount + 1);
         });
 
         socket.on('receiving returned signal', (payload: any) => {
-          console.log('received return signal. others:', others);
-          // debugger;
+          // console.log('received return signal. others:', others);
           if (others.length) {
             const { peer } = others.find((other: any) => other.id === payload.id);
             peer.signal(payload.signal);
@@ -259,7 +268,7 @@ const HouseParty: FC<HousePartyProps> = ({
         {/* Other Videos */}
         <div className="mt-6">
           {others.map((other: any) => {
-            const { id }: any = other;
+            const { id } = other.id;
             return (
               <Video key={id} peer={other.peer} />
             );
