@@ -39,7 +39,6 @@ const Room: FC<RoomProps> = ({
   user,
   changeRoom,
 }): ReactElement => {
-  // const half = Math.floor(roomSize / 2)
   const [playerPosition, setPlayerPosition] = useState({
     top: Math.random() * 500,
     left: Math.random() * 500,
@@ -93,20 +92,16 @@ const Room: FC<RoomProps> = ({
         }
         break;
     }
+    // maybe emit position here?
+    // create a variable to hold the position,
+    // emit that variable with socket.id
+    // then set Player position
+    // this is necessary anywhere we are setting player position
     setPlayerPosition({
       top: top + 5 * direction.top,
       left: left + 5 * direction.left,
     });
   };
-
-  // const roomDiv = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // if (roomDiv.current !== null) {
-    //   console.log(roomDiv.current.getBoundingClientRect());
-    // }
-    // console.log('Room useEffect ran');
-  });
 
   return (
     <div className={`relative w-full h-full inline-block ${layoutRef[layout]}`}>
