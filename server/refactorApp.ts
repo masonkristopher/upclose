@@ -36,7 +36,8 @@ io.on('connection', socket => {
   socket.on('switch room', (oldRoom: string, newRoom: string) => {
     socket.leave(oldRoom, () => {
       console.log(`${socket.id} left room ${oldRoom}`);
-      io.to(oldRoom).emit('user left room', socket.id);
+      // io.to(oldRoom).emit('user left room', socket.id);
+      socket.broadcast.emit('user left room', { userId: socket.id, roomId: newRoom });
       socket.join(newRoom, () => {
         console.log(`${socket.id} switched room ${newRoom}`);
         io.to(newRoom).emit('user joined room', socket.id);
