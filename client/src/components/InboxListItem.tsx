@@ -2,7 +2,7 @@ import React, { FC, ReactElement, useState, useEffect } from 'react';
 import UserDetails from './UserDetails';
 
 interface InboxListItemProps {
-  // user: {
+  // // user: {
   //   id: number,
   //   nameFirst: string,
   //   nameLast: string,
@@ -10,22 +10,37 @@ interface InboxListItemProps {
   //   email: string,
   //   avatar: string,
   //   googleId: string,
-  // },
+  // // },
   thread: {
-    someStuff: number
-
-  }
+    id: number,
+    nameFirst: string,
+    nameLast: string,
+    username: string,
+    email: string,
+    avatar: string,
+    googleId: string,
+  },
+  setClickedUser: any,
 }
 
-const Template: FC<InboxListItemProps> = ({
+const InboxListItem: FC<InboxListItemProps> = ({
   // user,
   thread,
+  setClickedUser,
 }): ReactElement => {
   return (
     <div className="">
-      {thread.someStuff}
+      <img
+        className="relative rounded-full h-10 w-10 z-10"
+        src={thread.avatar}
+        alt=""
+      />
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { setClickedUser(thread); }}>{ thread.username }</button>
+      {/* <ul onClick={onCLick}>
+        {thread.username}
+      </ul> */}
     </div>
   );
 };
 
-export default Template;
+export default InboxListItem;
