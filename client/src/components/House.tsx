@@ -61,8 +61,6 @@ const House: FC<HouseProps> = ({
     },
   });
 
-  // const [users, setUsers] = useState([]);
-
   const [currRoom, setCurrRoom] = useState(rooms.red);
 
   const changeRoom = (dir: dir) => {
@@ -82,10 +80,7 @@ const House: FC<HouseProps> = ({
         {`${user.username} is in Room: ${currRoom.name}`}
       </div>
       <div className="mx-auto bg-gray-200 h-500 w-500 border-solid border-black" id="house-container">
-        <Room name="Room 1" layout={currRoom.name} user={user} changeRoom={changeRoom} />
-        {/* <Room name="2" layout="blue" user={user} changeRoom={changeRoom} />
-        <Room name="3" layout="green" user={user} changeRoom={changeRoom} />
-        <Room name="4" layout="yellow" user={user} changeRoom={changeRoom} /> */}
+        <Room name="Room 1" layout={currRoom.name} user={user} changeRoom={changeRoom} playerPosition={playerPosition} setPlayerPosition={setPlayerPosition} />
       </div>
     </div>
   );
