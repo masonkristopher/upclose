@@ -1,10 +1,8 @@
 import React, { FC, useState, useEffect } from 'react';
 import axios from 'axios';
-import { any } from 'bluebird';
 import MessagesView from './MessagesView';
 import InboxListItem from './InboxListItem';
 
-// maybe I am a popup, maybe a dropdown menu thing, maybe a separate page
 interface IProps {
   user:{
     id: number,
@@ -18,7 +16,6 @@ interface IProps {
 }
 
 const Messages: FC<IProps> = ({ user }) => {
-  // get rid of hard coded clickedUser
   const [clickedUser, setClickedUser]: any = useState({});
   const [threads, setThreads]: any = useState([]);
   const [showMessages, setShowMessages]: any = useState(clickedUser !== {});
@@ -34,7 +31,6 @@ const Messages: FC<IProps> = ({ user }) => {
               setThreads((users: any) => [...users, resObj.data]);
             });
         });
-        // return userArr;
       });
   }, []);
 
