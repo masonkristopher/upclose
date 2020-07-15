@@ -46,8 +46,6 @@ io.on('connection', socket => {
   });
 
   socket.on('created peer signal', payload => {
-    console.log('callerID: ', payload.callerID, ' | userToSignal: ', payload.userToSignal);
-    console.log('^^^ created peer signal payload ^^^');
     io.to(payload.userToSignal).emit('connection requested', { signal: payload.signal, callerID: payload.callerID });
   });
 
