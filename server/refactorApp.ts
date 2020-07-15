@@ -57,6 +57,7 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     // emit back to last room that you left
+    socket.broadcast.emit('user left party', socket.id);
     console.log(`user disconnected: ${socket.id}`);
   });
 });

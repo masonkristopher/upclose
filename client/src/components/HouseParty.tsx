@@ -155,8 +155,11 @@ const HouseParty: FC<HousePartyProps> = ({
             // console.log(`user ${joiningUserId} joined the room, adding to others:`, other);
             existingOthers.push(other);
             console.log(existingOthers);
-            setOthers(existingOthers);
-            setPeersCount(peersCount + 1);
+            const asyncRender = async () => {
+              await setOthers(existingOthers);
+              setPeersCount(peersCount + 1);
+            };
+            asyncRender();
           }
         });
 
@@ -181,6 +184,15 @@ const HouseParty: FC<HousePartyProps> = ({
             const { peer } = others.find((other: any) => other.id === payload.id);
             peer.signal(payload.signal);
           }
+        });
+
+        socket.on('user left party', (leavingUserId: string) => {
+          console.log(`user ${leavingUserId} left the party, removing from users`);
+          const othersWithoutUser = others.filter((other: any) => {
+            return other.id !== leavingUserId;
+          });
+          setOthers(othersWithoutUser);
+          setPeersCount(peersCount - 1);
         });
       });
   };
