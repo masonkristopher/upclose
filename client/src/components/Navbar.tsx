@@ -14,6 +14,18 @@ import HouseParty from './HouseParty';
 import PartyProfile from './PartyProfile';
 // import UserContext from './contexts/UserContext';
 
+// interface NavbarProps {
+//   user: {
+//     id: number;
+//     nameFirst: string;
+//     nameLast: string;
+//     username: string;
+//     email: string;
+//     avatar: string;
+//     googleId: string;
+//   };
+// }
+
 const Navbar = ({
   // these come from App, and will alter App's user
   setUser,
