@@ -53,6 +53,10 @@ io.on('connection', socket => {
     io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
   });
 
+  socket.on('chat message', payload => {
+    socket.broadcast.emit('sending chat message', payload);
+  });
+
   socket.on('disconnect', () => {
     // emit back to last room that you left
     socket.broadcast.emit('user left party', socket.id);
