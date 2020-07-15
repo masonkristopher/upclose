@@ -34,7 +34,6 @@ const Messages: FC<IProps> = ({ user }) => {
     axios
       .get(`messages/threads/${user.id}`)
       .then(response => {
-        const userArr: any = [];
         console.log(response);
         response.data.forEach((id: number) => {
           axios
@@ -51,7 +50,11 @@ const Messages: FC<IProps> = ({ user }) => {
     <div>
       {threads.map((thread: any) => {
         return (
-          <InboxListItem thread={thread} key={thread.id} />
+          <InboxListItem
+            thread={thread}
+            key={thread.id}
+            setClickedUser={setClickedUser}
+          />
         );
       })}
       {/* <MessagesView clickedUser={clickedUser} user={user} /> */}

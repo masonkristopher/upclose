@@ -19,12 +19,14 @@ interface InboxListItemProps {
     email: string,
     avatar: string,
     googleId: string,
-  }
+  },
+  setClickedUser: any,
 }
 
 const InboxListItem: FC<InboxListItemProps> = ({
   // user,
   thread,
+  setClickedUser,
 }): ReactElement => {
   return (
     <div className="">
@@ -33,9 +35,10 @@ const InboxListItem: FC<InboxListItemProps> = ({
         src={thread.avatar}
         alt=""
       />
-      <ul>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { setClickedUser(thread); }}>{ thread.username }</button>
+      {/* <ul onClick={onCLick}>
         {thread.username}
-      </ul>
+      </ul> */}
     </div>
   );
 };
