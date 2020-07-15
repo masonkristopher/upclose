@@ -308,7 +308,7 @@ const HouseParty: FC<HousePartyProps> = ({
 
       {/* Underneath Chat Feature */}
       <div className="float-left m-6">
-        {/* <ChatSend key={user.id} user={user} /> */}
+        <ChatSend key={user.id} user={user} socket={socket} />
       </div>
     </div>
   );
