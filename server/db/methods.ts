@@ -215,7 +215,14 @@ const getAllUsersThreads = async (userId) => {
   }
 };
 
-getAllUsersThreads(1);
+const sendUserMessage = async (messageObj) => {
+  try {
+    await Message.create(messageObj);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createUser,
   getAllUsers,
@@ -233,4 +240,5 @@ export {
   getUsersSendersIds,
   getUsersRecipientsIds,
   getAllUsersThreads,
+  sendUserMessage,
 };
