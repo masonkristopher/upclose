@@ -273,7 +273,7 @@ const HouseParty: FC<HousePartyProps> = ({
         {/* Other Videos */}
         <div className="mt-6">
           {others.map((other: any) => {
-            const { id } = other.id;
+            const { id } = other;
             return (
               <Video key={id} peer={other.peer} />
             );
