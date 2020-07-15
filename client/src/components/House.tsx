@@ -32,11 +32,17 @@ interface HouseProps {
     googleId: string,
   };
   setRoomID: any;
+  positions: any;
+  setPositions: any;
+  socket: any;
 }
 
 const House: FC<HouseProps> = ({
   user,
   setRoomID,
+  positions,
+  setPositions,
+  socket,
 }): ReactElement => {
   const [rooms, setRooms] = useState<iHouse>({
     red: {
@@ -80,7 +86,7 @@ const House: FC<HouseProps> = ({
         {`${user.username} is in Room: ${currRoom.name}`}
       </div>
       <div className="mx-auto bg-gray-200 h-500 w-500 border-solid border-black" id="house-container">
-        <Room name="Room 1" layout={currRoom.name} user={user} changeRoom={changeRoom} />
+        <Room name="Room 1" layout={currRoom.name} user={user} changeRoom={changeRoom} positions={positions} setPositions={setPositions} socket={socket} />
       </div>
     </div>
   );

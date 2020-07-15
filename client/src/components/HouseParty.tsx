@@ -42,8 +42,12 @@ const HouseParty: FC<HousePartyProps> = ({
   const [party, setParty]: any = useState({});
   const [users, setUsers]: any = useState([]);
   const [invited, setInvited]: any = useState(null);
+  const [positions, setPositions]: any = useState({}); // { socketId, position }
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
+
+  // positions.socketId = 'newPosition';
+  // setPositions({ ...positions });
 
   const userVideo: any = useRef();
   // const peersRef: any = useRef([]);
@@ -266,7 +270,7 @@ const HouseParty: FC<HousePartyProps> = ({
       {/* House */}
       <div className="px-4 float-left">
         <div className="">
-          <House user={user} setRoomID={setRoomID} />
+          <House user={user} setRoomID={setRoomID} positions={positions} setPositions={setPositions} socket={socket} />
         </div>
       </div>
 

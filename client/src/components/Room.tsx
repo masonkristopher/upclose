@@ -18,6 +18,9 @@ interface RoomProps {
     avatar: string,
     googleId: string,
   };
+  positions: any;
+  setPositions: any;
+  socket: any;
 }
 
 interface direction {
@@ -38,6 +41,7 @@ const Room: FC<RoomProps> = ({
   layout,
   user,
   changeRoom,
+  socket,
 }): ReactElement => {
   const [playerPosition, setPlayerPosition] = useState({
     top: Math.random() * 500,
@@ -45,18 +49,23 @@ const Room: FC<RoomProps> = ({
   });
 
   const maxDim = 500;
+  const socketId = socket.id;
 
   const handlePlayerMovement = (direction: direction) => {
     const { top, left } = playerPosition;
+    let newPlayerPosition;
     // eslint-disable-next-line default-case
     switch (direction.dir) {
       case 'UP':
         if (top <= 0) {
-          changeRoom('UP');
-          setPlayerPosition({
+          newPlayerPosition = {
             top: top + 500,
             left,
-          });
+          };
+          // emit newPlayerPosition
+          socket.emit('player moved', { [socketId]: newPlayerPosition });
+          changeRoom('UP');
+          setPlayerPosition(newPlayerPosition);
           return;
         }
         break;
@@ -92,6 +101,10 @@ const Room: FC<RoomProps> = ({
         }
         break;
     }
+
+    // positions.socketId = 'newPosition';
+    // setPositions({ ...positions });
+
     // maybe emit position here?
     // create a variable to hold the position,
     // emit that variable with socket.id
