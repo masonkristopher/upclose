@@ -66,9 +66,7 @@ const Navbar = ({
 
           <ul className="flex items-center">
             {/* in the middle */}
-            <li>
-              <li className="p-2"><Link to="/">Home</Link></li>
-            </li>
+            <li className="p-2"><Link to="/">Home</Link></li>
           </ul>
           {/* <!-- to the right  --> */}
           <ul className="flex items-center">
