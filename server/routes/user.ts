@@ -1,7 +1,13 @@
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import {
-  createUser, addUserToParty, getUser, updateUser, getAllUsers, deleteFromParty,
+  createUser,
+  addUserToParty,
+  getUser,
+  getUserById,
+  updateUser,
+  getAllUsers,
+  deleteFromParty,
 } from '../db/methods';
 
 const userRouter = express.Router();
@@ -28,7 +34,7 @@ userRouter.post('/verify', (req, res) => {
       // if it does not, create that user in the database and send backthat user
       return getUser(googleId);
     })
-    .then((userData:any) => {
+    .then((userData: any) => {
       // console.log(userData, 'after getUser*****************');
       // if the user is in our database
       if (userData) {
@@ -88,6 +94,15 @@ userRouter.get('/all', (req, res) => {
   getAllUsers()
     .then((users) => {
       res.send(users);
+    })
+    .catch(error => console.error(error));
+});
+
+userRouter.get('/:id', (req, res) => {
+  const { id } = req.params;
+  getUserById(id)
+    .then((user) => {
+      res.send(user);
     })
     .catch(error => console.error(error));
 });

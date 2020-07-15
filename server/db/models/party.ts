@@ -11,7 +11,7 @@ import {
   HasManyCreateAssociationMixin,
 } from 'sequelize';
 
-import Message from './message';
+import { Message } from './message';
 import { User } from './user';
 
 interface PartyAttributes {

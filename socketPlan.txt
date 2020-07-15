@@ -1,0 +1,14 @@
+Eliminate the need for data storage on the server.
+
+New User Joins a Room
+1. When a user joins a room, emit their socket id to all other users in the room.
+2. When other users receive that socket id, they should create a peer with that new user.
+  - Initiate the handshake by using createPeer function
+3. When new user receives the request from the existing users, use addPeer function.
+
+User Leaves a Room
+1. Emit their socketid to all other users.
+2. Upon receiving the id of someone leaving the room, remove that id from the peers state.
+  - Create removePeer function?
+
+Note: peersRef is probably not necessary. Refactor to only reference peers state.
