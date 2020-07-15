@@ -80,7 +80,7 @@ const House: FC<HouseProps> = ({
         {`${user.username} is in Room: ${currRoom.name}`}
       </div>
       <div className="mx-auto bg-gray-200 h-500 w-500 border-solid border-black" id="house-container">
-        <Room name="Room 1" layout={currRoom.name} user={user} changeRoom={changeRoom} playerPosition={playerPosition} setPlayerPosition={setPlayerPosition} />
+        <Room name="Room 1" layout={currRoom.name} user={user} changeRoom={changeRoom} />
       </div>
     </div>
   );
