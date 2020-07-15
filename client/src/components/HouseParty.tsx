@@ -97,17 +97,10 @@ const HouseParty: FC<HousePartyProps> = ({
   };
 
   const joinRoom = () => {
-    console.log('new here');
     socket.emit('join room', roomID.newRoom);
   };
 
   const switchRoom = () => {
-    console.log('switching rooms');
-    // destroy each peer in the others array
-    // others.forEach((other: any) => {
-      // other.peer.destroy();
-    // });
-    // reset others array
     setPeersCount(0);
     setOthers([]);
     socket.emit('switch room', roomID.oldRoom, roomID.newRoom);
