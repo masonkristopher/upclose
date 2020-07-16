@@ -2,7 +2,6 @@ import React, { FC, useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import PartySettings from './PartySettings';
-import HouseLayout from './HouseLayout';
 import Search from './Search';
 
 interface PartyProfileProps {

@@ -2,7 +2,6 @@ import React, { useState, useEffect, FC } from 'react';
 import { BrowserRouter, Switch, Route, Redirect, } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
-import TestRoom from './TestRoom';
 import UserProfile from './UserProfile';
 // import UserContext from './contexts/UserContext';
 // import SampleVidChat from './SampleVidChat';

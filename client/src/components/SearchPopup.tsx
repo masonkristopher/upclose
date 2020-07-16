@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 
-const SearchPopup = ({ setInvitees, user }: any) => {
+const SearchPopup = ({ setInvitees, user, saveParty, setPopupNumber }: any) => {
   const [input, setInput] = useState('');
   const [users, setUsers] = useState([]);
   const [matches, setMatches]: any = useState([]);
@@ -31,17 +31,33 @@ const SearchPopup = ({ setInvitees, user }: any) => {
   const inviteUser = (invitee: any) => {
     // add the user to CreatePartyPopup's state, but only if it's not there already
     if (!tempInvitees.includes(invitee) && user !== invitee) {
-      console.log('click');
       const array = tempInvitees.concat(invitee);
       setTempInvitees(array);
       setInvitees(array);
     }
   };
 
+  const removeUser = (invitee: any) => {
+    const array = [...tempInvitees];
+    const index = array.indexOf(invitee);
+    array.splice(index, 1);
+    setTempInvitees(array);
+    setInvitees(array);
+  };
+
   return (
-    <div className="text-blue">
+    <div className="relative h-full w-full">
       <div className="flex flex-wrap -mx-3 mb-6">
         <div className="w-full px-3">
+          <ul className="float-right">
+            Invited people:
+            {tempInvitees.map((invitee: any) => (
+              <div className="flex flex-row">
+                <li key={invitee.username}>{invitee.username}</li>
+                <button className="ml-2" type="button" onClick={() => { removeUser(invitee); }}>Remove</button>
+              </div>
+            ))}
+          </ul>
           <input
             onChange={(e) => setInput(e.target.value)}
             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -56,6 +72,7 @@ const SearchPopup = ({ setInvitees, user }: any) => {
           >
             Search
           </button>
+          <button type="button" className="relative bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full mb-6" onClick={() => { saveParty(); setPopupNumber(0); }}>Confirm Invites</button>
         </div>
       </div>
       <div>
