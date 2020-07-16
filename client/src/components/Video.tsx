@@ -7,9 +7,8 @@ interface VideoProps {
 }
 
 const Video: FC<VideoProps> = ({ peer }) => {
-  // const ref = useRef<HTMLVideoElement>(null);
-  const [gain, setGain] = useState(0);
-  const ref: any = useRef();
+  const ref: any = useRef<HTMLVideoElement>(null);
+  // const [gain, setGain] = useState(0);
   const audioCtx = new AudioContext();
   const gainNode = audioCtx.createGain();
 
@@ -17,25 +16,23 @@ const Video: FC<VideoProps> = ({ peer }) => {
     peer.on('stream', (stream: any) => {
       if (ref.current !== null) {
         ref.current.srcObject = stream;
-        const track = ref.current.srcObject.getAudioTracks()[0];
+        // const track = ref.current.srcObject.getAudioTracks()[0];
         // track.enabled = false;
-        console.log(track);
-        // new WebAudio context
-        const source = audioCtx.createMediaStreamSource(stream);
-        gainNode.connect(audioCtx.destination);
-        source.connect(gainNode);
-        // gainNode.gain.linearRampToValueAtTime(0, 0);
-        gainNode.gain.value = gain;
-        console.log(gainNode.gain.value);
+        // console.log(track);
+        // // new WebAudio context
+        // const source = audioCtx.createMediaStreamSource(stream);
+        // gainNode.connect(audioCtx.destination);
+        // source.connect(gainNode);
+        // // gainNode.gain.linearRampToValueAtTime(0, 0);
+        // gainNode.gain.value = gain;
+        // console.log(gainNode.gain.value);
       }
     });
-  }, [gain]);
+  }, []);
 
-  // const setGain = (num: number) => {
-  //   gainNode.gain.value = ;
-  //   // gainNode.gain.linearRampToValueAtTime(num, 0);
-  //   console.log('set gain clicked!', gainNode.gain.value);
-  // };
+  const setGain = (num: number) => {
+    ref.current.volume = num;
+  };
 
   return (
     <div className="text-blue mt-4">
