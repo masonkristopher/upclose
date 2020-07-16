@@ -10,7 +10,7 @@ export interface User {
 }
 
 /* Video */
-const videoConstraints: MediaTrackConstraints = {
+export const videoConstraints: MediaTrackConstraints = {
   width: 320,
   height: 180,
 };
@@ -31,7 +31,7 @@ interface House {
   yellow: Room,
 }
 
-const house: House = {
+export const house: House = {
   red: {
     name: 'red',
     xChange: 'blue',
@@ -54,11 +54,27 @@ const house: House = {
   },
 };
 
-/* Room Size */
-const roomSize = 500;
+/* Room */
+export const roomSize = 500;
 
-export {
-  house,
-  videoConstraints,
-  roomSize,
-};
+export type dir = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN';
+
+export interface Direction {
+  top: 0 | 1;
+  left: 0 | 1;
+  dir: dir;
+}
+
+export enum RoomStyles {
+  red = 'bg-red-300',
+  green = 'bg-green-300',
+  blue = 'bg-blue-300',
+  yellow = 'bg-yellow-300',
+}
+
+/* Player */
+export interface Position {
+  avatar: string,
+  top: number,
+  left: number,
+}

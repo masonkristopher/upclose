@@ -1,23 +1,17 @@
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 import Player from './Player';
 
-import { User, roomSize } from '../services/constants';
+import {
+  User,
+  roomSize,
+  dir,
+  Direction,
+  RoomStyles,
+} from '../services/constants';
+
 import PartyGoer from './PartyGoer';
 
-type dir = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN';
-interface direction {
-  top: 0 | 1;
-  left: 0 | 1;
-  dir: dir;
-}
-
-enum RoomStyles {
-  red = 'bg-red-300',
-  green = 'bg-green-300',
-  blue = 'bg-blue-300',
-  yellow = 'bg-yellow-300',
-}
 interface RoomProps {
   name: 'red' | 'green' | 'blue' | 'yellow';
   changeRoom: (dir: dir) => void;
@@ -29,21 +23,16 @@ interface RoomProps {
 
 const Room: FC<RoomProps> = ({
   name,
-  // user,
   changeRoom,
   socket,
   positions,
   setPositions,
 }): ReactElement => {
-
   const emitPosition = (newPlayerPosition: any) => {
     socket.emit('player moved', { [socket.id]: newPlayerPosition });
   };
 
-  // room size
-
-
-  const handlePlayerMovement = (direction: direction) => {
+  const handlePlayerMovement = (direction: Direction) => {
     // existing coordinates
     const playerPosition = positions[socket.id];
     const { top, left } = playerPosition;
