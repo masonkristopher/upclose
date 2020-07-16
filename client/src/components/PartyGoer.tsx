@@ -1,25 +1,18 @@
 /* eslint-disable max-len */
 import React, { FC, ReactElement } from 'react';
 
-import { User } from '../services/constants';
+import { Position } from '../services/constants';
 
-interface position {
-  avatar: string,
-  top: number,
-  left: number,
-}
 interface PartyGoerProps {
-  position: position;
+  position: Position;
   calibration?: number;
-  // user: User;
 }
 
 const PartyGoer: FC<PartyGoerProps> = ({
-  // user,
   position,
   calibration = 0,
 }): ReactElement => {
-  const assignPosition = (pos: position) => {
+  const assignPosition = (pos: Position) => {
     return {
       top: `${pos.top - calibration}px`,
       left: `${pos.left}px`,
