@@ -35,11 +35,9 @@ userRouter.post('/verify', (req, res) => {
       return getUser(googleId);
     })
     .then((userData: any) => {
-      // console.log(userData, 'after getUser*****************');
       // if the user is in our database
-      if (userData) {
-        // console.log(userData, 'if(userArray)******************');
-        res.send(userData);
+      if (userData.dataValues) {
+        res.send(userData.dataValues);
       } else {
         // user is not in database, so let's add the user
         const {
@@ -53,7 +51,6 @@ userRouter.post('/verify', (req, res) => {
           avatar: MK,
           googleId: JU,
         };
-        // console.log(user, 'user not found ************');
         createUser(user);
         res.send(user);
       }
