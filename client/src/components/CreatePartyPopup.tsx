@@ -44,26 +44,26 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
     copy.name = e.target.value;
     setPartyDetails(copy);
   };
-  // sets partyDetails state to have the party's layout
-  const setPartyLayout = (e: number): void => {
-    const copy = { ...partyDetails };
-    copy.idLayout = e;
-    setPartyDetails(copy);
-  };
-  // sets the active slide when the back button is clicked
-  const handleBack = () => {
-    setActiveSlide(activeSlide - 1);
-    if (activeSlide <= 0) {
-      setActiveSlide(0);
-    }
-  };
-  // sets the active slide when the next button is clicked
-  const handleNext = () => {
-    setActiveSlide(activeSlide + 1);
-    if (activeSlide >= totalSlides - 1) {
-      setActiveSlide(totalSlides);
-    }
-  };
+  // // sets partyDetails state to have the party's layout
+  // const setPartyLayout = (e: number): void => {
+  //   const copy = { ...partyDetails };
+  //   copy.idLayout = e;
+  //   setPartyDetails(copy);
+  // };
+  // // sets the active slide when the back button is clicked
+  // const handleBack = () => {
+  //   setActiveSlide(activeSlide - 1);
+  //   if (activeSlide <= 0) {
+  //     setActiveSlide(0);
+  //   }
+  // };
+  // // sets the active slide when the next button is clicked
+  // const handleNext = () => {
+  //   setActiveSlide(activeSlide + 1);
+  //   if (activeSlide >= totalSlides - 1) {
+  //     setActiveSlide(totalSlides);
+  //   }
+  // };
 
   const toggleChecked = () => {
     setIsChecked(!isChecked);
@@ -110,7 +110,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           <button type="button" className="absolute bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { setPopupNumber(2); }}>Confirm party name</button>
         </div>
       </Popup>
-      <Popup open={popUpNumber === 2}>
+      {/* <Popup open={popUpNumber === 2}>
         <>
           <h4 className="relative left-0 top-0 pl-2 pt-2 font-bold">Select a layout</h4>
           <CarouselProvider
@@ -155,16 +155,31 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           </CarouselProvider>
           <button type="button" className="relative bottom-0 border border-solid border-1 bg-blue-600 text-orange-300" onClick={() => { setPartyLayout(activeSlide); setPopupNumber(3); }}>Confirm party layout</button>
         </>
-      </Popup>
-      <Popup open={popUpNumber === 3}>
-        <div>
-          <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
-          <SearchPopup
-            user={user}
-            setInvitees={setInvitees}
-          />
-          <button type="button" className="relative bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { saveParty(); setPopupNumber(0); }}>Confirm Invites</button>
-        </div>
+      </Popup> */}
+      <Popup
+        contentStyle={{
+          top: 'auto',
+          left: 'auto',
+          right: 'auto',
+          bottom: 'auto',
+          height: '400px',
+          overflow: 'auto',
+          display: 'flex'
+        }}
+        open={popUpNumber === 2}
+      >
+        <>
+          <div className="flex flex-col">
+            <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
+            <SearchPopup
+              user={user}
+              setInvitees={setInvitees}
+              saveParty={saveParty}
+              setPopupNumber={setPopupNumber}
+            />
+          </div>
+          <button type="button" onClick={() => setPopupNumber(1)}>Go back</button>
+        </>
       </Popup>
     </>
   );
