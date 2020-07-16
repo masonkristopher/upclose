@@ -42,8 +42,12 @@ const HouseParty: FC<HousePartyProps> = ({
   const [party, setParty]: any = useState({});
   const [users, setUsers]: any = useState([]);
   const [invited, setInvited]: any = useState(null);
+  const [positions, setPositions]: any = useState({}); // { socketId, position }
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
+
+  // positions.socketId = 'newPosition';
+  // setPositions({ ...positions });
 
   const userVideo: any = useRef();
   // const peersRef: any = useRef([]);
@@ -258,15 +262,15 @@ const HouseParty: FC<HousePartyProps> = ({
 
   // to do: make all this render only if a user is invited
   return (
-    <div className="container p-4">
+    <div className="container p-8">
       {/* Header */}
-      <div className="px-4">
+      <div className="">
         {`Party Name: ${party.name} ${roomID.newRoom}`}
       </div>
       {/* House */}
-      <div className="px-4 float-left">
+      <div className="float-left">
         <div className="">
-          <House user={user} setRoomID={setRoomID} />
+          <House user={user} setRoomID={setRoomID} positions={positions} setPositions={setPositions} socket={socket} />
         </div>
       </div>
 
@@ -303,8 +307,8 @@ const HouseParty: FC<HousePartyProps> = ({
       </div>
 
       {/* Underneath Chat Feature */}
-      <div className="float-left m-6">
-        {/* <ChatSend key={user.id} user={user} /> */}
+      <div className="clear-both py-6">
+        <ChatSend key={user.id} user={user} socket={socket} />
       </div>
     </div>
   );
