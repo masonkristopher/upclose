@@ -32,12 +32,13 @@ io.on('connection', socket => {
       io.to(newRoom).emit('user joined room', socket.id);
     });
   });
+
   // if user switches room
   socket.on('switch room', (oldRoom: string, newRoom: string) => {
     socket.leave(oldRoom, () => {
       console.log(`${socket.id} left room ${oldRoom}`);
-      // io.to(oldRoom).emit('user left room', socket.id);
-      socket.broadcast.emit('user left room', { userId: socket.id, roomId: newRoom });
+      io.to(oldRoom).emit('user left room', socket.id);
+      // socket.broadcast.emit('user left room', { userId: socket.id, roomId: newRoom });
       socket.join(newRoom, () => {
         console.log(`${socket.id} switched room ${newRoom}`);
         io.to(newRoom).emit('user joined room', socket.id);
@@ -51,6 +52,11 @@ io.on('connection', socket => {
 
   socket.on('returning signal', payload => {
     io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
+  });
+
+  socket.on('player moved', payload => {
+    console.log(payload);
+    socket.broadcast.emit('update player', payload);
   });
 
   socket.on('disconnect', () => {
