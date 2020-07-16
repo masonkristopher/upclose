@@ -117,7 +117,7 @@ const Room: FC<RoomProps> = ({
   };
 
   return (
-    <div className={`relative w-full h-full inline-block ${layoutRef[layout]}`}>
+    <div className={`w-full h-full inline-block ${layoutRef[layout]}`}>
       <Player user={user} position={playerPosition} handlePlayerMovement={handlePlayerMovement} />
       <div className="text-gray-800 mx-auto">
         {name}

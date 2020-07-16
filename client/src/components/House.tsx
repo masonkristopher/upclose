@@ -85,7 +85,7 @@ const House: FC<HouseProps> = ({
       <div className="">
         {`${user.username} is in Room: ${currRoom.name}`}
       </div>
-      <div className="mx-auto bg-gray-200 h-500 w-500 border-solid border-black" id="house-container">
+      <div className="mx-auto bg-gray-200 h-500 w-500  border-solid border-black" id="house-container">
         <Room name="Room 1" layout={currRoom.name} user={user} changeRoom={changeRoom} positions={positions} setPositions={setPositions} socket={socket} />
       </div>
     </div>
