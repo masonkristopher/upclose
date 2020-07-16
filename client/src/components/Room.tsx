@@ -2,7 +2,7 @@ import React, { FC, ReactElement, useState } from 'react';
 
 import Player from './Player';
 
-import { User } from '../services/constants';
+import { User, roomSize } from '../services/constants';
 import PartyGoer from './PartyGoer';
 
 type dir = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN';
@@ -11,6 +11,7 @@ interface direction {
   left: 0 | 1;
   dir: dir;
 }
+
 enum RoomStyles {
   red = 'bg-red-300',
   green = 'bg-green-300',
@@ -34,42 +35,34 @@ const Room: FC<RoomProps> = ({
   positions,
   setPositions,
 }): ReactElement => {
-  // const [playerPosition, setPlayerPosition] = useState({
-  //   top: Math.random() * 500,
-  //   left: Math.random() * 500,
-  // });
 
   const emitPosition = (newPlayerPosition: any) => {
     socket.emit('player moved', { [socket.id]: newPlayerPosition });
   };
 
   // room size
-  const maxDim = 500;
+
 
   const handlePlayerMovement = (direction: direction) => {
     // existing coordinates
     const playerPosition = positions[socket.id];
     const { top, left } = playerPosition;
+
     // boundary movement
     switch (direction.dir) {
       case 'UP':
         if (top <= 0) {
-          // const newPlayerPosition = { top: top + maxDim, left };
-          playerPosition.top = top + maxDim;
+          playerPosition.top = top + roomSize;
           changeRoom('UP');
-          // emitPosition(newPlayerPosition);
           emitPosition(playerPosition);
           setPositions({ ...positions });
           return;
         }
         break;
       case 'DOWN':
-        if (top >= maxDim - 40) {
-          // const newPlayerPosition = { top: top - maxDim, left };
-          playerPosition.top = top - maxDim;
+        if (top >= roomSize - 40) {
+          playerPosition.top = top - roomSize;
           changeRoom('DOWN');
-          // emitPosition(newPlayerPosition);
-          // setPlayerPosition(newPlayerPosition);
           emitPosition(playerPosition);
           setPositions({ ...positions });
           return;
@@ -77,24 +70,17 @@ const Room: FC<RoomProps> = ({
         break;
       case 'LEFT':
         if (left <= 0) {
-          // const newPlayerPosition = { top, left: left + maxDim };
-          playerPosition.left = left + maxDim;
+          playerPosition.left = left + roomSize;
           changeRoom('LEFT');
-          // emitPosition(newPlayerPosition);
-          // setPlayerPosition(newPlayerPosition);
           emitPosition(playerPosition);
-
           setPositions({ ...positions });
           return;
         }
         break;
       case 'RIGHT':
-        if (left >= maxDim - 40) {
-          // const newPlayerPosition = { top, left: left - maxDim };
-          playerPosition.left = left - maxDim;
+        if (left >= roomSize - 40) {
+          playerPosition.left = left - roomSize;
           changeRoom('RIGHT');
-          // emitPosition(newPlayerPosition);
-          // setPlayerPosition(newPlayerPosition);
           emitPosition(playerPosition);
           setPositions({ ...positions });
           return;
@@ -107,12 +93,6 @@ const Room: FC<RoomProps> = ({
     // normal field movement
     playerPosition.top = top + 5 * direction.top;
     playerPosition.left = left + 5 * direction.left;
-    // const newPlayerPosition = {
-    //   top: top + 5 * direction.top,
-    //   left: left + 5 * direction.left,
-    // };
-    // emitPosition(newPlayerPosition);
-    // setPlayerPosition(newPlayerPosition);
     emitPosition(playerPosition);
     setPositions({ ...positions });
   };

@@ -54,7 +54,11 @@ const house: House = {
   },
 };
 
+/* Room Size */
+const roomSize = 500;
+
 export {
   house,
   videoConstraints,
+  roomSize,
 };
