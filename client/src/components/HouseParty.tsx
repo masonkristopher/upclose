@@ -183,13 +183,13 @@ const HouseParty: FC<HousePartyProps> = ({
 
   // to do: make all this render only if a user is invited
   return (
-    <div className="container p-4">
+    <div className="container p-8">
       {/* Header */}
-      <div className="px-4">
+      <div className="">
         {`Party Name: ${party.name} ${roomID.newRoom}`}
       </div>
       {/* House */}
-      <div className="px-4 float-left">
+      <div className="float-left">
         <div className="">
           <House
             user={user}
@@ -233,8 +233,8 @@ const HouseParty: FC<HousePartyProps> = ({
       </div>
 
       {/* Underneath Chat Feature */}
-      <div className="float-left m-6">
-        {/* <ChatSend key={user.id} user={user} /> */}
+      <div className="clear-both py-6">
+        <ChatSend key={user.id} user={user} socket={socket} />
       </div>
     </div>
   );
