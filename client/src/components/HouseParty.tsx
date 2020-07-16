@@ -210,6 +210,10 @@ const HouseParty: FC<HousePartyProps> = ({
 
   // Runs once when HouseParty component initially renders
   useEffect(() => {
+    if (roomID.oldRoom === null) {
+      joinParty();
+      console.log(`user ${socket.id} joined party`);
+    }
     // should query the database and find the party we need on render
     axios.get(`/party/${partyId}`)
       .then((response) => {
@@ -230,8 +234,6 @@ const HouseParty: FC<HousePartyProps> = ({
     }
   }, [roomID]);
 
-
-
   // watches users for changes, then checks that the logged in user is an invited user
   useEffect(() => {
     users.forEach((invitedUser: any, index: number) => {
@@ -244,15 +246,15 @@ const HouseParty: FC<HousePartyProps> = ({
   }, [users]);
 
   // watches invited for changes; if the user was invited, begin socketConnect
-  useEffect(() => {
-    if (party.inviteOnly === false || (invited === true)) {
-      console.log(invited, 'inside if statement');
-      if (roomID.oldRoom === null) {
-        joinParty();
-        console.log(`user ${socket.id} joined party`);
-      }
-    }
-  }, [invited]);
+  // useEffect(() => {
+  //   if (party.inviteOnly === false || (invited === true)) {
+  //     console.log(invited, 'inside if statement');
+  //     if (roomID.oldRoom === null) {
+  //       joinParty();
+  //       console.log(`user ${socket.id} joined party`);
+  //     }
+  //   }
+  // }, [invited]);
 
   // to do: make all this render only if a user is invited
   return (
@@ -292,7 +294,7 @@ const HouseParty: FC<HousePartyProps> = ({
         {/* Other Videos */}
         <div className="mt-6">
           {others.map((other: any) => {
-            const { id } = other.id;
+            const { id } = other;
             return (
               <Video key={id} peer={other.peer} />
             );
