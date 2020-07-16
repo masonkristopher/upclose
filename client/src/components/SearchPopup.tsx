@@ -37,15 +37,26 @@ const SearchPopup = ({ setInvitees, user, saveParty, setPopupNumber }: any) => {
     }
   };
 
+  const removeUser = (invitee: any) => {
+    const array = [...tempInvitees];
+    const index = array.indexOf(invitee);
+    array.splice(index, 1);
+    setTempInvitees(array);
+    setInvitees(array);
+  };
+
   return (
     <div className="relative h-full w-full">
       <div className="flex flex-wrap -mx-3 mb-6">
         <div className="w-full px-3">
           <ul className="float-right">
             Invited people:
-            {tempInvitees.map((invitee: any) => {
-              return <li key={invitee.username}>{invitee.username}</li>;
-            })}
+            {tempInvitees.map((invitee: any) => (
+              <div className="flex flex-row">
+                <li key={invitee.username}>{invitee.username}</li>
+                <button className="ml-2" type="button" onClick={() => { removeUser(invitee); }}>Remove</button>
+              </div>
+            ))}
           </ul>
           <input
             onChange={(e) => setInput(e.target.value)}
