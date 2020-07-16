@@ -44,26 +44,26 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
     copy.name = e.target.value;
     setPartyDetails(copy);
   };
-  // sets partyDetails state to have the party's layout
-  const setPartyLayout = (e: number): void => {
-    const copy = { ...partyDetails };
-    copy.idLayout = e;
-    setPartyDetails(copy);
-  };
-  // sets the active slide when the back button is clicked
-  const handleBack = () => {
-    setActiveSlide(activeSlide - 1);
-    if (activeSlide <= 0) {
-      setActiveSlide(0);
-    }
-  };
-  // sets the active slide when the next button is clicked
-  const handleNext = () => {
-    setActiveSlide(activeSlide + 1);
-    if (activeSlide >= totalSlides - 1) {
-      setActiveSlide(totalSlides);
-    }
-  };
+  // // sets partyDetails state to have the party's layout
+  // const setPartyLayout = (e: number): void => {
+  //   const copy = { ...partyDetails };
+  //   copy.idLayout = e;
+  //   setPartyDetails(copy);
+  // };
+  // // sets the active slide when the back button is clicked
+  // const handleBack = () => {
+  //   setActiveSlide(activeSlide - 1);
+  //   if (activeSlide <= 0) {
+  //     setActiveSlide(0);
+  //   }
+  // };
+  // // sets the active slide when the next button is clicked
+  // const handleNext = () => {
+  //   setActiveSlide(activeSlide + 1);
+  //   if (activeSlide >= totalSlides - 1) {
+  //     setActiveSlide(totalSlides);
+  //   }
+  // };
 
   const toggleChecked = () => {
     setIsChecked(!isChecked);
@@ -165,19 +165,21 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           height: '400px',
           overflow: 'auto',
           display: 'flex'
-        }} 
+        }}
         open={popUpNumber === 2}
       >
-
-        <div className="flex flex-col">
-          <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
-          <SearchPopup
-            user={user}
-            setInvitees={setInvitees}
-            saveParty={saveParty}
-            setPopupNumber={setPopupNumber}
-          />
-        </div>
+        <>
+          <div className="flex flex-col">
+            <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
+            <SearchPopup
+              user={user}
+              setInvitees={setInvitees}
+              saveParty={saveParty}
+              setPopupNumber={setPopupNumber}
+            />
+          </div>
+          <button type="button" onClick={() => setPopupNumber(1)}>Go back</button>
+        </>
       </Popup>
     </>
   );
