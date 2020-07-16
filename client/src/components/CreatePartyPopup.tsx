@@ -110,7 +110,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           <button type="button" className="absolute bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { setPopupNumber(2); }}>Confirm party name</button>
         </div>
       </Popup>
-      <Popup open={popUpNumber === 2}>
+      {/* <Popup open={popUpNumber === 2}>
         <>
           <h4 className="relative left-0 top-0 pl-2 pt-2 font-bold">Select a layout</h4>
           <CarouselProvider
@@ -155,15 +155,28 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           </CarouselProvider>
           <button type="button" className="relative bottom-0 border border-solid border-1 bg-blue-600 text-orange-300" onClick={() => { setPartyLayout(activeSlide); setPopupNumber(3); }}>Confirm party layout</button>
         </>
-      </Popup>
-      <Popup open={popUpNumber === 3}>
-        <div>
+      </Popup> */}
+      <Popup
+        contentStyle={{
+          top: 'auto',
+          left: 'auto',
+          right: 'auto',
+          bottom: 'auto',
+          height: '400px',
+          overflow: 'auto',
+          display: 'flex'
+        }} 
+        open={popUpNumber === 2}
+      >
+
+        <div className="flex flex-col">
           <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
           <SearchPopup
             user={user}
             setInvitees={setInvitees}
+            saveParty={saveParty}
+            setPopupNumber={setPopupNumber}
           />
-          <button type="button" className="relative bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { saveParty(); setPopupNumber(0); }}>Confirm Invites</button>
         </div>
       </Popup>
     </>
