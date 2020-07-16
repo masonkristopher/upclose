@@ -29,7 +29,7 @@ const ChatSend: FC<ChatSendProps> = ({ user, socket }) => {
       user,
       timestamp: new Date(),
     };
-    setMessages((msgs: any) => [...msgs, messageObj]);
+    setMessages((msgs: any) => [messageObj, ...msgs]);
     socket.emit('chat message', messageObj);
     setMessage(''); // clear the input
   };
@@ -40,14 +40,14 @@ const ChatSend: FC<ChatSendProps> = ({ user, socket }) => {
 
   useEffect(() => {
     socket.on('sending chat message', (msg: any) => {
-      setMessages((msgs: any) => [...msgs, msg]);
+      setMessages((msgs: any) => [msg, ...msgs]);
     });
   }, []);
 
   return (
     <div className="relative p-6 border rounded bg-gray-200 h-chat w-500">
       <div className="overflow-y-auto h-40">
-        {messages.reverse().map((msg: any) => {
+        {messages.map((msg: any) => {
           const key = `${msg.messageCount}-${msg.socketId}`;
           return (
             <div key={key} className="relative">
