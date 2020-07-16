@@ -3,6 +3,7 @@ import React, { FC, ReactElement, useEffect } from 'react';
 import PartyGoer from './PartyGoer';
 
 interface position {
+  avatar: string,
   top: number,
   left: number,
 }
@@ -10,19 +11,19 @@ interface position {
 interface PlayerProps {
   handlePlayerMovement: any;
   position: position;
-  user: {
-    id: number,
-    nameFirst: string,
-    nameLast: string,
-    username: string,
-    email: string,
-    avatar: string,
-    googleId: string,
-  };
+  // user: {
+  //   id: number,
+  //   nameFirst: string,
+  //   nameLast: string,
+  //   username: string,
+  //   email: string,
+  //   avatar: string,
+  //   googleId: string,
+  // };
 }
 
 const House: FC<PlayerProps> = ({
-  user,
+  // user,
   position,
   handlePlayerMovement,
 }): ReactElement => {
@@ -56,9 +57,7 @@ const House: FC<PlayerProps> = ({
   });
 
   return (
-    <div className="">
-      <PartyGoer user={user} position={position} />
-    </div>
+    <PartyGoer position={position} />
   );
 };
 
