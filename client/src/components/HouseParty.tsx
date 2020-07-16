@@ -226,7 +226,12 @@ const HouseParty: FC<HousePartyProps> = ({
         <div className="mt-6">
           {Object.keys(peers).map((socketId: string) => {
             return (
-              <Video key={socketId} peer={peers[socketId]} />
+              <Video
+                key={socketId}
+                peer={peers[socketId]}
+                positionA={positions[socketId]}
+                positionB={positions[playerSocket]}
+              />
             );
           })}
         </div>
