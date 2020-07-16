@@ -26,18 +26,15 @@ const HouseParty: FC<HousePartyProps> = ({
 }): ReactElement => {
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
+  const playerSocket = socket.id;
 
   const [invited, setInvited]: any = useState(null);
   const [party, setParty]: any = useState({});
   const [users, setUsers]: any = useState([]);
-  // const [peersCount, setPeersCount] = useState(0);
 
   const [roomID, setRoomID] = useState({ oldRoom: null, newRoom: 'red' });
-  // const [others, setOthers]: any = useState([]); // [{ id, peer }]
+
   const [peers, setPeers]: any = useState({}); // { [socketId]: peer, [socketId]: peer... }
-
-  const playerSocket = socket.id;
-
   const [positions, setPositions] = useState({
     [playerSocket]: {
       avatar: user.avatar,
@@ -71,8 +68,6 @@ const HouseParty: FC<HousePartyProps> = ({
 
   const switchRoom = () => {
     setPeers({});
-    // setOthers([]);
-    // setPeersCount(0);
     socket.emit('switch room', roomID.oldRoom, roomID.newRoom);
   };
 
@@ -88,40 +83,15 @@ const HouseParty: FC<HousePartyProps> = ({
           if (roomID.newRoom !== newRoomId) {
             delete peers[leavingUserId];
             setPeers({ ...peers });
-
-            // const othersWithoutUser = others.filter((other: any) => {
-            //   return other.id !== leavingUserId;
-            // });
-            // setOthers(othersWithoutUser);
-            // setPeersCount(peersCount - 1);
           }
         });
 
         // create new peer for new other users in room
         socket.on('user joined room', (joiningUserId: string) => {
-          // const existingOthers = others;
-          // let indexOfJoiningUser;
-          // existingOthers.forEach((other: any, i: number) => {
-          //   if (other.id === joiningUserId) {
-          //     indexOfJoiningUser = i;
-          //   }
-          // });
-
-          // if (indexOfJoiningUser !== undefined) {
-          //   existingOthers.splice(indexOfJoiningUser, 1);
-          // }
           if (joiningUserId !== socket.id) {
             const peer = createPeer(socket, joiningUserId, socket.id, stream);
             peers[joiningUserId] = peer;
             setPeers({ ...peers });
-
-            // const other = {
-            //   id: joiningUserId,
-            //   peer: createPeer(socket, joiningUserId, socket.id, stream),
-            // };
-            // existingOthers.push(other);
-            // setOthers(existingOthers);
-            // setPeersCount(peersCount + 1);
           }
         });
 
@@ -130,40 +100,21 @@ const HouseParty: FC<HousePartyProps> = ({
           const peer = addPeer(socket, payload.signal, payload.callerID, stream);
           peers[payload.callerID] = peer;
           setPeers({ ...peers });
-
-          // const other = {
-          //   id: payload.callerID,
-          //   peer: addPeer(socket, payload.signal, payload.callerID, stream),
-          // };
-          // setOthers((others: any) => [...others, other]);
-          // setPeersCount(peersCount + 1);
         });
 
         socket.on('receiving returned signal', (payload: any) => {
           if (peers[payload.id]) {
             peers[payload.id].signal(payload.signal);
           }
-          // if (others.length) {
-          //   const { peer } = others.find((other: any) => other.id === payload.id);
-          //   peer.signal(payload.signal);
-          // }
         });
 
         socket.on('user left party', (leavingUserId: string) => {
           delete peers[leavingUserId];
           setPeers({ ...peers });
-          // const othersWithoutUser = others.filter((other: any) => {
-          //   return other.id !== leavingUserId;
-          // });
-          // setOthers(othersWithoutUser);
-          // setPeersCount(peersCount - 1);
         });
 
         socket.on('update player', (payload: any) => {
           const playerId = Object.keys(payload)[0];
-          console.log('this player moved:', playerId);
-
-          // const inSameRoom = others.findIndex((other: any) => other.id === playerId);
           if (peers[playerId]) {
             console.log(`player ${playerId} is in the same room... updating position`);
             positions[playerId] = payload[playerId];
@@ -177,15 +128,10 @@ const HouseParty: FC<HousePartyProps> = ({
       });
   };
 
-  // for debugging purposes only, logs when others is updated
+  // for debugging purposes only, logs when peers is updated
   useEffect(() => {
     console.log('peers updated:', peers);
   }, [peers]);
-
-  // // for debugging purposes only, logs when others is updated
-  // useEffect(() => {
-  //   console.log('others updated:', others);
-  // }, [others]);
 
   // Runs once when HouseParty component initially renders
   useEffect(() => {
@@ -284,14 +230,6 @@ const HouseParty: FC<HousePartyProps> = ({
             );
           })}
         </div>
-        {/* <div className="mt-6">
-          {others.map((other: any) => {
-            const { id } = other;
-            return (
-              <Video key={id} peer={other.peer} />
-            );
-          })}
-        </div> */}
       </div>
 
       {/* Underneath Chat Feature */}
