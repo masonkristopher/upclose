@@ -1,4 +1,4 @@
-body {
+/* body {
   margin: 0;
   padding: 0;
   font-family: "Montserrat", sans-serif;
@@ -102,11 +102,18 @@ body {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   width: 300px;
-}
+} */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: "Montserrat", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafc;
+}
 
 .h-half {
   height: 50%;
@@ -134,4 +141,12 @@ body {
 
 .w-chat-input {
   width: 350px;
+}
+
+.h-house {
+  height: 250px;
+}
+
+.w-house {
+  width: 250px;
 }
