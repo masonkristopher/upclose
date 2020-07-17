@@ -36,7 +36,7 @@ userRouter.post('/verify', (req, res) => {
     })
     .then((userData: any) => {
       // if the user is in our database
-      if (userData.dataValues) {
+      if (userData && userData.dataValues) {
         res.send(userData.dataValues);
       } else {
         // user is not in database, so let's add the user
