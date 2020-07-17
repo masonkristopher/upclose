@@ -47,8 +47,13 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
     // should query the database and find the party we need on render
     axios.get(`/party/${partyId}`)
       .then((response) => {
-        // then use setParty to put the party's info into state
-        setParty(response.data);
+      // should also check the join table to see if accepted or pending
+        axios.get(`/party/${user.id}/in/${partyId}`)
+          .then((res) => {
+            response.data.inviteStatus = res.data.inviteStatus;
+            // then use setParty to put the party's info into state
+            setParty(response.data);
+          })
         return axios.get(`/party/getUsers/${partyId}`)
       })
       .then((response) => {
