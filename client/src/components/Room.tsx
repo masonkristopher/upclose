@@ -125,7 +125,7 @@ const Room: FC<RoomProps> = ({
           })}
         </div>
       )}
-      {(name === 'blue' && party.roomOneBackground === 'blue') && (
+      {(name === 'blue' && party.roomTwoBackground === 'blue') && (
         <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
           <Player
             handlePlayerMovement={handlePlayerMovement}
@@ -145,7 +145,7 @@ const Room: FC<RoomProps> = ({
           })}
         </div>
       )}
-      {(name === 'blue' && party.roomOneBackground !== 'blue') && (
+      {(name === 'blue' && party.roomTwoBackground !== 'blue') && (
         <div
           className="relative w-full h-full inline-block bg-no-repeat bg-cover bg-center"
           style={{ backgroundImage: `url(${party.roomTwoBackground})` }}
@@ -168,7 +168,7 @@ const Room: FC<RoomProps> = ({
           })}
         </div>
       )}
-      {(name === 'green' && party.roomOneBackground === 'green') && (
+      {(name === 'green' && party.roomThreeBackground === 'green') && (
         <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
           <Player
             handlePlayerMovement={handlePlayerMovement}
@@ -188,7 +188,7 @@ const Room: FC<RoomProps> = ({
           })}
         </div>
       )}
-      {(name === 'green' && party.roomOneBackground !== 'green') && (
+      {(name === 'green' && party.roomThreeBackground !== 'green') && (
         <div
           className="relative w-full h-full inline-block bg-no-repeat bg-cover bg-center"
           style={{ backgroundImage: `url(${party.roomThreeBackground})` }}
@@ -211,7 +211,7 @@ const Room: FC<RoomProps> = ({
           })}
         </div>
       )}
-      {(name === 'yellow' && party.roomOneBackground === 'yellow') && (
+      {(name === 'yellow' && party.roomFourBackground === 'yellow') && (
         <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
           <Player
             handlePlayerMovement={handlePlayerMovement}
@@ -231,7 +231,7 @@ const Room: FC<RoomProps> = ({
           })}
         </div>
       )}
-      {(name === 'yellow' && party.roomOneBackground !== 'yellow') && (
+      {(name === 'yellow' && party.roomFourBackground !== 'yellow') && (
         <div
           className="relative w-full h-full inline-block bg-no-repeat bg-cover bg-center"
           style={{ backgroundImage: `url(${party.roomFourBackground})` }}
