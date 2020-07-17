@@ -1,114 +1,99 @@
-import React, { FC, ReactElement, useState, useEffect, useRef } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 import Player from './Player';
 
-type layout = 'red' | 'green' | 'blue' | 'yellow';
-type dir = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN';
+import {
+  User,
+  roomSize,
+  dir,
+  Direction,
+  RoomStyles,
+} from '../services/constants';
+
+import PartyGoer from './PartyGoer';
 
 interface RoomProps {
-  name: string;
-  layout: layout;
+  name: 'red' | 'green' | 'blue' | 'yellow';
   changeRoom: (dir: dir) => void;
-  user: {
-    id: number,
-    nameFirst: string,
-    nameLast: string,
-    username: string,
-    email: string,
-    avatar: string,
-    googleId: string,
-  };
-}
-
-interface direction {
-  top: 0 | 1,
-  left: 0 | 1,
-  dir: dir,
-}
-
-enum layoutRef {
-  red = 'bg-red-300',
-  green = 'bg-green-300',
-  blue = 'bg-blue-300',
-  yellow = 'bg-yellow-300',
+  user: User;
+  socket: SocketIOClient.Socket;
+  positions: any;
+  setPositions: any;
 }
 
 const Room: FC<RoomProps> = ({
   name,
-  layout,
-  user,
   changeRoom,
+  socket,
+  positions,
+  setPositions,
 }): ReactElement => {
-  const [playerPosition, setPlayerPosition] = useState({
-    top: Math.random() * 500,
-    left: Math.random() * 500,
-  });
+  const emitPosition = (newPlayerPosition: any) => {
+    socket.emit('player moved', { [socket.id]: newPlayerPosition });
+  };
 
-  const maxDim = 500;
-
-  const handlePlayerMovement = (direction: direction) => {
+  const handlePlayerMovement = (direction: Direction) => {
+    // existing coordinates
+    const playerPosition = positions[socket.id];
     const { top, left } = playerPosition;
-    // eslint-disable-next-line default-case
+
+    // boundary movement
     switch (direction.dir) {
       case 'UP':
         if (top <= 0) {
+          playerPosition.top = top + roomSize;
           changeRoom('UP');
-          setPlayerPosition({
-            top: top + 500,
-            left,
-          });
+          emitPosition(playerPosition);
+          setPositions({ ...positions });
           return;
         }
         break;
       case 'DOWN':
-        if (top >= maxDim - 40) {
+        if (top >= roomSize - 40) {
+          playerPosition.top = top - roomSize;
           changeRoom('DOWN');
-          setPlayerPosition({
-            top: top - 500,
-            left,
-          });
+          emitPosition(playerPosition);
+          setPositions({ ...positions });
           return;
         }
         break;
       case 'LEFT':
         if (left <= 0) {
+          playerPosition.left = left + roomSize;
           changeRoom('LEFT');
-          setPlayerPosition({
-            top,
-            left: left + 500,
-          });
+          emitPosition(playerPosition);
+          setPositions({ ...positions });
           return;
         }
         break;
       case 'RIGHT':
-        if (left >= maxDim - 40) {
-          // change room right
+        if (left >= roomSize - 40) {
+          playerPosition.left = left - roomSize;
           changeRoom('RIGHT');
-          setPlayerPosition({
-            top,
-            left: left - 500,
-          });
+          emitPosition(playerPosition);
+          setPositions({ ...positions });
           return;
         }
         break;
+      default:
+        break;
     }
-    // maybe emit position here?
-    // create a variable to hold the position,
-    // emit that variable with socket.id
-    // then set Player position
-    // this is necessary anywhere we are setting player position
-    setPlayerPosition({
-      top: top + 5 * direction.top,
-      left: left + 5 * direction.left,
-    });
+
+    // normal field movement
+    playerPosition.top = top + 5 * direction.top;
+    playerPosition.left = left + 5 * direction.left;
+    emitPosition(playerPosition);
+    setPositions({ ...positions });
   };
 
   return (
-    <div className={`relative w-full h-full inline-block ${layoutRef[layout]}`}>
-      <Player user={user} position={playerPosition} handlePlayerMovement={handlePlayerMovement} />
-      <div className="text-gray-800 mx-auto">
-        {name}
-      </div>
+    <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
+      <Player position={positions[socket.id]} handlePlayerMovement={handlePlayerMovement} />
+      {Object.keys(positions).filter(socketId => socketId !== socket.id).map((socketId, i) => {
+        return (
+          <PartyGoer key={socketId} position={positions[socketId]} calibration={(i + 1) * 40} />
+        );
+      })}
     </div>
   );
 };

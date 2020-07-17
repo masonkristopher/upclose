@@ -127,3 +127,11 @@ body {
 .w-40p {
   width: 40px;
 }
+
+.h-chat {
+  height: 300px;
+}
+
+.w-chat-input {
+  width: 350px;
+}
