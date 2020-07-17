@@ -11,6 +11,7 @@ interface HouseProps {
   setPositions: any;
   socket: SocketIOClient.Socket;
   user: User;
+  party: any;
 }
 
 const House: FC<HouseProps> = ({
@@ -19,6 +20,7 @@ const House: FC<HouseProps> = ({
   setPositions,
   socket,
   user,
+  party,
 }): ReactElement => {
   return (
     <div className="">
@@ -32,6 +34,7 @@ const House: FC<HouseProps> = ({
           setPeers={setPeers}
           setPositions={setPositions}
           socket={socket}
+          party={party}
         />
       </div>
     </div>

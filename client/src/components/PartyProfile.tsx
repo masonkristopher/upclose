@@ -69,11 +69,9 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
 
   // watches users for changes, then checks that the logged in user is an invited user
   useEffect(() => {
-    users.forEach((invitedUser: any, index: number) => {
+    users.forEach((invitedUser: any) => {
       if (invitedUser.id === user.id) {
         setInvited(true);
-      } else if (index === users.length - 1) {
-        setInvited(false);
       }
     });
   }, [users]);
