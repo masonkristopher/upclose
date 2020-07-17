@@ -228,6 +228,7 @@ const HouseParty: FC<HousePartyProps> = ({
             return (
               <Video
                 key={socketId}
+                id={socketId}
                 peer={peers[socketId]}
                 positionA={positions[socketId]}
                 positionB={positions[playerSocket]}

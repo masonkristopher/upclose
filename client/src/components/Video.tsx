@@ -2,14 +2,28 @@ import React, {
   FC, useState, ReactElement, useRef, useEffect,
 } from 'react';
 
+import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider'; // example render components - source below
+
+const sliderStyle = {
+  position: 'relative',
+  width: '100%',
+}
+
 interface VideoProps {
   peer: any;
   positionA: any;
   positionB: any;
+  id: any;
 }
 
-const Video: FC<VideoProps> = ({ peer, positionA, positionB }) => {
+const Video: FC<VideoProps> = ({
+  peer,
+  positionA,
+  positionB,
+  id,
+}) => {
   const ref: any = useRef<HTMLVideoElement>(null);
+  const [showVolume, setShowVolume]: any = useState(0);
 
   const getDistance = (a: any, b: any) => {
     if (a !== null && a !== undefined) {
@@ -61,6 +75,7 @@ const Video: FC<VideoProps> = ({ peer, positionA, positionB }) => {
         break;
     }
     ref.current.volume = volume;
+    setShowVolume(volume);
   };
 
   useEffect(() => {
@@ -75,8 +90,13 @@ const Video: FC<VideoProps> = ({ peer, positionA, positionB }) => {
 
   useEffect(() => {
     setVolume(getDistance(positionA, positionB));
-    console.log('This is your current volume:', ref.current.volume);
+    console.log(`this is current the volume of ${id}`, ref.current.volume);
   }, [positionA]);
+
+  useEffect(() => {
+    setVolume(getDistance(positionA, positionB));
+    console.log(`this is current the volume of ${id}`, ref.current.volume);
+  }, [positionB]);
 
   // const setGain = (num: number) => {
   //   ref.current.volume = num;
@@ -87,8 +107,9 @@ const Video: FC<VideoProps> = ({ peer, positionA, positionB }) => {
       <video ref={ref} playsInline autoPlay>
         <track />
       </video>
-      {/* <button type="button" className="bg-white hover:bg-pink-100 text-gray-800 font-semibold p-1 border border-gray-400 rounded shadow float-right" onClick={() => { setGain(0); }}>WEBAUDIOMUTE</button>
-      <button type="button" className="bg-white hover:bg-pink-100 text-gray-800 font-semibold p-1 border border-gray-400 rounded shadow float-right" onClick={() => { setGain(1); }}>webaudioUNmute</button> */}
+      current volume:
+      { (showVolume * 10) }
+      /10
     </div>
   );
 };
