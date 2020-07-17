@@ -17,7 +17,7 @@ const PlayerVideoPanel: FC<PlayerVideoPanelProps> = ({
   userVideo,
 }): ReactElement => {
   return (
-    <div className="bg-gray-100 md:float-left">
+    <div className="">
       {/* Your Video */}
       <div className="z-10">
         <video muted autoPlay ref={userVideo} className="mb-3 shadow-md z-0" />

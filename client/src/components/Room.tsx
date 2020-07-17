@@ -109,7 +109,7 @@ const Room: FC<RoomProps> = ({
 
   return (
     <div
-      className={`relative w-full h-full inline-block ${defaultBackground ? RoomStyles[name] : ''}`}
+      className={`relative w-500 h-500 inline-block ${defaultBackground ? RoomStyles[name] : ''}`}
       style={defaultBackground ? {} : backgroundStyle}
     >
       <Player

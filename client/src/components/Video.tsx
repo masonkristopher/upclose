@@ -107,7 +107,7 @@ const Video: FC<VideoProps> = ({
   // };
 
   return (
-    <div className="text-blue mt-4">
+    <div className="text-blue">
       <video ref={ref} playsInline autoPlay>
         <track />
       </video>

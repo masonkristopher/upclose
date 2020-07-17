@@ -161,31 +161,28 @@ const HouseParty: FC<HousePartyProps> = ({
 
   // to do: make all this render only if a user is invited
   return (
-    <div className="container p-8">
+    <div className="pl-8 pt-4">
       <h1 className="text-xl">Party Name</h1>
-      {/* House */}
       <div className="float-left">
-        <div className="mx-auto bg-gray-200 h-500 w-500 border-solid border-black">
-          <Room
-            name={positions[socket.id].currentRoom}
-            party={party}
-            positions={positions}
-            setPeers={setPeers}
-            setPositions={setPositions}
-            socket={socket}
-          />
-        </div>
+        <Room
+          name={positions[socket.id].currentRoom}
+          party={party}
+          positions={positions}
+          setPeers={setPeers}
+          setPositions={setPositions}
+          socket={socket}
+        />
+      </div>
+      <div className="bg-gray-100 md:float-left pl-4">
+        <PlayerVideoPanel
+          positions={positions}
+          socket={socket}
+          userVideo={userVideo}
+        />
       </div>
 
-      {/* Right=Side Video Side Panel */}
-      <PlayerVideoPanel
-        positions={positions}
-        socket={socket}
-        userVideo={userVideo}
-      />
-
       {/* Peer Videos */}
-      <div className="bg-gray-100 md:float-left">
+      <div className="bg-gray-100 md:float-left pl-4">
         {Object.keys(peers).map((socketId: string) => {
           return (
             <Video
