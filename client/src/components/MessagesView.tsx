@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 import axios from 'axios';
+
 // maybe I am a popup, maybe a dropdown menu thing, maybe a separate page
 interface IProps {
   user: {
@@ -24,23 +25,33 @@ interface IProps {
   setShowMessages: any,
 }
 
-const MessagesView: FC<IProps> = ({ user, clickedUser, showMessages, setShowMessages }) => {
+const MessagesView: FC<IProps> = ({
+  user, clickedUser, showMessages, setShowMessages,
+}) => {
   const [typedMessage, setTypedMessage]: any = useState('');
   const [allMessages, setAllMessages]: any = useState([]);
+  // const [check, setCheck]: any = useState(false);
 
-  const updateMessages = () => {
+  // grab both user and their combined messages sorted
+  const getMessages = () => {
     axios
       .get(`/messages/all/${user.id}/${clickedUser.id}`)
       .then((response) => {
-        console.log('messages between two users', response);
         setAllMessages(response.data);
       })
-      .catch((err) => console.error(err));
+      .catch(error => console.log(error));
   };
 
-  useEffect(() => {
-    updateMessages();
-  }, []);
+  // useEffect to shift done to true or false every so often
+  // useEffect(() => {
+  //   setCheck(!check);
+  //   console.log('Check if allMessages is updating', allMessages);
+  // });
+
+  // useEffect to call getMessages every time done switches
+  // useEffect(() => {
+  //   getMessages();
+  // }, [check]);
 
   const sendMessage = () => {
     const messageObj = {
@@ -48,11 +59,10 @@ const MessagesView: FC<IProps> = ({ user, clickedUser, showMessages, setShowMess
       idSender: user.id,
       idRecipient: clickedUser.id,
     };
-
     axios
       .post('/messages/send', messageObj)
-      .then(() => console.log('Message was sent', messageObj))
-      .then(() => updateMessages())
+      .then(() => showMessages())
+      // .then((response) => setAllMessages(allMessages.concat(response.data)))
       .catch(error => console.log(error));
   };
 
@@ -112,6 +122,13 @@ const MessagesView: FC<IProps> = ({ user, clickedUser, showMessages, setShowMess
           type="button"
         >
           Back to Threads
+        </button>
+        <button
+          onClick={() => getMessages()}
+          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
+          type="button"
+        >
+          Show Messages
         </button>
       </div>
     </div>
