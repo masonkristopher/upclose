@@ -2,12 +2,16 @@ import React, {
   FC, useState, ReactElement, useRef, useEffect,
 } from 'react';
 
+import Peer from 'simple-peer';
+
+import { Position, Positions } from '../services/constants';
+
 interface VideoProps {
-  peer: any;
-  positionA: any;
-  positionB: any;
-  id: any;
-  positions: any;
+  peer: Peer.Instance;
+  positionA: Position;
+  positionB: Position;
+  id: string;
+  positions: Positions;
 }
 
 const Video: FC<VideoProps> = ({
@@ -16,7 +20,7 @@ const Video: FC<VideoProps> = ({
   positionB,
   positions,
   id,
-}) => {
+}): ReactElement => {
   const ref: any = useRef<HTMLVideoElement>(null);
   const [showVolume, setShowVolume]: any = useState(0);
 
