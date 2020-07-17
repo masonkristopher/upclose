@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom';
 import {
   ChatSend,
   House,
-  // Radar,
+  Radar,
   Video,
 } from '.';
 
@@ -173,9 +173,7 @@ const HouseParty: FC<HousePartyProps> = ({
   return (
     <div className="container p-8">
       {/* Header */}
-      <div className="">
-        {`Party Name: ${party.name} ${positions[playerSocket].currentRoom}`}
-      </div>
+
       {/* House */}
       <div className="float-left">
         <div className="">
@@ -188,8 +186,9 @@ const HouseParty: FC<HousePartyProps> = ({
           />
         </div>
       </div>
-
-      {/* <Radar /> */}
+      <div className="block float-right">
+        <Radar positions={positions} socket={socket} />
+      </div>
 
       {/* Right=Side Video Side Panel */}
       <div className="bg-gray-500 p-4 float-left m-6">
