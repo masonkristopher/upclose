@@ -4,13 +4,13 @@ import React, { FC, ReactElement } from 'react';
 import { Position } from '../services/constants';
 
 interface PartyGoerProps {
-  position: Position;
   calibration?: number;
+  position: Position;
 }
 
 const PartyGoer: FC<PartyGoerProps> = ({
-  position,
   calibration = 0,
+  position,
 }): ReactElement => {
   const assignPosition = (pos: Position) => {
     return {
@@ -21,7 +21,7 @@ const PartyGoer: FC<PartyGoerProps> = ({
   return (
     <div className="">
       <img
-        className="relative rounded-full h-10 w-10 z-10"
+        className="relative rounded-full h-50p w-50p z-10"
         style={assignPosition(position)}
         src={position.avatar}
         alt="party goer"
