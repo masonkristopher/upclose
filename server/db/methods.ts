@@ -98,7 +98,7 @@ const getAllParties = async (id) => {
 };
 
 // GET ALL USERS THAT HAVE JOINED A PARTY
-const getUsersInParty = async (idParty) => {
+const getAllUsersInParty = async (idParty) => {
   try {
     // query join table to find all parties that match a given party id
     return UserParty.findAll({ where: { idParty } })
@@ -110,6 +110,15 @@ const getUsersInParty = async (idParty) => {
         // promise.all ensures that all the findOnes have resolved before returning
         return Promise.all(users);
       });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// GET ONE ENTRY FROM THE USERPARTY TABLE
+const getUserInParty = async (idUser, idParty) => {
+  try {
+    return UserParty.findOne({ where: { idUser, idParty } });
   } catch (err) {
     console.error(err);
   }
@@ -168,6 +177,7 @@ const updateParty = async (partyObj) => {
   }
 };
 
+// DELETE AN ENTRY IN THE USERPARTY TABLE
 const deleteFromParty = async (idUser, idParty) => {
   try {
     UserParty.destroy({
@@ -278,7 +288,8 @@ export {
   updateUser,
   getParty,
   addUserToParty,
-  getUsersInParty,
+  getAllUsersInParty,
+  getUserInParty,
   getAllParties,
   createParty,
   deleteParty,
