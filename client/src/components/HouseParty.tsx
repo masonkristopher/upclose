@@ -9,12 +9,10 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-import {
-  ChatSend,
-  House,
-  Radar,
-  Video,
-} from '.';
+import ChatSend from './ChatSend';
+import Radar from './Radar';
+import Room from './Room';
+import Video from './Video';
 
 import {
   Position,
@@ -178,11 +176,10 @@ const HouseParty: FC<HousePartyProps> = ({
 
       {/* House */}
       <div className="float-left">
-        <div className="">
-          <House
-            user={user}
+        <div className="mx-auto bg-gray-200 h-500 w-500 border-solid border-black" id="house-container">
+          <Room
+            name={positions[socket.id].currentRoom}
             party={party}
-            // setRoomID={setRoomID}   *******************************************
             positions={positions}
             setPeers={setPeers}
             setPositions={setPositions}
