@@ -136,6 +136,16 @@ const deleteParty = async (idParty) => {
   }
 };
 
+// UPDATE A PARTY
+const updateParty = async (partyObj) => {
+  try {
+    await Party.update(partyObj,
+      { returning: true, where: { id: partyObj.id } });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 const deleteFromParty = async (idUser, idParty) => {
   try {
     UserParty.destroy({
@@ -250,6 +260,7 @@ export {
   getAllParties,
   createParty,
   deleteParty,
+  updateParty,
   deleteFromParty,
   getMessagesWithOneUser,
   getUsersSendersIds,

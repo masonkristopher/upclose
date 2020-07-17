@@ -158,6 +158,8 @@ const HouseParty: FC<HousePartyProps> = ({
     });
   }, [users]);
 
+  // to do: uncomment this to check that a user is involved in a party *************************
+
   // watches invited for changes; if the user was invited, begin socketConnect
   // useEffect(() => {
   //   if (party.inviteOnly === false || (invited === true)) {
@@ -178,11 +180,13 @@ const HouseParty: FC<HousePartyProps> = ({
       <div className="float-left">
         <div className="">
           <House
+            user={user}
+            party={party}
+            // setRoomID={setRoomID}   *******************************************
             positions={positions}
             setPeers={setPeers}
             setPositions={setPositions}
             socket={socket}
-            user={user}
           />
         </div>
       </div>
