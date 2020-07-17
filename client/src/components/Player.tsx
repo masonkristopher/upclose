@@ -2,19 +2,19 @@ import React, { FC, ReactElement, useEffect } from 'react';
 
 import PartyGoer from './PartyGoer';
 
-import { Position } from '../services/constants';
+import { Direction, Position } from '../services/constants';
 
 interface PlayerProps {
-  handlePlayerMovement: any;
+  handlePlayerMovement: (direction: Direction) => void;
   position: Position;
 }
 
 const House: FC<PlayerProps> = ({
-  position,
   handlePlayerMovement,
+  position,
 }): ReactElement => {
   const handleKeyDown = (event: KeyboardEvent) => {
-    let newDirection;
+    let newDirection: Direction;
     switch (event.keyCode) {
       case 37:
         event.preventDefault();

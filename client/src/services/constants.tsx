@@ -1,4 +1,6 @@
-/* User Interface */
+import Peer from 'simple-peer';
+
+/* User */
 export interface User {
   id: number,
   nameFirst: string,
@@ -15,11 +17,20 @@ export const videoConstraints: MediaTrackConstraints = {
   height: 180,
 };
 
-/* House Structure */
-type layout = 'red' | 'green' | 'blue' | 'yellow';
+/* House */
+export interface Position {
+  avatar: string,
+  currentRoom: layout,
+  top: number,
+  left: number,
+}
+
+export type Peers = Record<string, Peer.Instance>;
+export type Positions = Record<string, Position>;
+
+export type layout = 'red' | 'green' | 'blue' | 'yellow';
 
 interface Room {
-  name: layout,
   xChange: layout,
   yChange: layout,
 }
@@ -33,22 +44,18 @@ interface House {
 
 export const house: House = {
   red: {
-    name: 'red',
     xChange: 'blue',
     yChange: 'green',
   },
   blue: {
-    name: 'blue',
     xChange: 'red',
     yChange: 'yellow',
   },
   green: {
-    name: 'green',
     xChange: 'yellow',
     yChange: 'red',
   },
   yellow: {
-    name: 'yellow',
     xChange: 'green',
     yChange: 'blue',
   },
@@ -57,12 +64,12 @@ export const house: House = {
 /* Room */
 export const roomSize = 500;
 
-export type dir = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN';
+export type Dir = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN';
 
 export interface Direction {
-  top: 0 | 1;
-  left: 0 | 1;
-  dir: dir;
+  top: 0 | 1 | -1;
+  left: 0 | 1 | -1;
+  dir: Dir;
 }
 
 export enum RoomStyles {
@@ -73,8 +80,10 @@ export enum RoomStyles {
 }
 
 /* Player */
-export interface Position {
-  avatar: string,
-  top: number,
-  left: number,
-}
+export const randomPosition = () => {
+  let x = Math.floor(Math.random() * 500);
+  while (x % 50 !== 0) {
+    x -= 1;
+  }
+  return x;
+};
