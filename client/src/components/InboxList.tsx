@@ -2,6 +2,8 @@ import React, { FC, useState, useEffect } from 'react';
 import axios from 'axios';
 import MessagesView from './MessagesView';
 import InboxListItem from './InboxListItem';
+import SearchMessage from './SearchMessage';
+import Search from './Search';
 
 interface IProps {
   user:{
@@ -19,6 +21,7 @@ const Messages: FC<IProps> = ({ user }) => {
   const [clickedUser, setClickedUser]: any = useState({});
   const [threads, setThreads]: any = useState([]);
   const [showMessages, setShowMessages]: any = useState(clickedUser !== {});
+
   useEffect(() => {
     axios
       .get(`messages/threads/${user.id}`)
@@ -46,15 +49,18 @@ const Messages: FC<IProps> = ({ user }) => {
         ? (<div><MessagesView clickedUser={clickedUser} user={user} showMessages={showMessages} setShowMessages={setShowMessages} /></div>)
         : (
           <div>
-            {threads.map((thread: any) => {
-              return (
-                <InboxListItem
-                  thread={thread}
-                  key={thread.id}
-                  handleMessageView={handleMessageView}
-                />
-              );
-            })}
+            <div>
+              {threads.map((thread: any) => {
+                return (
+                  <InboxListItem
+                    thread={thread}
+                    key={thread.id}
+                    handleMessageView={handleMessageView}
+                  />
+                );
+              })}
+            </div>
+            <div><SearchMessage setClickedUser={setClickedUser} showMessages={showMessages} setShowMessages={setShowMessages} /></div>
           </div>
         )}
     </div>
