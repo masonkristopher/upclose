@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 import axios from 'axios';
+
 // maybe I am a popup, maybe a dropdown menu thing, maybe a separate page
 interface IProps {
   user: {
@@ -19,59 +20,49 @@ interface IProps {
     email: string,
     avatar: string,
     googleId: string,
-  }
+  },
+  showMessages: any,
+  setShowMessages: any,
 }
 
-const fakeMessages = [
-  {
-    id: 1,
-    message: "What's up gamer",
-    sender_id: 3,
-    recipient_id: 2,
-  },
-  {
-    id: 2,
-    message: 'Nothing much',
-    sender_id: 2,
-    recipient_id: 3,
-  },
-  {
-    id: 3,
-    message: 'We gaming today?',
-    sender_id: 3,
-    recipient_id: 2,
-  },
-  {
-    id: 4,
-    message: 'Fortnite?',
-    sender_id: 3,
-    recipient_id: 2,
-  },
-  {
-    id: 4,
-    message: 'lets get these EZ Dubs',
-    sender_id: 2,
-    recipient_id: 3,
-  },
-];
-
-const MessagesView: FC<IProps> = ({ user, clickedUser }) => {
+const MessagesView: FC<IProps> = ({
+  user, clickedUser, showMessages, setShowMessages,
+}) => {
   const [typedMessage, setTypedMessage]: any = useState('');
-  const [allMessages, setAllMessages]: any = useState(fakeMessages);
+  const [allMessages, setAllMessages]: any = useState([]);
+  // const [check, setCheck]: any = useState(false);
 
-  useEffect(() => {
+  // grab both user and their combined messages sorted
+  const getMessages = () => {
     axios
       .get(`/messages/all/${user.id}/${clickedUser.id}`)
       .then((response) => {
         setAllMessages(response.data);
       })
-      .catch((err) => console.error(err));
-  }, []);
+      .catch(error => console.log(error));
+  };
+
+  // useEffect to shift done to true or false every so often
+  // useEffect(() => {
+  //   setCheck(!check);
+  //   console.log('Check if allMessages is updating', allMessages);
+  // });
+
+  // useEffect to call getMessages every time done switches
+  // useEffect(() => {
+  //   getMessages();
+  // }, [check]);
 
   const sendMessage = () => {
+    const messageObj = {
+      message: typedMessage,
+      idSender: user.id,
+      idRecipient: clickedUser.id,
+    };
     axios
-      .post(`/message/sendto/${clickedUser.id}/from/${user.id}`)
-      .then(() => console.log('Message was sent'))
+      .post('/messages/send', messageObj)
+      .then(() => showMessages())
+      // .then((response) => setAllMessages(allMessages.concat(response.data)))
       .catch(error => console.log(error));
   };
 
@@ -81,10 +72,10 @@ const MessagesView: FC<IProps> = ({ user, clickedUser }) => {
         I am the child of beautiful Messages
       </div>
       <div>
-        {fakeMessages.length >= 1
-          ? allMessages.map((messageObj: {id: number, message: string, sender_id: number, recipient_id: number}) => (
+        {allMessages.length >= 1
+          ? allMessages.map((messageObj: {id: number, message: string, idSender: number, idRecipient: number}) => (
             <div key={messageObj.id}>
-              {messageObj.sender_id === user.id
+              {messageObj.idSender === user.id
                 ? (
                   <div className="">
                     <img
@@ -124,6 +115,20 @@ const MessagesView: FC<IProps> = ({ user, clickedUser }) => {
           type="button"
         >
           Send
+        </button>
+        <button
+          onClick={() => setShowMessages(!showMessages)}
+          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
+          type="button"
+        >
+          Back to Threads
+        </button>
+        <button
+          onClick={() => getMessages()}
+          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
+          type="button"
+        >
+          Show Messages
         </button>
       </div>
     </div>
