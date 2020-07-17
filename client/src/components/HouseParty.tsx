@@ -9,20 +9,39 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-import { House, Video, ChatSend } from '.';
-import { User, videoConstraints } from '../services/constants';
+import {
+  ChatSend,
+  House,
+  Radar,
+  Video,
+} from '.';
+
+import {
+  Position,
+  User,
+  randomPosition,
+  videoConstraints,
+} from '../services/constants';
+
 import { addPeer, createPeer } from '../services/peerServices';
 
 const socket = io.connect('/');
 
 interface HousePartyProps {
   user: User;
+  initialPlayerPosition?: Position;
 }
 
 // this component will be rendered from the Navbar, via a link in the PartyProfile page
 // its route will be /party/partyId
 const HouseParty: FC<HousePartyProps> = ({
   user,
+  initialPlayerPosition = {
+    avatar: user.avatar,
+    currentRoom: 'red',
+    top: randomPosition(),
+    left: randomPosition(),
+  },
 }): ReactElement => {
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
@@ -32,16 +51,8 @@ const HouseParty: FC<HousePartyProps> = ({
   const [party, setParty]: any = useState({});
   const [users, setUsers]: any = useState([]);
 
-  const [roomID, setRoomID] = useState({ oldRoom: null, newRoom: 'red' });
-
   const [peers, setPeers]: any = useState({}); // { [socketId]: peer, [socketId]: peer... }
-  const [positions, setPositions] = useState({
-    [playerSocket]: {
-      avatar: user.avatar,
-      top: Math.random() * 500,
-      left: Math.random() * 500,
-    },
-  });
+  const [positions, setPositions] = useState({ [playerSocket]: initialPlayerPosition });
 
   const userVideo = useRef<HTMLVideoElement>(null);
 
@@ -62,25 +73,15 @@ const HouseParty: FC<HousePartyProps> = ({
     }
   };
 
-  const joinRoom = () => {
-    socket.emit('join room', roomID.newRoom);
-  };
-
-  const switchRoom = () => {
-    setPeers({});
-    socket.emit('switch room', roomID.oldRoom, roomID.newRoom);
-  };
-
   const joinParty = () => {
     navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true })
       .then(stream => {
         (userVideo.current as HTMLVideoElement).srcObject = stream;
-        joinRoom();
+        socket.emit('join room', positions[playerSocket]);
 
-        // remove user from peers
-        socket.on('user left room', (leavingUserId: string, newRoomId: string) => {
-          console.log(`user ${leavingUserId} left the room, removing from users`);
-          if (roomID.newRoom !== newRoomId) {
+        // remove user from peers but not positions
+        socket.on('user left room', (leavingUserId: string, newRoom: string) => {
+          if (positions[playerSocket].currentRoom !== newRoom) {
             delete peers[leavingUserId];
             setPeers({ ...peers });
           }
@@ -89,6 +90,7 @@ const HouseParty: FC<HousePartyProps> = ({
         // create new peer for new other users in room
         socket.on('user joined room', (joiningUserId: string) => {
           if (joiningUserId !== socket.id) {
+            socket.emit('player moved', { [socket.id]: positions[socket.id] });
             const peer = createPeer(socket, joiningUserId, socket.id, stream);
             peers[joiningUserId] = peer;
             setPeers({ ...peers });
@@ -109,21 +111,16 @@ const HouseParty: FC<HousePartyProps> = ({
         });
 
         socket.on('user left party', (leavingUserId: string) => {
+          delete positions[leavingUserId];
           delete peers[leavingUserId];
+          setPositions({ ...positions });
           setPeers({ ...peers });
         });
 
         socket.on('update player', (payload: any) => {
           const playerId = Object.keys(payload)[0];
-          if (peers[playerId]) {
-            console.log(`player ${playerId} is in the same room... updating position`);
-            positions[playerId] = payload[playerId];
-            setPositions({ ...positions });
-          } else {
-            console.log(`player ${playerId} is not in same room... removing position`);
-            delete positions[playerId];
-            setPositions({ ...positions });
-          }
+          positions[playerId] = payload[playerId];
+          setPositions({ ...positions });
         });
       });
   };
@@ -135,10 +132,8 @@ const HouseParty: FC<HousePartyProps> = ({
 
   // Runs once when HouseParty component initially renders
   useEffect(() => {
-    if (roomID.oldRoom === null) {
-      joinParty();
-      console.log(`user ${socket.id} joined party`);
-    }
+    console.log(`user ${socket.id} joined party`);
+    joinParty();
     // should query the database and find the party we need on render
     axios.get(`/party/${partyId}`)
       .then((response) => {
@@ -152,13 +147,6 @@ const HouseParty: FC<HousePartyProps> = ({
       .catch((err) => console.error(err));
   }, []);
 
-  useEffect(() => {
-    if (roomID.oldRoom !== null) {
-      console.log(`user: ${socket.id} switched from ${roomID.oldRoom} to ${roomID.newRoom}`);
-      switchRoom();
-    }
-  }, [roomID]);
-
   // watches users for changes, then checks that the logged in user is an invited user
   useEffect(() => {
     users.forEach((invitedUser: any, index: number) => {
@@ -169,6 +157,8 @@ const HouseParty: FC<HousePartyProps> = ({
       }
     });
   }, [users]);
+
+  // to do: uncomment this to check that a user is involved in a party *************************
 
   // watches invited for changes; if the user was invited, begin socketConnect
   // useEffect(() => {
@@ -185,20 +175,23 @@ const HouseParty: FC<HousePartyProps> = ({
   return (
     <div className="container p-8">
       {/* Header */}
-      <div className="">
-        {`Party Name: ${party.name} ${roomID.newRoom}`}
-      </div>
+
       {/* House */}
       <div className="float-left">
         <div className="">
           <House
             user={user}
-            setRoomID={setRoomID}
+            party={party}
+            // setRoomID={setRoomID}   *******************************************
             positions={positions}
+            setPeers={setPeers}
             setPositions={setPositions}
             socket={socket}
           />
         </div>
+      </div>
+      <div className="block float-right">
+        <Radar positions={positions} socket={socket} />
       </div>
 
       {/* Right=Side Video Side Panel */}

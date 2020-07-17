@@ -1,16 +1,6 @@
-import React, { FC, ReactElement, useState, useEffect } from 'react';
-import UserDetails from './UserDetails';
+import React, { FC, ReactElement } from 'react';
 
 interface InboxListItemProps {
-  // // user: {
-  //   id: number,
-  //   nameFirst: string,
-  //   nameLast: string,
-  //   username: string,
-  //   email: string,
-  //   avatar: string,
-  //   googleId: string,
-  // // },
   thread: {
     id: number,
     nameFirst: string,
@@ -20,13 +10,12 @@ interface InboxListItemProps {
     avatar: string,
     googleId: string,
   },
-  setClickedUser: any,
+  handleMessageView: any,
 }
 
 const InboxListItem: FC<InboxListItemProps> = ({
-  // user,
   thread,
-  setClickedUser,
+  handleMessageView,
 }): ReactElement => {
   return (
     <div className="">
@@ -35,10 +24,7 @@ const InboxListItem: FC<InboxListItemProps> = ({
         src={thread.avatar}
         alt=""
       />
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { setClickedUser(thread); }}>{ thread.username }</button>
-      {/* <ul onClick={onCLick}>
-        {thread.username}
-      </ul> */}
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { handleMessageView(thread); }}>{ thread.username }</button>
     </div>
   );
 };

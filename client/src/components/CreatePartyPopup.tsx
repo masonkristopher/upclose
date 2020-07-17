@@ -167,6 +167,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           display: 'flex'
         }}
         open={popUpNumber === 2}
+        onClose={() => {setInvitees([]); setPopupNumber(0)}}
       >
         <>
           <div className="flex flex-col">

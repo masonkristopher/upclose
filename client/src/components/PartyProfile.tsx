@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
+import Popup from 'reactjs-popup';
 import axios from 'axios';
 import PartySettings from './PartySettings';
 import Search from './Search';
@@ -22,6 +23,8 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   const [users, setUsers]: any = useState([]);
   const [update, setUpdate]: any = useState(true);
   const [invited, setInvited]: any = useState(false);
+  const [changeBackground, setChangeBackground]: any = useState(false);
+  const [roomBackgrounds, setRoomBackgrounds]: any = useState({1: 'red', 2: 'blue', 3: 'green', 4: 'yellow' });
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
   // useHistory allows us to redirect by pushing onto the url
@@ -66,23 +69,50 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
 
   // watches users for changes, then checks that the logged in user is an invited user
   useEffect(() => {
-    users.forEach((invitedUser: any, index: number) => {
+    users.forEach((invitedUser: any) => {
       if (invitedUser.id === user.id) {
         setInvited(true);
-      } else if (index === users.length - 1) {
-        setInvited(false);
       }
     });
   }, [users]);
 
+  const editPartyName = () => {
+    // should pop up a thing to edit the name
+    // send a request to edit party in the database
+    // update state
+    console.log('hello')
+  };
+
+  const editRoomBackgrounds = (e:any, roomNumber: number) => {
+    const copy = {...roomBackgrounds};
+    copy[roomNumber] = e.target.value;
+    setRoomBackgrounds(copy);
+  };
+
+  const saveRoomBackgrounds = () => {
+    // send a request to update a party
+    // console.log(party, 'before')
+    party.roomOneBackground = roomBackgrounds[1];
+    party.roomTwoBackground = roomBackgrounds[2];
+    party.roomThreeBackground = roomBackgrounds[3];
+    party.roomFourBackground = roomBackgrounds[4];
+    axios.put('/party/', { party });
+  };
+
   return (
-    <div>
-      <div className="text-blue">
+    <div className="flex flex-col">
+      <div className="flex flex-col">
         {party && (
-          <h4>
-            party name is:
-            {party.name}
-          </h4>
+          <div className="flex flex-row">
+            <h4>
+              party name is:
+              {party.name}
+            </h4>
+            <div role="button" tabIndex={0} onClick={editPartyName} onKeyUp={editPartyName}>
+              <img className="h-4 w-4 ml-2" alt="edit" src="https://www.pngfind.com/pngs/m/70-704184_png-file-svg-pencil-edit-icon-png-transparent.png" />
+
+            </div>
+          </div>
         )}
         {users && user.id !== party.idCreator && (
           <h4>
@@ -114,11 +144,17 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
           </div>
         )}
       </div>
-      {/* {users.includes(user) === false && (
-        <button type="button"> Would you like to join this party?</button>
-      )} */}
       <button type="button">Change House layout</button>
-      <button type="button">Change Party Settings</button>
+      <button type="button" onClick={() => setChangeBackground(true)}>Change Room backgrounds</button>
+      <Popup open={changeBackground === true} onClose={() => {setChangeBackground(false)}}>
+        <div className="flex flex-col">
+          <input onChange={(e) => {editRoomBackgrounds(e, 1)}} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[1]} />
+          <input onChange={(e) => {editRoomBackgrounds(e, 2)}} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[2]} />
+          <input onChange={(e) => {editRoomBackgrounds(e, 3)}} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[3]} />
+          <input onChange={(e) => {editRoomBackgrounds(e, 4)}} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[4]} />
+          <button type="button" onClick={() => {saveRoomBackgrounds(); setChangeBackground(false)}}>Save Images</button>
+        </div>
+      </Popup>
       {(party.inviteOnly === false || (invited === true)) && (
         <button onClick={goToParty} type="button">Go to this party!</button>
       )}

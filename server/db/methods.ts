@@ -136,6 +136,16 @@ const deleteParty = async (idParty) => {
   }
 };
 
+// UPDATE A PARTY
+const updateParty = async (partyObj) => {
+  try {
+    await Party.update(partyObj,
+      { returning: true, where: { id: partyObj.id } });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 const deleteFromParty = async (idUser, idParty) => {
   try {
     UserParty.destroy({
@@ -215,7 +225,29 @@ const getAllUsersThreads = async (userId) => {
   }
 };
 
-getAllUsersThreads(1);
+const getAllUserMessages = async (idSender, idRecipient) => {
+  try {
+    return await Message.findAll({
+      // attributes: ['message'],
+      where: {
+        idSender,
+        idRecipient,
+      },
+      raw: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const sendUserMessage = async (messageObj) => {
+  try {
+    return await Message.create(messageObj);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createUser,
   getAllUsers,
@@ -228,9 +260,12 @@ export {
   getAllParties,
   createParty,
   deleteParty,
+  updateParty,
   deleteFromParty,
   getMessagesWithOneUser,
   getUsersSendersIds,
   getUsersRecipientsIds,
   getAllUsersThreads,
+  getAllUserMessages,
+  sendUserMessage,
 };
