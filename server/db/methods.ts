@@ -105,11 +105,12 @@ const getParty = async (id) => {
 };
 
 // ADDS A USER AND PARTY TO THE USERPARTY JOIN TABLE
-const addUserToParty = async (idUser, idParty) => {
+const addUserToParty = async (idUser, idParty, inviteStatus) => {
   try {
     const party = await Party.findOne({ where: { id: idParty } });
     const user = await User.findOne({ where: { id: idUser } });
-    party.addUser(user);
+    // @ts-ignore             *************** fix meeeeee pleeeeeaseseesaaaa
+    party.addUser(user, { through: { inviteStatus }});
   } catch (err) {
     console.error(err);
   }

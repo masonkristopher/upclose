@@ -71,8 +71,9 @@ userRouter.put('/profile/edit', (req, res) => {
 
 userRouter.post('/:idUser/joins/:idParty', (req, res) => {
   const { idUser, idParty } = req.params;
+  const { inviteStatus } = req.body;
   // console.log(req.params, '/userid/joins/partyid')
-  addUserToParty(idUser, idParty)
+  addUserToParty(idUser, idParty, inviteStatus)
     .then(() => {
       res.send('user added to party');
     })
