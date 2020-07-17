@@ -2,13 +2,6 @@ import React, {
   FC, useState, ReactElement, useRef, useEffect,
 } from 'react';
 
-import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider'; // example render components - source below
-
-const sliderStyle = {
-  position: 'relative',
-  width: '100%',
-}
-
 interface VideoProps {
   peer: any;
   positionA: any;
@@ -82,20 +75,18 @@ const Video: FC<VideoProps> = ({
     peer.on('stream', (stream: any) => {
       if (ref.current !== null) {
         ref.current.srcObject = stream;
-        setVolume(getDistance(positionA, positionB));
-        console.log(ref.current.volume);
       }
     });
   }, []);
 
   useEffect(() => {
     setVolume(getDistance(positionA, positionB));
-    console.log(`this is current the volume of ${id}`, ref.current.volume);
+    console.log('positionA', id, ref.current.volume);
   }, [positionA]);
 
   useEffect(() => {
     setVolume(getDistance(positionA, positionB));
-    console.log(`this is current the volume of ${id}`, ref.current.volume);
+    console.log('positionB', id, ref.current.volume);
   }, [positionB]);
 
   // const setGain = (num: number) => {
@@ -107,9 +98,9 @@ const Video: FC<VideoProps> = ({
       <video ref={ref} playsInline autoPlay>
         <track />
       </video>
-      current volume:
-      { (showVolume * 10) }
-      /10
+      user volume:
+      { (showVolume * 100) }
+      %
     </div>
   );
 };
