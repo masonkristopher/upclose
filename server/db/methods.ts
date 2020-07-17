@@ -61,16 +61,37 @@ const updateUser = async (userObj) => {
 // GET ALL A USER'S PARTIES, BY USERID
 const getAllParties = async (id) => {
   try {
-    // we need to query our user/party join table and return all parties that match the user's id
-    return UserParty.findAll({ where: { idUser: id } })
-      .then((joinedParties) => {
-        // now that we have all the parties a user is a part of, we find the actual party objects
-        const parties = joinedParties.map((joinedParty) => {
-          return Party.findOne({ where: { id: joinedParty.idParty } });
+    // first find all the parties a user has accepted in the userParty table
+    const acceptedParties = await UserParty.findAll({ where: { idUser: id, inviteStatus: 'accepted' } })
+      .then((parties) => {
+        // return all the actual party objects
+        const p = parties.map((party) => {
+          return Party.findOne({ where: { id: party.idParty } });
         });
-        // promise.all ensures that all the findOnes have resolved before returning
-        return Promise.all(parties);
+        // Promise.all ensures the promises resolve before we return
+        return Promise.all(p);
       });
+
+    // add an inviteStatus to each party object, for use in the frontend
+    acceptedParties.forEach((party: any) => {
+      party.dataValues.inviteStatus = 'accepted';
+    })
+
+    // same thing with pendingParties
+    const pendingParties = await UserParty.findAll({ where: { idUser: id, inviteStatus: 'pending' } })
+      .then((parties) => {
+        const a = parties.map((party) => {
+          return Party.findOne({ where: { id: party.idParty } });
+        });
+        return Promise.all(a);
+      });
+
+    pendingParties.forEach((party: any) => {
+      party.dataValues.inviteStatus = 'pending';
+    })
+
+    // return all parties
+    return acceptedParties.concat(pendingParties);
   } catch (err) {
     console.error(err);
   }
@@ -109,8 +130,8 @@ const addUserToParty = async (idUser, idParty, inviteStatus) => {
   try {
     const party = await Party.findOne({ where: { id: idParty } });
     const user = await User.findOne({ where: { id: idUser } });
-    // @ts-ignore             *************** fix meeeeee pleeeeeaseseesaaaa
-    party.addUser(user, { through: { inviteStatus }});
+    // @ts-ignore             ***************to do fix meeeeee pleeeeeaseseesaaaa
+    party.addUser(user, { through: { inviteStatus } });
   } catch (err) {
     console.error(err);
   }
@@ -164,10 +185,10 @@ const getMessagesWithOneUser = async (idSender, idRecipient) => {
   try {
     return await Message.findAll({
       where:
-        {
-          idSender,
-          idRecipient,
-        },
+      {
+        idSender,
+        idRecipient,
+      },
     });
   } catch (err) {
     console.error(err);
