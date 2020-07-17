@@ -100,7 +100,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
         <div className="p-8 flex">
           <button type="button" className="close absolute top-0 right-0" onClick={() => { setPopupNumber(0); setInvitees([]); }}>
             &times;
-            </button>
+          </button>
           <h4 className="absolute left-0 top-0 pl-2 pt-2">Create a Party</h4>
           <div className="flex">
             <input onChange={setPartyName} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Party Name?" />
@@ -167,10 +167,13 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           display: 'flex'
         }}
         open={popUpNumber === 2}
-        onClose={() => {setInvitees([]); setPopupNumber(0)}}
+        onClose={() => { setInvitees([]); }}
       >
         <>
           <div className="flex flex-col">
+            <button type="button" className="close absolute top-0 right-0" onClick={() => { setPopupNumber(0); setInvitees([]); }}>
+              &times;
+            </button>
             <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
             <SearchPopup
               user={user}
