@@ -26,21 +26,19 @@ app.get('*', (req: Request, res: Response): void => {
 
 io.on('connection', socket => {
   // if user joins room
-  socket.on('join room', (newRoom: string) => {
+  socket.on('join room', (playerPosition) => {
+    const newRoom = playerPosition.currentRoom;
     socket.join(newRoom, () => {
-      console.log(`${socket.id} joined room ${newRoom}`);
+      socket.broadcast.emit('update player', { [socket.id]: playerPosition });
       io.to(newRoom).emit('user joined room', socket.id);
     });
   });
 
   // if user switches room
-  socket.on('switch room', (oldRoom: string, newRoom: string) => {
-    socket.leave(oldRoom, () => {
-      console.log(`${socket.id} left room ${oldRoom}`);
-      io.to(oldRoom).emit('user left room', socket.id);
-      // socket.broadcast.emit('user left room', { userId: socket.id, roomId: newRoom });
+  socket.on('switch room', (previousRoom: string, newRoom: string) => {
+    socket.leave(previousRoom, () => {
+      socket.broadcast.emit('user left room', socket.id, newRoom);
       socket.join(newRoom, () => {
-        console.log(`${socket.id} switched room ${newRoom}`);
         io.to(newRoom).emit('user joined room', socket.id);
       });
     });
@@ -55,7 +53,6 @@ io.on('connection', socket => {
   });
 
   socket.on('player moved', payload => {
-    console.log(payload);
     socket.broadcast.emit('update player', payload);
   });
 
