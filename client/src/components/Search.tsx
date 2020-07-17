@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 
-const Search = ({ partyId, setPartyUpdate, update }: any) => {
+const Search = ({ partyId, setPartyUpdate, update, inMessage, setInMessage }: any) => {
   const [input, setInput] = useState('');
   const [users, setUsers] = useState([]);
   const [matches, setMatches]: any = useState([]);
