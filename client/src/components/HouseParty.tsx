@@ -225,6 +225,7 @@ const HouseParty: FC<HousePartyProps> = ({
                 peer={peers[socketId]}
                 positionA={positions[socketId]}
                 positionB={positions[playerSocket]}
+                positions={positions}
               />
             );
           })}
