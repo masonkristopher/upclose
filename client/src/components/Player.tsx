@@ -10,8 +10,8 @@ interface PlayerProps {
 }
 
 const House: FC<PlayerProps> = ({
-  position,
   handlePlayerMovement,
+  position,
 }): ReactElement => {
   const handleKeyDown = (event: KeyboardEvent) => {
     let newDirection;
