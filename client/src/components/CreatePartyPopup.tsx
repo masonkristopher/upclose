@@ -80,10 +80,14 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
         // party's id
         const { id } = response.data;
         // add logged in user to UserParty join table
-        axios.post(`user/${user.id}/joins/${id}`);
+        axios.post(`user/${user.id}/joins/${id}`, {
+          inviteStatus: 'accepted',
+        });
         // map through invitees and use their userId + id to add them to UserParty table
         invitees.map((invitee: any) => {
-          axios.post(`user/${invitee.id}/joins/${id}`);
+          axios.post(`user/${invitee.id}/joins/${id}`, {
+            inviteStatus: 'pending',
+          });
         });
         return id;
       })
