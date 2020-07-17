@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  font-family: "Montserrat", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafc;
+}
+
 .h-half {
   height: 50%;
 }
@@ -28,4 +35,12 @@
 
 .w-chat-input {
   width: 350px;
+}
+
+.h-house {
+  height: 250px;
+}
+
+.w-house {
+  width: 250px;
 }
