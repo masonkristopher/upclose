@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllParties, getParty, createParty, getUsersInParty, deleteParty } from '../db/methods';
+import { getAllParties, getParty, createParty, getUsersInParty, deleteParty, updateParty } from '../db/methods';
 
 const partyRouter = express.Router();
 
@@ -56,6 +56,16 @@ partyRouter.delete('/:idParty', (req, res) => {
       res.send('party deleted');
     })
     .catch(err => console.error(err));
+});
+
+// update a party
+partyRouter.put('/', (req, res) => {
+  const { party } = req.body;
+  updateParty(party)
+    .then(() => {
+      res.send('party updated');
+    })
+    .catch((err => console.error(err)));
 });
 
 export default partyRouter;

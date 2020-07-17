@@ -19,6 +19,7 @@ interface RoomProps {
   setPeers: any;
   setPositions: any;
   socket: SocketIOClient.Socket;
+  party: any;
 }
 
 const Room: FC<RoomProps> = ({
@@ -27,6 +28,7 @@ const Room: FC<RoomProps> = ({
   setPeers,
   setPositions,
   socket,
+  party,
 }): ReactElement => {
   const switchRoom = (dir: Dir) => {
     const playerPosition = positions[socket.id];
@@ -79,24 +81,180 @@ const Room: FC<RoomProps> = ({
   };
 
   return (
-    <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
-      <Player
-        handlePlayerMovement={handlePlayerMovement}
-        position={positions[socket.id]}
-      />
-      {Object.keys(positions).filter(socketId => {
-        return socketId !== socket.id
-        && positions[socketId].currentRoom === positions[socket.id].currentRoom;
-      }).map((socketId, i) => {
-        return (
-          <PartyGoer
-            calibration={(i + 1) * 50}
-            key={socketId}
-            position={positions[socketId]}
+    <>
+      {(name === 'red' && party.roomOneBackground === 'red') && (
+        <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
+          <Player
+            handlePlayerMovement={handlePlayerMovement}
+            position={positions[socket.id]}
           />
-        );
-      })}
-    </div>
+          {Object.keys(positions).filter(socketId => {
+            return socketId !== socket.id
+              && positions[socketId].currentRoom === positions[socket.id].currentRoom;
+          }).map((socketId, i) => {
+            return (
+              <PartyGoer
+                calibration={(i + 1) * 50}
+                key={socketId}
+                position={positions[socketId]}
+              />
+            );
+          })}
+        </div>
+      )}
+      {(name === 'red' && party.roomOneBackground !== 'red') && (
+        <div
+          className="relative w-full h-full inline-block bg-no-repeat bg-cover bg-center"
+          style={{ backgroundImage: `url(${party.roomOneBackground})` }}
+        >
+          <Player
+            handlePlayerMovement={handlePlayerMovement}
+            position={positions[socket.id]}
+          />
+          {Object.keys(positions).filter(socketId => {
+            return socketId !== socket.id
+              && positions[socketId].currentRoom === positions[socket.id].currentRoom;
+          }).map((socketId, i) => {
+            return (
+              <PartyGoer
+                calibration={(i + 1) * 50}
+                key={socketId}
+                position={positions[socketId]}
+              />
+            );
+          })}
+        </div>
+      )}
+      {(name === 'blue' && party.roomOneBackground === 'blue') && (
+        <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
+          <Player
+            handlePlayerMovement={handlePlayerMovement}
+            position={positions[socket.id]}
+          />
+          {Object.keys(positions).filter(socketId => {
+            return socketId !== socket.id
+              && positions[socketId].currentRoom === positions[socket.id].currentRoom;
+          }).map((socketId, i) => {
+            return (
+              <PartyGoer
+                calibration={(i + 1) * 50}
+                key={socketId}
+                position={positions[socketId]}
+              />
+            );
+          })}
+        </div>
+      )}
+      {(name === 'blue' && party.roomOneBackground !== 'blue') && (
+        <div
+          className="relative w-full h-full inline-block bg-no-repeat bg-cover bg-center"
+          style={{ backgroundImage: `url(${party.roomTwoBackground})` }}
+        >
+          <Player
+            handlePlayerMovement={handlePlayerMovement}
+            position={positions[socket.id]}
+          />
+          {Object.keys(positions).filter(socketId => {
+            return socketId !== socket.id
+              && positions[socketId].currentRoom === positions[socket.id].currentRoom;
+          }).map((socketId, i) => {
+            return (
+              <PartyGoer
+                calibration={(i + 1) * 50}
+                key={socketId}
+                position={positions[socketId]}
+              />
+            );
+          })}
+        </div>
+      )}
+      {(name === 'green' && party.roomOneBackground === 'green') && (
+        <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
+          <Player
+            handlePlayerMovement={handlePlayerMovement}
+            position={positions[socket.id]}
+          />
+          {Object.keys(positions).filter(socketId => {
+            return socketId !== socket.id
+              && positions[socketId].currentRoom === positions[socket.id].currentRoom;
+          }).map((socketId, i) => {
+            return (
+              <PartyGoer
+                calibration={(i + 1) * 50}
+                key={socketId}
+                position={positions[socketId]}
+              />
+            );
+          })}
+        </div>
+      )}
+      {(name === 'green' && party.roomOneBackground !== 'green') && (
+        <div
+          className="relative w-full h-full inline-block bg-no-repeat bg-cover bg-center"
+          style={{ backgroundImage: `url(${party.roomThreeBackground})` }}
+        >
+          <Player
+            handlePlayerMovement={handlePlayerMovement}
+            position={positions[socket.id]}
+          />
+          {Object.keys(positions).filter(socketId => {
+            return socketId !== socket.id
+              && positions[socketId].currentRoom === positions[socket.id].currentRoom;
+          }).map((socketId, i) => {
+            return (
+              <PartyGoer
+                calibration={(i + 1) * 50}
+                key={socketId}
+                position={positions[socketId]}
+              />
+            );
+          })}
+        </div>
+      )}
+      {(name === 'yellow' && party.roomOneBackground === 'yellow') && (
+        <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
+          <Player
+            handlePlayerMovement={handlePlayerMovement}
+            position={positions[socket.id]}
+          />
+          {Object.keys(positions).filter(socketId => {
+            return socketId !== socket.id
+              && positions[socketId].currentRoom === positions[socket.id].currentRoom;
+          }).map((socketId, i) => {
+            return (
+              <PartyGoer
+                calibration={(i + 1) * 50}
+                key={socketId}
+                position={positions[socketId]}
+              />
+            );
+          })}
+        </div>
+      )}
+      {(name === 'yellow' && party.roomOneBackground !== 'yellow') && (
+        <div
+          className="relative w-full h-full inline-block bg-no-repeat bg-cover bg-center"
+          style={{ backgroundImage: `url(${party.roomFourBackground})` }}
+        >
+          <Player
+            handlePlayerMovement={handlePlayerMovement}
+            position={positions[socket.id]}
+          />
+          {Object.keys(positions).filter(socketId => {
+            return socketId !== socket.id
+              && positions[socketId].currentRoom === positions[socket.id].currentRoom;
+          }).map((socketId, i) => {
+            return (
+              <PartyGoer
+                calibration={(i + 1) * 50}
+                key={socketId}
+                position={positions[socketId]}
+              />
+            );
+          })}
+        </div>
+      )}
+    </>
   );
 };
 
