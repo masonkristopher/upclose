@@ -225,7 +225,29 @@ const getAllUsersThreads = async (userId) => {
   }
 };
 
-getAllUsersThreads(1);
+const getAllUserMessages = async (idSender, idRecipient) => {
+  try {
+    return await Message.findAll({
+      // attributes: ['message'],
+      where: {
+        idSender,
+        idRecipient,
+      },
+      raw: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const sendUserMessage = async (messageObj) => {
+  try {
+    return await Message.create(messageObj);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createUser,
   getAllUsers,
@@ -244,4 +266,6 @@ export {
   getUsersSendersIds,
   getUsersRecipientsIds,
   getAllUsersThreads,
+  getAllUserMessages,
+  sendUserMessage,
 };

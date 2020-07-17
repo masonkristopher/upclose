@@ -3,9 +3,10 @@ import React, { FC, ReactElement } from 'react';
 import Player from './Player';
 
 import {
-  User,
+  Position,
+  house,
   roomSize,
-  dir,
+  Dir,
   Direction,
   RoomStyles,
 } from '../services/constants';
@@ -14,84 +15,85 @@ import PartyGoer from './PartyGoer';
 
 interface RoomProps {
   name: 'red' | 'green' | 'blue' | 'yellow';
-  changeRoom: (dir: dir) => void;
-  user: User;
-  socket: SocketIOClient.Socket;
-  positions: any;
+  positions: Record<string, Position>;
+  setPeers: any;
   setPositions: any;
+  socket: SocketIOClient.Socket;
 }
 
 const Room: FC<RoomProps> = ({
   name,
-  changeRoom,
-  socket,
   positions,
+  setPeers,
   setPositions,
+  socket,
 }): ReactElement => {
-  const emitPosition = (newPlayerPosition: any) => {
-    socket.emit('player moved', { [socket.id]: newPlayerPosition });
+  const switchRoom = (dir: Dir) => {
+    const playerPosition = positions[socket.id];
+    const { top, left } = playerPosition;
+    const previousRoom = positions[socket.id].currentRoom;
+    const newRoom = (dir === 'UP' || dir === 'DOWN') ? house[previousRoom].yChange : house[previousRoom].xChange;
+
+    if (dir === 'UP') {
+      playerPosition.top = top + roomSize - 50;
+      playerPosition.currentRoom = newRoom;
+    } else if (dir === 'DOWN') {
+      playerPosition.top = top - roomSize + 50;
+      playerPosition.currentRoom = newRoom;
+    } else if (dir === 'LEFT') {
+      playerPosition.left = left + roomSize - 50;
+      playerPosition.currentRoom = newRoom;
+    } else if (dir === 'RIGHT') {
+      playerPosition.left = left - roomSize + 50;
+      playerPosition.currentRoom = newRoom;
+    }
+
+    setPositions({ ...positions });
+    setPeers({});
+    socket.emit('player moved', { [socket.id]: playerPosition });
+    socket.emit('switch room', previousRoom, newRoom);
   };
 
   const handlePlayerMovement = (direction: Direction) => {
     // existing coordinates
     const playerPosition = positions[socket.id];
     const { top, left } = playerPosition;
+    const { dir } = direction;
 
-    // boundary movement
-    switch (direction.dir) {
-      case 'UP':
-        if (top <= 0) {
-          playerPosition.top = top + roomSize;
-          changeRoom('UP');
-          emitPosition(playerPosition);
-          setPositions({ ...positions });
-          return;
-        }
-        break;
-      case 'DOWN':
-        if (top >= roomSize - 40) {
-          playerPosition.top = top - roomSize;
-          changeRoom('DOWN');
-          emitPosition(playerPosition);
-          setPositions({ ...positions });
-          return;
-        }
-        break;
-      case 'LEFT':
-        if (left <= 0) {
-          playerPosition.left = left + roomSize;
-          changeRoom('LEFT');
-          emitPosition(playerPosition);
-          setPositions({ ...positions });
-          return;
-        }
-        break;
-      case 'RIGHT':
-        if (left >= roomSize - 40) {
-          playerPosition.left = left - roomSize;
-          changeRoom('RIGHT');
-          emitPosition(playerPosition);
-          setPositions({ ...positions });
-          return;
-        }
-        break;
-      default:
-        break;
+    // boundary movement handled by switchRoom
+    if (dir === 'UP' && top <= 0) {
+      switchRoom('UP');
+    } else if (dir === 'DOWN' && top >= roomSize - 50) {
+      switchRoom('DOWN');
+    } else if (dir === 'LEFT' && left <= 0) {
+      switchRoom('LEFT');
+    } else if (dir === 'RIGHT' && left >= roomSize - 50) {
+      switchRoom('RIGHT');
+    } else {
+      // normal field movement
+      playerPosition.top = top + 5 * direction.top;
+      playerPosition.left = left + 5 * direction.left;
+      setPositions({ ...positions });
+      socket.emit('player moved', { [socket.id]: playerPosition });
     }
-
-    // normal field movement
-    playerPosition.top = top + 5 * direction.top;
-    playerPosition.left = left + 5 * direction.left;
-    emitPosition(playerPosition);
-    setPositions({ ...positions });
   };
 
   return (
     <div className={`relative w-full h-full inline-block ${RoomStyles[name]}`}>
-      <Player position={positions[socket.id]} handlePlayerMovement={handlePlayerMovement} />
-      {Object.keys(positions).filter(socketId => socketId !== socket.id).map((socketId, i) => {
+      <Player
+        handlePlayerMovement={handlePlayerMovement}
+        position={positions[socket.id]}
+      />
+      {Object.keys(positions).filter(socketId => {
+        return socketId !== socket.id
+        && positions[socketId].currentRoom === positions[socket.id].currentRoom;
+      }).map((socketId, i) => {
         return (
-          <PartyGoer key={socketId} position={positions[socketId]} calibration={(i + 1) * 40} />
+          <PartyGoer
+            calibration={(i + 1) * 50}
+            key={socketId}
+            position={positions[socketId]}
+          />
         );
       })}
     </div>
