@@ -2,7 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 
-const Search = ({ partyId, setPartyUpdate, update, inMessage, setInMessage }: any) => {
+interface IProps {
+    user: {
+        id: number,
+        nameFirst: string,
+        nameLast: string,
+        username: string,
+        email: string,
+        avatar: string,
+        googleId: string,
+    },
+}
+
+const SearchMessage = ({ setClickedUser, showMessages, setShowMessages }: any) => {
   const [input, setInput] = useState('');
   const [users, setUsers] = useState([]);
   const [matches, setMatches]: any = useState([]);
@@ -27,14 +39,9 @@ const Search = ({ partyId, setPartyUpdate, update, inMessage, setInMessage }: an
     setMatches(results);
   };
 
-  const inviteUser = (user: any) => {
-    axios
-      .post(`/user/${user.id}/joins/${partyId}`)
-      .then(() => {
-        // show user that they have joined in some way
-        setPartyUpdate(!update);
-      })
-      .catch((error) => console.error(error));
+  const openMessageView = (data: any) => {
+    setClickedUser(data.item);
+    setShowMessages(!showMessages);
   };
 
   return (
@@ -68,11 +75,11 @@ const Search = ({ partyId, setPartyUpdate, update, inMessage, setInMessage }: an
               />
               <li>{match.item.username}</li>
               <button
-                onClick={() => inviteUser(match.item)}
+                onClick={() => openMessageView(match)}
                 className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
                 type="button"
               >
-                Add
+                Message
               </button>
             </div>
           ))
@@ -82,4 +89,4 @@ const Search = ({ partyId, setPartyUpdate, update, inMessage, setInMessage }: an
   );
 };
 
-export default Search;
+export default SearchMessage;
