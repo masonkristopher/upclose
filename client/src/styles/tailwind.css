@@ -1,4 +1,4 @@
-body {
+/* body {
   margin: 0;
   padding: 0;
   font-family: "Montserrat", sans-serif;
@@ -61,10 +61,7 @@ body {
   padding: 10px 30px;
   border-bottom: 1px solid #cddfe7;
   cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
 }
 
 .active-user:hover {
@@ -105,7 +102,7 @@ body {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   width: 300px;
-}
+} */
 
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
@@ -18733,6 +18730,13 @@ video {
 
 .delay-1000 {
   transition-delay: 1000ms;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafc;
 }
 
 .h-half {
