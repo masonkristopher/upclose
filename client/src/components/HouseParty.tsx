@@ -9,7 +9,12 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-import { House, Video, ChatSend } from '.';
+import {
+  ChatSend,
+  House,
+  // Radar,
+  Video,
+} from '.';
 
 import {
   Position,
@@ -116,13 +121,6 @@ const HouseParty: FC<HousePartyProps> = ({
           const playerId = Object.keys(payload)[0];
           positions[playerId] = payload[playerId];
           setPositions({ ...positions });
-          // if (peers[playerId]) {
-          //   positions[playerId] = payload[playerId];
-          //   setPositions({ ...positions });
-          // } else {
-          //   delete positions[playerId];
-          //   setPositions({ ...positions });
-          // }
         });
       });
   };
@@ -190,6 +188,8 @@ const HouseParty: FC<HousePartyProps> = ({
           />
         </div>
       </div>
+
+      {/* <Radar /> */}
 
       {/* Right=Side Video Side Panel */}
       <div className="bg-gray-500 p-4 float-left m-6">
