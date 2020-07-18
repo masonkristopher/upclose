@@ -167,7 +167,68 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           </div>
         </>
       </Popup>
-      {/* <Popup open={popUpNumber === 2}>
+
+      <Popup
+        open={popUpNumber === 2}
+        onClose={() => { setInvitees([]); }}
+      >
+        <>
+          <div className="justify-center text-seaweed items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="relative w-10/12 sm:w-10/12 md:w-2/3 lg:w-1/2 xl:w-1/2 my-6 mx-auto max-w-3xl">
+              {/* content */}
+              <div className="border-0 rounded-lg shadow-lg relative p-8 flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/* header */}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
+                  <h3 className="text-3xl text-seaweed font-semibold">
+                    Invite Friends
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => { setPopupNumber(0); setInvitees([]); }}
+                    type="button"
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none hover:shadow-md">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                <SearchPopup
+                  user={user}
+                  setInvitees={setInvitees}
+                  saveParty={saveParty}
+                  setPopupNumber={setPopupNumber}
+                />
+                {/* footer */}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                  <button
+                    className="text-caviar background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                    type="button"
+                    style={{ transition: 'all .15s ease' }}
+                    onClick={() => { setPopupNumber(0); setInvitees([]); }}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="bg-avocado text-white active:bg-salmon font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                    type="button"
+                    style={{ transition: 'all .15s ease' }}
+                    onClick={() => { setPopupNumber(2); }}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      </Popup>
+    </>
+  );
+};
+
+export default CreatePartyPopup;
+
+/* <Popup open={popUpNumber === 2}>
         <>
           <h4 className="relative left-0 top-0 pl-2 pt-2 font-bold">Select a layout</h4>
           <CarouselProvider
@@ -212,38 +273,5 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           </CarouselProvider>
           <button type="button" className="relative bottom-0 border border-solid border-1 bg-blue-600 text-orange-300" onClick={() => { setPartyLayout(activeSlide); setPopupNumber(3); }}>Confirm party layout</button>
         </>
-      </Popup> */}
-      <Popup
-        contentStyle={{
-          top: 'auto',
-          left: 'auto',
-          right: 'auto',
-          bottom: 'auto',
-          height: '400px',
-          overflow: 'auto',
-          display: 'flex',
-        }}
-        open={popUpNumber === 2}
-        onClose={() => { setInvitees([]); }}
-      >
-        <>
-          <button type="button" className="close absolute top-5 right-5" onClick={() => { setPopupNumber(0); setInvitees([]); }}>
-            <svg className="h-4 w-4 fill-current text-seaweed hover:text-salmon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path xmlns="http://www.w3.org/2000/svg" d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
-            </svg>
-          </button>
-          <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
-          <SearchPopup
-            user={user}
-            setInvitees={setInvitees}
-            saveParty={saveParty}
-            setPopupNumber={setPopupNumber}
-          />
-          {/* <button type="button" onClick={() => setPopupNumber(1)}>Go back</button> */}
-        </>
       </Popup>
-    </>
-  );
-};
-
-export default CreatePartyPopup;
+*/
