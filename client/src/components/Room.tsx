@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { Dispatch, FC, ReactElement, SetStateAction } from 'react';
 import { CSSProperties } from 'styled-components';
 
 import Player from './Player';
@@ -19,8 +19,8 @@ import PartyGoer from './PartyGoer';
 interface RoomProps {
   name: 'red' | 'green' | 'blue' | 'yellow';
   positions: Record<string, Position>;
-  setPeers: React.Dispatch<React.SetStateAction<Peers>>;
-  setPositions: React.Dispatch<React.SetStateAction<Positions>>;
+  setPeers: Dispatch<SetStateAction<Peers>>;
+  setPositions: Dispatch<SetStateAction<Positions>>;
   socket: SocketIOClient.Socket;
   party: any;
 }
@@ -76,8 +76,8 @@ const Room: FC<RoomProps> = ({
       switchRoom('RIGHT');
     } else {
       // normal field movement
-      playerPosition.top = top + 5 * direction.top;
-      playerPosition.left = left + 5 * direction.left;
+      playerPosition.top = top + 10 * direction.top;
+      playerPosition.left = left + 10 * direction.left;
       setPositions({ ...positions });
       socket.emit('player moved', { [socket.id]: playerPosition });
     }
