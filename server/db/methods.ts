@@ -191,6 +191,16 @@ const deleteFromParty = async (idUser, idParty) => {
   }
 };
 
+// UPDATE USERPARTY with a new inviteStatus
+const updateUserParty = async (idUser, idParty, inviteStatus) => {
+  try {
+    await UserParty.update({ inviteStatus },
+      { returning: true, where: { idUser, idParty } });
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const getMessagesWithOneUser = async (idSender, idRecipient) => {
   try {
     return await Message.findAll({
@@ -294,6 +304,7 @@ export {
   createParty,
   deleteParty,
   updateParty,
+  updateUserParty,
   deleteFromParty,
   getMessagesWithOneUser,
   getUsersSendersIds,
