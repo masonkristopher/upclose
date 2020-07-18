@@ -3,10 +3,10 @@ import { CSSProperties } from 'styled-components';
 
 import RadarDot from './RadarDot';
 
-import { Position } from '../services/constants';
+import { Positions } from '../services/constants';
 
 interface RadarProps {
-  positions: Record<string, Position>;
+  positions: Positions;
   socket: SocketIOClient.Socket;
 }
 
@@ -26,7 +26,7 @@ const Radar: FC<RadarProps> = ({
   };
 
   return (
-    <div className="relative block" style={containerStyle}>
+    <div className="relative" style={containerStyle}>
       <div className="inline-block bg-red-300" style={roomStyle} />
       <div className="inline-block bg-blue-300" style={roomStyle} />
       <div className="inline-block bg-green-300" style={roomStyle} />

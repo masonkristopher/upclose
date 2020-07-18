@@ -1,3 +1,5 @@
+import Peer from 'simple-peer';
+
 /* User */
 export interface User {
   id: number,
@@ -15,7 +17,17 @@ export const videoConstraints: MediaTrackConstraints = {
   height: 180,
 };
 
-/* House Structure */
+/* House */
+export interface Position {
+  avatar: string,
+  currentRoom: layout,
+  top: number,
+  left: number,
+}
+
+export type Peers = Record<string, Peer.Instance>;
+export type Positions = Record<string, Position>;
+
 export type layout = 'red' | 'green' | 'blue' | 'yellow';
 
 interface Room {
@@ -55,8 +67,8 @@ export const roomSize = 500;
 export type Dir = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN';
 
 export interface Direction {
-  top: 0 | 1;
-  left: 0 | 1;
+  top: 0 | 1 | -1;
+  left: 0 | 1 | -1;
   dir: Dir;
 }
 
@@ -75,9 +87,3 @@ export const randomPosition = () => {
   }
   return x;
 };
-export interface Position {
-  avatar: string,
-  currentRoom: layout,
-  top: number,
-  left: number,
-}
