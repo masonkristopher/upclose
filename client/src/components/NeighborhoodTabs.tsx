@@ -20,7 +20,7 @@ const Tab = ({
           setOpenTab(tab);
         }}
         data-toggle="tab"
-        href="#link1"
+        href={`#link${tab}`}
         role="tablist"
       >
         {name}
