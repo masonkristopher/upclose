@@ -61,23 +61,44 @@ const updateUser = async (userObj) => {
 // GET ALL A USER'S PARTIES, BY USERID
 const getAllParties = async (id) => {
   try {
-    // we need to query our user/party join table and return all parties that match the user's id
-    return UserParty.findAll({ where: { idUser: id } })
-      .then((joinedParties) => {
-        // now that we have all the parties a user is a part of, we find the actual party objects
-        const parties = joinedParties.map((joinedParty) => {
-          return Party.findOne({ where: { id: joinedParty.idParty } });
+    // first find all the parties a user has accepted in the userParty table
+    const acceptedParties = await UserParty.findAll({ where: { idUser: id, inviteStatus: 'accepted' } })
+      .then((parties) => {
+        // return all the actual party objects
+        const p = parties.map((party) => {
+          return Party.findOne({ where: { id: party.idParty } });
         });
-        // promise.all ensures that all the findOnes have resolved before returning
-        return Promise.all(parties);
+        // Promise.all ensures the promises resolve before we return
+        return Promise.all(p);
       });
+
+    // add an inviteStatus to each party object, for use in the frontend
+    acceptedParties.forEach((party: any) => {
+      party.dataValues.inviteStatus = 'accepted';
+    })
+
+    // same thing with pendingParties
+    const pendingParties = await UserParty.findAll({ where: { idUser: id, inviteStatus: 'pending' } })
+      .then((parties) => {
+        const a = parties.map((party) => {
+          return Party.findOne({ where: { id: party.idParty } });
+        });
+        return Promise.all(a);
+      });
+
+    pendingParties.forEach((party: any) => {
+      party.dataValues.inviteStatus = 'pending';
+    })
+
+    // return all parties
+    return acceptedParties.concat(pendingParties);
   } catch (err) {
     console.error(err);
   }
 };
 
 // GET ALL USERS THAT HAVE JOINED A PARTY
-const getUsersInParty = async (idParty) => {
+const getAllUsersInParty = async (idParty) => {
   try {
     // query join table to find all parties that match a given party id
     return UserParty.findAll({ where: { idParty } })
@@ -94,6 +115,15 @@ const getUsersInParty = async (idParty) => {
   }
 };
 
+// GET ONE ENTRY FROM THE USERPARTY TABLE
+const getUserInParty = async (idUser, idParty) => {
+  try {
+    return UserParty.findOne({ where: { idUser, idParty } });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 // GET ONE PARTY BY ID
 const getParty = async (id) => {
   try {
@@ -105,11 +135,12 @@ const getParty = async (id) => {
 };
 
 // ADDS A USER AND PARTY TO THE USERPARTY JOIN TABLE
-const addUserToParty = async (idUser, idParty) => {
+const addUserToParty = async (idUser, idParty, inviteStatus) => {
   try {
     const party = await Party.findOne({ where: { id: idParty } });
     const user = await User.findOne({ where: { id: idUser } });
-    party.addUser(user);
+    // @ts-ignore             ***************to do fix meeeeee pleeeeeaseseesaaaa
+    party.addUser(user, { through: { inviteStatus } });
   } catch (err) {
     console.error(err);
   }
@@ -146,6 +177,7 @@ const updateParty = async (partyObj) => {
   }
 };
 
+// DELETE AN ENTRY IN THE USERPARTY TABLE
 const deleteFromParty = async (idUser, idParty) => {
   try {
     UserParty.destroy({
@@ -159,14 +191,24 @@ const deleteFromParty = async (idUser, idParty) => {
   }
 };
 
+// UPDATE USERPARTY with a new inviteStatus
+const updateUserParty = async (idUser, idParty, inviteStatus) => {
+  try {
+    await UserParty.update({ inviteStatus },
+      { returning: true, where: { idUser, idParty } });
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const getMessagesWithOneUser = async (idSender, idRecipient) => {
   try {
     return await Message.findAll({
       where:
-        {
-          idSender,
-          idRecipient,
-        },
+      {
+        idSender,
+        idRecipient,
+      },
     });
   } catch (err) {
     console.error(err);
@@ -256,11 +298,13 @@ export {
   updateUser,
   getParty,
   addUserToParty,
-  getUsersInParty,
+  getAllUsersInParty,
+  getUserInParty,
   getAllParties,
   createParty,
   deleteParty,
   updateParty,
+  updateUserParty,
   deleteFromParty,
   getMessagesWithOneUser,
   getUsersSendersIds,
