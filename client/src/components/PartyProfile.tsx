@@ -24,7 +24,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   const [update, setUpdate]: any = useState(true);
   const [invited, setInvited]: any = useState(false);
   const [changeBackground, setChangeBackground]: any = useState(false);
-  const [roomBackgrounds, setRoomBackgrounds]: any = useState({1: 'red', 2: 'blue', 3: 'green', 4: 'yellow' });
+  const [roomBackgrounds, setRoomBackgrounds]: any = useState({ 1: 'red', 2: 'blue', 3: 'green', 4: 'yellow' });
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
   // useHistory allows us to redirect by pushing onto the url
@@ -42,13 +42,18 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       });
   };
 
-  // runs once, on load
+  // to do: this takkes a little bit to run, maybe change it up
   useEffect(() => {
     // should query the database and find the party we need on render
     axios.get(`/party/${partyId}`)
       .then((response) => {
-        // then use setParty to put the party's info into state
-        setParty(response.data);
+        // should also check the join table to see if accepted or pending
+        axios.get(`/party/${user.id}/in/${partyId}`)
+          .then((res) => {
+            response.data.inviteStatus = res.data.inviteStatus;
+            // then use setParty to put the party's info into state
+            setParty(response.data);
+          })
         return axios.get(`/party/getUsers/${partyId}`)
       })
       .then((response) => {
@@ -83,8 +88,18 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
     console.log('hello')
   };
 
-  const editRoomBackgrounds = (e:any, roomNumber: number) => {
-    const copy = {...roomBackgrounds};
+  const acceptInvite = () => {
+    // request to backend to update userParty table, then set state
+    axios.put(`/user//userParty/${user.id}/${partyId}/accepted`)
+      .then(() => {
+        const copy = { ...party }
+        copy.inviteStatus = 'accepted';
+        setParty(copy);
+      });
+  };
+
+  const editRoomBackgrounds = (e: any, roomNumber: number) => {
+    const copy = { ...roomBackgrounds };
     copy[roomNumber] = e.target.value;
     setRoomBackgrounds(copy);
   };
@@ -101,16 +116,26 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
 
   return (
     <div className="flex flex-col">
+      {party.inviteStatus === 'pending' && (
+        <button type="button" className="flex p-6 bg-salmon border-black border-solid border" onClick={() => acceptInvite()}>Accept invitation to join</button>
+      )}
       <div className="flex flex-col">
         {party && (
-          <div className="flex flex-row">
-            <h4>
-              party name is:
-              {party.name}
-            </h4>
-            <div role="button" tabIndex={0} onClick={editPartyName} onKeyUp={editPartyName}>
-              <img className="h-4 w-4 ml-2" alt="edit" src="https://www.pngfind.com/pngs/m/70-704184_png-file-svg-pencil-edit-icon-png-transparent.png" />
+          <div className="flex flex-col">
+            {party.inviteStatus === 'accepted' && (
+              <div>
+                <p> You have accepted this invitation</p>
+              </div>
+            )}
+            <div className="flex flex-row">
+              <h4>
+                party name is:
+                {party.name}
+              </h4>
+              <div role="button" tabIndex={0} onClick={editPartyName} onKeyUp={editPartyName}>
+                <img className="h-4 w-4 ml-2" alt="edit" src="https://www.pngfind.com/pngs/m/70-704184_png-file-svg-pencil-edit-icon-png-transparent.png" />
 
+              </div>
             </div>
           </div>
         )}
@@ -146,13 +171,13 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       </div>
       <button type="button">Change House layout</button>
       <button type="button" onClick={() => setChangeBackground(true)}>Change Room backgrounds</button>
-      <Popup open={changeBackground === true} onClose={() => {setChangeBackground(false)}}>
+      <Popup open={changeBackground === true} onClose={() => { setChangeBackground(false) }}>
         <div className="flex flex-col">
-          <input onChange={(e) => {editRoomBackgrounds(e, 1)}} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[1]} />
-          <input onChange={(e) => {editRoomBackgrounds(e, 2)}} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[2]} />
-          <input onChange={(e) => {editRoomBackgrounds(e, 3)}} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[3]} />
-          <input onChange={(e) => {editRoomBackgrounds(e, 4)}} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[4]} />
-          <button type="button" onClick={() => {saveRoomBackgrounds(); setChangeBackground(false)}}>Save Images</button>
+          <input onChange={(e) => { editRoomBackgrounds(e, 1) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[1]} />
+          <input onChange={(e) => { editRoomBackgrounds(e, 2) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[2]} />
+          <input onChange={(e) => { editRoomBackgrounds(e, 3) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[3]} />
+          <input onChange={(e) => { editRoomBackgrounds(e, 4) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomBackgrounds[4]} />
+          <button type="button" onClick={() => { saveRoomBackgrounds(); setChangeBackground(false) }}>Save Images</button>
         </div>
       </Popup>
       {(party.inviteOnly === false || (invited === true)) && (
