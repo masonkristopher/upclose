@@ -102,7 +102,10 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
 
   return (
     <>
+      {/* Start a Party - Open Popup Button */}
       <button type="button" onClick={() => { setPopupNumber(0); setPopupNumber(1); }} className="bg-white hover:text-salmon text-gray-800 py-1 px-2 font-semibold border border-gray-400 rounded-full shadow">Start a Party</button>
+
+      {/* Start a Party - Popup 1 */}
       <Popup onClose={() => { setInvitees([]); }} open={popUpNumber === 1}>
         <>
           <div className="justify-center text-seaweed items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -127,7 +130,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
                 {/* body */}
                 <div className="relative p-6 flex-auto">
                   <label htmlFor="party-name" className="block">
-                    <span className="text-seaweed">Party Name</span>
+                    <span className="text-lg font-bold">Party Name</span>
                     <input onChange={setPartyName} className="form-input mt-1 block w-full" id="party-name" placeholder="My Party" />
                   </label>
                   <div className="mt-4">
@@ -153,14 +156,27 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
                   >
                     Close
                   </button>
-                  <button
-                    className="bg-avocado text-white active:bg-salmon font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-                    type="button"
-                    style={{ transition: 'all .15s ease' }}
-                    onClick={() => { setPopupNumber(2); }}
-                  >
-                    Next
-                  </button>
+
+                  {/* prevent <next> button click unless party name is entered */}
+                  {partyDetails.name === '' && (
+                    <button
+                      className="bg-gray-400 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 cursor-not-allowed"
+                      type="button"
+                      style={{ transition: 'all .15s ease' }}
+                    >
+                      Next
+                    </button>
+                  )}
+                  {partyDetails.name !== '' && (
+                    <button
+                      className="bg-avocado text-white active:bg-salmon font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                      type="button"
+                      style={{ transition: 'all .15s ease' }}
+                      onClick={() => { setPopupNumber(2); }}
+                    >
+                      Next
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -168,6 +184,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
         </>
       </Popup>
 
+      {/* Invite Friends - Popup 2 */}
       <Popup
         open={popUpNumber === 2}
         onClose={() => { setInvitees([]); }}
@@ -204,17 +221,17 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
                     className="text-caviar background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
                     type="button"
                     style={{ transition: 'all .15s ease' }}
-                    onClick={() => { setPopupNumber(0); setInvitees([]); }}
+                    onClick={() => { setPopupNumber(1); }}
                   >
-                    Close
+                    Back
                   </button>
                   <button
                     className="bg-avocado text-white active:bg-salmon font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                     type="button"
                     style={{ transition: 'all .15s ease' }}
-                    onClick={() => { setPopupNumber(2); }}
+                    onClick={() => { saveParty(); setPopupNumber(0); }}
                   >
-                    Next
+                    Save Party
                   </button>
                 </div>
               </div>
