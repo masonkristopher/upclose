@@ -1,7 +1,9 @@
 import React, { FC, ReactElement, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Popup from 'reactjs-popup';
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, Image, DotGroup } from 'pure-react-carousel';
+import {
+  CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, Image, DotGroup,
+} from 'pure-react-carousel';
 import axios from 'axios';
 import SearchPopup from './SearchPopup';
 // to do: does this need to go somewhere else???
@@ -31,12 +33,12 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
   });
   const [invitees, setInvitees]: any = useState([]);
   const [popUpNumber, setPopupNumber]: any = useState(0);
-  // const [activeSlide, setActiveSlide] = useState(0);
   const [isChecked, setIsChecked] = useState(true);
-  // this should equal how many layouts we have  **************
-  // const [totalSlides, setTotalSlides] = useState(2);
   // useHistory allows us to redirect by pushing onto the url
   const history = useHistory();
+  // const [activeSlide, setActiveSlide] = useState(0);
+  // this should equal how many layouts we have  **************
+  // const [totalSlides, setTotalSlides] = useState(2);
 
   // sets partyDetails state to have the party's name
   const setPartyName = (e: any): void => {
@@ -70,7 +72,8 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
     const newPartyDetails = { ...partyDetails };
     newPartyDetails.inviteOnly = !newPartyDetails.inviteOnly;
     setPartyDetails(newPartyDetails);
-  }
+  };
+
   // sends request to server to save the party, sending party details
   const saveParty = () => {
     axios.post('/party/create', {
@@ -101,24 +104,68 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
     <>
       <button type="button" onClick={() => { setPopupNumber(0); setPopupNumber(1); }} className="bg-white hover:text-salmon text-gray-800 py-1 px-2 font-semibold border border-gray-400 rounded-full shadow">Start a Party</button>
       <Popup onClose={() => { setInvitees([]); }} open={popUpNumber === 1}>
-        <div className="p-8 flex justify-center">
-          <button type="button" className="close absolute top-5 right-5" onClick={() => { setPopupNumber(0); setInvitees([]); }}>
-            <svg className="h-4 w-4 fill-current text-seaweed hover:text-salmon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path xmlns="http://www.w3.org/2000/svg" d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
-            </svg>
-          </button>
-          <h1 className="absolute left-0 top-0 pl-4 pt-4 font-bold">Create a Party</h1>
-          <div className="flex flex-wrap items-center">
-            <p className="float-left">Invite only: </p>
-            <input className="form-checkbox float-left h-6 w-6 m-2 text-avocado" checked={isChecked} onChange={toggleChecked} type="checkbox" />
-            <input onChange={setPartyName} className="appearance-none shadow float-left w-85 bg-gray-100 text-gray-700 border border-gray-400 rounded ml-2 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Party Name" />
+        <>
+          <div className="justify-center text-seaweed items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="relative w-10/12 sm:w-10/12 md:w-2/3 lg:w-1/2 xl:w-1/2 my-6 mx-auto max-w-3xl">
+              {/* content */}
+              <div className="border-0 rounded-lg shadow-lg relative p-8 flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/* header */}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
+                  <h3 className="text-3xl text-seaweed font-semibold">
+                    Create a Party
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => { setPopupNumber(0); setInvitees([]); }}
+                    type="button"
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none hover:shadow-md">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/* body */}
+                <div className="relative p-6 flex-auto">
+                  <label htmlFor="party-name" className="block">
+                    <span className="text-seaweed">Party Name</span>
+                    <input onChange={setPartyName} className="form-input mt-1 block w-full" id="party-name" placeholder="My Party" />
+                  </label>
+                  <div className="mt-4">
+                    <div className="mt-2">
+                      <label htmlFor="invite-only" className="inline-flex items-center">
+                        <input type="radio" className="form-radio text-avocado" name="accountType" value="invite" id="invite-only" checked={isChecked} onChange={toggleChecked} />
+                        <span className="ml-2">Invite Only</span>
+                      </label>
+                      <label htmlFor="pubic" className="inline-flex items-center ml-6">
+                        <input type="radio" className="form-radio text-caviar" name="accountType" value="public" id="public" checked={!isChecked} onChange={toggleChecked} />
+                        <span className="ml-2">Public</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                {/* footer */}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                  <button
+                    className="text-caviar background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                    type="button"
+                    style={{ transition: 'all .15s ease' }}
+                    onClick={() => { setPopupNumber(0); setInvitees([]); }}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="bg-avocado text-white active:bg-salmon font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                    type="button"
+                    style={{ transition: 'all .15s ease' }}
+                    onClick={() => { setPopupNumber(2); }}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <button type="button" className="bg-white hover:text-salmon text-seaweed h-10 w-10 m-4 pl-1 font-semibold rounded-full shadow" onClick={() => { setPopupNumber(2); }}>
-            <svg className="h-8 w-8 fill-current text-seaweed hover:text-salmon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path xmlns="http://www.w3.org/2000/svg" d="M10 7H2v6h8v5l8-8-8-8v5z" />
-            </svg>
-          </button>
-        </div>
+        </>
       </Popup>
       {/* <Popup open={popUpNumber === 2}>
         <>
@@ -174,7 +221,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           bottom: 'auto',
           height: '400px',
           overflow: 'auto',
-          display: 'flex'
+          display: 'flex',
         }}
         open={popUpNumber === 2}
         onClose={() => { setInvitees([]); }}
