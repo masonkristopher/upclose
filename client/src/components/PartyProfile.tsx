@@ -228,7 +228,6 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
             </div>
           )}
         </div>
-        <button type="button">Change House layout</button>
         <button type="button" onClick={() => setChangeBackground(true)}>Change Room backgrounds</button>
         <Popup open={changeBackground === true} onClose={() => { setChangeBackground(false) }}>
           <div className="flex flex-col">
@@ -238,10 +237,10 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
                 <path xmlns="http://www.w3.org/2000/svg" d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
               </svg>
             </button>
-            <input onChange={(e) => { editRoomBackgrounds(e, 0) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomOneBackground} />
-            <input onChange={(e) => { editRoomBackgrounds(e, 1) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomTwoBackground} />
-            <input onChange={(e) => { editRoomBackgrounds(e, 2) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomThreeBackground} />
-            <input onChange={(e) => { editRoomBackgrounds(e, 3) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" value={roomFourBackground} />
+            <input onChange={(e) => { editRoomBackgrounds(e, 0) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" defaultValue={roomOneBackground} />
+            <input onChange={(e) => { editRoomBackgrounds(e, 1) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" defaultValue={roomTwoBackground} />
+            <input onChange={(e) => { editRoomBackgrounds(e, 2) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" defaultValue={roomThreeBackground} />
+            <input onChange={(e) => { editRoomBackgrounds(e, 3) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" defaultValue={roomFourBackground} />
             <button type="button" onClick={() => { saveRoomBackgrounds(); setChangeBackground(false) }}>Save Images</button>
           </div>
         </Popup>
