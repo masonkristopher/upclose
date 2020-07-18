@@ -4,7 +4,7 @@ import { initUser } from './db/models/user';
 import { initParty, associatePartyMessages, associateIdCreator } from './db/models/party';
 import { initMessage, associateMessage } from './db/models/message';
 import { initUserParty, associateUserParty } from './db/models/userParty';
-import server from './refactorApp';
+import server from './server';
 
 dotenv.config();
 
