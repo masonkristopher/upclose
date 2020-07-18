@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllParties, getParty, createParty, getUsersInParty, deleteParty, updateParty } from '../db/methods';
+import { getAllParties, getParty, createParty, getAllUsersInParty, deleteParty, updateParty, getUserInParty } from '../db/methods';
 
 const partyRouter = express.Router();
 
@@ -17,14 +17,24 @@ partyRouter.get('/all/:id', (req, res) => {
 // retrieve all users in a specific party
 partyRouter.get('/getUsers/:idParty', (req, res) => {
   const { idParty } = req.params;
-  getUsersInParty(idParty)
+  getAllUsersInParty(idParty)
     .then((users) => {
       res.send(users);
     })
     .catch(err => console.error(err));
 });
 
-// retrieve one party by its id
+// retrieve one entry from the userParty table
+partyRouter.get('/:idUser/in/:idParty', (req, res) => {
+  const { idUser, idParty } = req.params;
+  getUserInParty(idUser, idParty)
+    .then((entry) => {
+      res.send(entry);
+    })
+    .catch(err => console.error(err));
+});
+
+// retrieve one party by its id,
 partyRouter.get('/:id', (req, res) => {
   // party's id
   const { id } = req.params;
