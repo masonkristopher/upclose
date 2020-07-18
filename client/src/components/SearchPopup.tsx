@@ -64,7 +64,7 @@ const SearchPopup = ({ setInvitees, user, saveParty, setPopupNumber }: any) => {
         <div className="p-4">
           {matches.length >= 1
             ? matches.map((match: any) => (
-              <div className="flex items-center">
+              <div key={match.item.googleId} className="flex items-center">
                 <img className="w-10 h-10 rounded-full m-2" src={match.item.avatar} alt="Avatar" />
                 <div className="mr-3">
                   <p className="text-gray-900 text-base leading-none">{match.item.username}</p>
