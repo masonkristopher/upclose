@@ -1,5 +1,5 @@
 import React, {
-  FC, ReactElement, useState, useEffect, useRef,
+  Dispatch, FC, ReactElement, SetStateAction, useState, useEffect, useRef,
 } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -49,12 +49,12 @@ const HouseParty: FC<HousePartyProps> = ({
 
   const [peers, setPeers]: [
     Peers,
-    React.Dispatch<React.SetStateAction<Peers>>,
+    Dispatch<SetStateAction<Peers>>,
   ] = useState({});
 
   const [positions, setPositions]: [
     Positions,
-    React.Dispatch<React.SetStateAction<Positions>>,
+    Dispatch<SetStateAction<Positions>>,
   ] = useState({
     [playerSocket]: initialPlayerPosition,
   });
