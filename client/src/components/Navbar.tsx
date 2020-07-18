@@ -69,9 +69,9 @@ const Navbar = ({
             <li className="p-2"><Link to="/">Home</Link></li>
           </ul>
           {/* <!-- to the right  --> */}
-          <ul className="flex items-center">
+          <ul className="flex items-left">
             {user && (
-              <li className="pr-2">
+              <li className="p-2">
                 <GoogleLogout
                   clientId="619935015421-c9vv4mlcuabiotbke4dpnc2ehp760l3a.apps.googleusercontent.com"
                   buttonText="Logout"
@@ -80,7 +80,7 @@ const Navbar = ({
               </li>
             )}
             {!user && (
-              <li className="pl-2">
+              <li className="p-2">
                 <GoogleLogin
                   clientId="619935015421-c9vv4mlcuabiotbke4dpnc2ehp760l3a.apps.googleusercontent.com"
                   buttonText="Login"
@@ -89,20 +89,22 @@ const Navbar = ({
                 />
               </li>
             )}
-            <li className="p-2">
+            <li className="px-1 pt-1">
               {user && (
-                <div>
-                  <div>
-                    Logged in as
-                    {' '}
-                    {user.username}
-                  </div>
-                  <img
-                    className="rounded-full mx-auto h-6 w-6"
-                    src={user.avatar}
-                    alt="profile"
-                  />
-                </div>
+                <img
+                  className="rounded-full h-12 w-12 m-1 mr-3 float-left"
+                  src={user.avatar}
+                  alt="profile"
+                />
+              )}
+            </li>
+            <li className="pt-3">
+              {user && (
+                <p className="text-xs text-gray-500">
+                  Logged in as
+                  <br />
+                  {user.username}
+                </p>
               )}
             </li>
           </ul>

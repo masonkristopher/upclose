@@ -99,7 +99,7 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
 
   return (
     <>
-      <button type="button" onClick={() => { setPopupNumber(0); setPopupNumber(1) }} className="bg-black text-orange-400">Make a new party!</button>
+      <button type="button" onClick={() => { setPopupNumber(0); setPopupNumber(1); }} className="bg-white hover:text-salmon text-gray-800 py-1 px-2 font-semibold border border-gray-400 rounded-full shadow">Start a Party</button>
       <Popup onClose={() => { setInvitees([]); }} open={popUpNumber === 1}>
         <div className="p-8 flex">
           <button type="button" className="close absolute top-0 right-0" onClick={() => { setPopupNumber(0); setInvitees([]); }}>
