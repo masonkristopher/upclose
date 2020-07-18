@@ -25,6 +25,9 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   const [invited, setInvited]: any = useState(false);
   const [changeBackground, setChangeBackground]: any = useState(false);
   const [roomBackgrounds, setRoomBackgrounds]: any = useState({ 1: 'red', 2: 'blue', 3: 'green', 4: 'yellow' });
+  const [changeName, setChangeName]: any = useState(false);
+  const [partyName, setPartyName]: any = useState('');
+  const [creator, setCreator]: any = useState(false);
   // access the partyId from the route using useParams.
   const { partyId }: any = useParams();
   // useHistory allows us to redirect by pushing onto the url
@@ -78,23 +81,29 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       if (invitedUser.id === user.id) {
         setInvited(true);
       }
+      if (user.id === party.idCreator) {
+        setCreator(true);
+      }
     });
   }, [users]);
 
   const editPartyName = () => {
-    // should pop up a thing to edit the name
-    // send a request to edit party in the database
-    // update state
-    console.log('hello')
+    setChangeName(false);
+    party.name = partyName;
+    axios.put('/party/', { party })
+      .then(() => {
+        setParty(party);
+      });
   };
 
   const acceptInvite = () => {
     // request to backend to update userParty table, then set state
     axios.put(`/user//userParty/${user.id}/${partyId}/accepted`)
       .then(() => {
-        const copy = { ...party }
-        copy.inviteStatus = 'accepted';
-        setParty(copy);
+        party.inviteStatus = 'accepted';
+        // const copy = { ...party }
+        // copy.inviteStatus = 'accepted';
+        setParty(party);
       });
   };
 
@@ -139,18 +148,29 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
               </div>
             )}
             <div className="flex flex-row">
-              <h4>
-                party name is:
-                {party.name}
-              </h4>
-              <div role="button" tabIndex={0} onClick={editPartyName} onKeyUp={editPartyName}>
-                <img className="h-4 w-4 ml-2" alt="edit" src="https://www.pngfind.com/pngs/m/70-704184_png-file-svg-pencil-edit-icon-png-transparent.png" />
-
-              </div>
+              {changeName === false && (
+                <>
+                  <h4>
+                    party name is:
+                  {party.name}
+                  </h4>
+                  {creator && (
+                    <div role="button" tabIndex={0} onClick={() => { setChangeName(true) }} onKeyUp={() => { setChangeName(true) }}>
+                      <img className="h-4 w-4 ml-2" alt="edit" src="https://www.pngfind.com/pngs/m/70-704184_png-file-svg-pencil-edit-icon-png-transparent.png" />
+                    </div>
+                  )}
+                </>
+              )}
+              {changeName && (
+                <>
+                  <input onChange={(e) => setPartyName(e.target.value)} placeholder="New party name?" />
+                  <button type="button" onClick={editPartyName}>submit</button>
+                </>
+              )}
             </div>
           </div>
         )}
-        {users && user.id !== party.idCreator && (
+        {users && !creator && (
           <h4>
             Users involved in this party:
             <ul>
@@ -162,7 +182,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
             </ul>
           </h4>
         )}
-        {users && user.id === party.idCreator && (
+        {users && creator && (
           <div>
             <h4>
               Users involved in this party:
