@@ -1,9 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import {
-  Link,
-} from 'react-router-dom';
 import axios from 'axios';
-import CreatePartyPopup from './CreatePartyPopup';
 import NeighborhoodTabs from './NeighborhoodTabs';
 
 // our landing page
@@ -33,13 +29,6 @@ const Neighborhood: FC<NeighborhoodProps> = ({ user }) => {
         setParties(response.data);
       });
   }, [partyChange]);
-
-  // const deleteParty = (partyId: number) => {
-  //   axios.delete(`/party/${partyId}`)
-  //     .then(() => {
-  //       setPartyChange(!partyChange);
-  //     });
-  // };
 
   return (
     <div className="p-10 text-seaweed">
