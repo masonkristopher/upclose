@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, KeyboardEvent } from 'react';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 
@@ -26,6 +26,7 @@ const SearchPopup = ({ setInvitees, user, saveParty, setPopupNumber }: any) => {
   const handleMatches = () => {
     const results: any = fuse.search(input);
     setMatches(results);
+    setInput('');
   };
 
   const inviteUser = (invitee: any) => {
@@ -45,56 +46,52 @@ const SearchPopup = ({ setInvitees, user, saveParty, setPopupNumber }: any) => {
     setInvitees(array);
   };
 
+  const onKeyPress = (event: KeyboardEvent) => {
+    if (event.which === 13) handleMatches();
+  };
+
   return (
-    <div className="relative h-full w-full">
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full px-3">
-          <ul className="float-right">
-            Invited people:
-            {tempInvitees.map((invitee: any) => (
-              <div className="flex flex-row">
-                <li key={invitee.username}>{invitee.username}</li>
-                <button className="ml-2" type="button" onClick={() => { removeUser(invitee); }}>Remove</button>
-              </div>
-            ))}
-          </ul>
-          <input
-            onChange={(e) => setInput(e.target.value)}
-            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            id="grid-password"
-            type="text"
-            value={input}
-          />
-          <button
-            onClick={() => handleMatches()}
-            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
-            type="button"
-          >
-            Search
+    <div className="flex flex-wrap -mx-4 overflow-hidden">
+      <div className="my-2 px-3 w-1/2 overflow-hidden">
+        <div className="shadow flex">
+          <input onChange={(e) => setInput(e.target.value)} onKeyPress={onKeyPress} className="w-full rounded p-2 border-1 border-gray-400" type="text" value={input} id="grid-password" placeholder="Search..." />
+          <button type="button" className="bg-gray-200 w-auto flex justify-end items-center text-salmon p-2" onClick={() => handleMatches()}>
+            <svg viewBox="0 0 20 20" className="w-5 h-5 fill-current hover:text-avocado">
+              <path xmlns="http://www.w3.org/2000/svg" d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" />
+            </svg>
           </button>
-          <button type="button" className="relative bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full mb-6" onClick={() => { saveParty(); setPopupNumber(0); }}>Confirm Invites</button>
+        </div>
+        <div className="p-4">
+          {matches.length >= 1
+            ? matches.map((match: any) => (
+              <div className="flex items-center">
+                <img className="w-10 h-10 rounded-full m-2" src={match.item.avatar} alt="Avatar" />
+                <div className="mr-3">
+                  <p className="text-gray-900 text-base leading-none">{match.item.username}</p>
+                </div>
+                <div className="mr-4 text-white">
+                  <button type="button" className="w-6 h-6 bg-salmon rounded-full hover:bg-avocado active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none" onClick={() => inviteUser(match.item)}>
+                    +
+                  </button>
+                </div>
+              </div>
+            ))
+            : null}
         </div>
       </div>
-      <div>
-        {matches.length >= 1
-          ? matches.map((match: any) => (
-            <div>
-              <img
-                className="rounded-full mx-auto h-6 w-6"
-                src={match.item.avatar}
-                alt="avatar"
-              />
-              <li>{match.item.username}</li>
-              <button
-                onClick={() => inviteUser(match.item)}
-                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
-                type="button"
-              >
-                Add
+
+      <div className="my-2 px-3 w-1/2 overflow-hidden">
+        <span className="text-lg font-bold">Guest List:</span>
+        <ul className="pl-2 list-none">
+          {tempInvitees.map((invitee: any) => (
+            <div className="flex flex-row">
+              <li className="mr-3" key={invitee.username}>{invitee.username}</li>
+              <button type="button" className="w-6 h-6 bg-salmon rounded-full hover:bg-avocado active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none" onClick={() => { removeUser(invitee); }}>
+                <span className="text-white">-</span>
               </button>
             </div>
-          ))
-          : null}
+          ))}
+        </ul>
       </div>
     </div>
   );
