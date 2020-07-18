@@ -98,6 +98,14 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
       });
   };
 
+  const declineInvite = () => {
+    // delete user from userParty table, then redirect back to neighborhood
+    axios.delete(`/user/userParty/${user.id}/${partyId}`)
+      .then(() => {
+        history.replace('/neighborhood');
+      })
+  };
+
   const editRoomBackgrounds = (e: any, roomNumber: number) => {
     const copy = { ...roomBackgrounds };
     copy[roomNumber] = e.target.value;
@@ -117,7 +125,10 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   return (
     <div className="flex flex-col">
       {party.inviteStatus === 'pending' && (
-        <button type="button" className="flex p-6 bg-salmon border-black border-solid border" onClick={() => acceptInvite()}>Accept invitation to join</button>
+        <>
+          <button type="button" className="flex p-6 bg-salmon border-black border-solid border" onClick={() => acceptInvite()}>Accept invitation to join</button>
+          <button type="button" className="flex p-6 bg-avocado border-black border-solid border" onClick={() => declineInvite()}>Decline invitation to join</button>
+        </>
       )}
       <div className="flex flex-col">
         {party && (
