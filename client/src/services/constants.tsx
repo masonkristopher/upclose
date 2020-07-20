@@ -73,10 +73,16 @@ export interface Direction {
 }
 
 export enum RoomStyles {
-  red = 'bg-red-300',
-  green = 'bg-green-300',
-  blue = 'bg-blue-300',
-  yellow = 'bg-yellow-300',
+  red = 'bg-myred',
+  green = 'bg-mygreen',
+  blue = 'bg-myblue',
+  yellow = 'bg-myyellow',
+  orange = 'bg-myorange',
+  purple = 'bg-mypurple',
+  pink = 'bg-mypink',
+  white = 'bg-mywhite',
+  black = 'bg-myblack',
+  brown = 'bg-mybrown'
 }
 
 /* Player */
