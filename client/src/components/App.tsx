@@ -14,8 +14,7 @@ const App:FC = () => {
     // in public/index.html creates it
     (window as any).gapi.load('auth2', () => {
       // initializes the GoogleAuth object, which has all the fun methods we need
-      (window as any).gapi.auth2
-        .init({
+      (window as any).gapi.auth2.init({
           client_id:
             '619935015421-c9vv4mlcuabiotbke4dpnc2ehp760l3a.apps.googleusercontent.com',
         })
