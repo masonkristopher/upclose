@@ -7,12 +7,14 @@ interface RadarDotProps {
   calibration?: number;
   color: 'black' | 'red';
   position: Position;
+  rooms: (string | undefined)[];
 }
 
 const RadarDot: FC<RadarDotProps> = ({
   calibration = 0,
   color,
   position,
+  rooms,
 }): ReactElement => {
   const styleDot = (): CSSProperties => {
     const { currentRoom } = position;
@@ -20,16 +22,16 @@ const RadarDot: FC<RadarDotProps> = ({
     top /= 10;
     left /= 10;
 
-    if (currentRoom === 'red') {
+    if (currentRoom === rooms[0]) {
       top += 0;
       left += 0;
-    } else if (currentRoom === 'blue') {
+    } else if (currentRoom === rooms[1]) {
       top += 0;
       left += 50;
-    } else if (currentRoom === 'green') {
+    } else if (currentRoom === rooms[2]) {
       top += 50;
       left += 0;
-    } else if (currentRoom === 'yellow') {
+    } else if (currentRoom === rooms[3]) {
       top += 50;
       left += 50;
     }
