@@ -23,6 +23,10 @@ interface PartyAttributes {
   roomTwoBackground: string
   roomThreeBackground: string
   roomFourBackground: string
+  idRoomOne: string
+  idRoomTwo: string
+  idRoomThree: string
+  idRoomFour: string
   inviteOnly: boolean
   createdAt: Date
   updatedAt: Date
@@ -47,6 +51,14 @@ export class Party extends Model<PartyAttributes, PartyCreationAttributes>
   public roomThreeBackground: string;
 
   public roomFourBackground: string;
+
+  public idRoomOne: string;
+  
+  public idRoomTwo: string;
+  
+  public idRoomThree: string;
+  
+  public idRoomFour: string;
 
   public inviteOnly!: boolean;
 
@@ -100,6 +112,22 @@ export function initParty(sequelize: Sequelize): void {
         type: new DataTypes.STRING(250),
         allowNull: false,
         defaultValue: 'yellow',
+      },
+      idRoomOne: {
+        type: new DataTypes.STRING(10),
+        allowNull: false,
+      },
+      idRoomTwo: {
+        type: new DataTypes.STRING(10),
+        allowNull: false,
+      },
+      idRoomThree: {
+        type: new DataTypes.STRING(10),
+        allowNull: false,
+      },
+      idRoomFour: {
+        type: new DataTypes.STRING(10),
+        allowNull: false,
       },
       inviteOnly: {
         type: DataTypes.BOOLEAN,
