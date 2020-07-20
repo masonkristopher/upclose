@@ -18,17 +18,20 @@ interface UserPartyAttributes {
   id: number
   idUser: number
   idParty: number
+  inviteStatus: string
   createdAt: Date
   updatedAt: Date
 }
 
 export class UserParty extends Model<UserPartyAttributes>
   implements UserPartyAttributes {
-  public id!: number
+  public id!: number;
 
-  public idUser: number
+  public idUser: number;
 
-  public idParty: number
+  public idParty: number;
+
+  public inviteStatus: string;
 
   public readonly createdAt: Date;
 
@@ -75,6 +78,11 @@ export function initUserParty(sequelize: Sequelize): void {
       {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      inviteStatus: {
+        type: DataTypes.STRING(10),
+        allowNull: false,
+        defaultValue: 'pending',
       },
       createdAt: {
         type: DataTypes.DATE(),

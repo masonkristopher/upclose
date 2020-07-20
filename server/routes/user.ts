@@ -6,6 +6,7 @@ import {
   getUser,
   getUserById,
   updateUser,
+  updateUserParty,
   getAllUsers,
   deleteFromParty,
 } from '../db/methods';
@@ -69,10 +70,11 @@ userRouter.put('/profile/edit', (req, res) => {
     .catch((error) => console.log(error));
 });
 
+// add a user and its inviteStatus to the userParty table
 userRouter.post('/:idUser/joins/:idParty', (req, res) => {
   const { idUser, idParty } = req.params;
-  // console.log(req.params, '/userid/joins/partyid')
-  addUserToParty(idUser, idParty)
+  const { inviteStatus } = req.body;
+  addUserToParty(idUser, idParty, inviteStatus)
     .then(() => {
       res.send('user added to party');
     })
@@ -112,6 +114,16 @@ userRouter.delete('/userParty/:idUser/:idParty', (req, res) => {
       res.send('user deleted');
     })
     .catch(error => console.error(error));
+});
+
+// update the inviteStatus in the userParty table
+userRouter.put('/userParty/:idUser/:idParty/:inviteStatus', (req, res) => {
+  const { idUser, idParty, inviteStatus } = req.params;
+  updateUserParty(idUser, idParty, inviteStatus)
+    .then(() => {
+      res.send('invitation status changed');
+    })
+    .catch(err => console.error(err));
 });
 
 export default userRouter;
