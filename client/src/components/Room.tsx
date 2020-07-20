@@ -4,35 +4,40 @@ import { CSSProperties } from 'styled-components';
 import Player from './Player';
 
 import {
+  Dir,
+  Direction,
+  House,
+  Party,
   Peers,
   Position,
   Positions,
-  house,
   roomSize,
-  Dir,
-  Direction,
   RoomStyles,
 } from '../services/constants';
 
 import PartyGoer from './PartyGoer';
 
 interface RoomProps {
-  name: 'red' | 'green' | 'blue' | 'yellow';
+  currentRoom: string;
+  house: House;
   positions: Record<string, Position>;
   setPeers: Dispatch<SetStateAction<Peers>>;
   setPositions: Dispatch<SetStateAction<Positions>>;
   socket: SocketIOClient.Socket;
-  party: any;
+  party: Party;
 }
 
 const Room: FC<RoomProps> = ({
-  name,
+  house,
+  currentRoom,
   positions,
   setPeers,
   setPositions,
   socket,
   party,
 }): ReactElement => {
+  const rooms = Object.keys(house);
+
   const switchRoom = (dir: Dir) => {
     const playerPosition = positions[socket.id];
     const { top, left } = playerPosition;
@@ -55,8 +60,8 @@ const Room: FC<RoomProps> = ({
 
     setPositions({ ...positions });
     setPeers({});
-    socket.emit('player moved', { [socket.id]: playerPosition });
-    socket.emit('switch room', previousRoom, newRoom);
+    socket.emit('player moved', { [socket.id]: playerPosition }, rooms);
+    socket.emit('switch room', previousRoom, newRoom, rooms);
   };
 
   const handlePlayerMovement = (direction: Direction) => {
@@ -79,16 +84,16 @@ const Room: FC<RoomProps> = ({
       playerPosition.top = top + 10 * direction.top;
       playerPosition.left = left + 10 * direction.left;
       setPositions({ ...positions });
-      socket.emit('player moved', { [socket.id]: playerPosition });
+      socket.emit('player moved', { [socket.id]: playerPosition }, rooms);
     }
   };
 
-  let roomBackgroundImage: string;
-  if (name === 'red') {
+  let roomBackgroundImage: string | undefined;
+  if (currentRoom === party.idRoomOne) {
     roomBackgroundImage = party.roomOneBackground;
-  } else if (name === 'blue') {
+  } else if (currentRoom === party.idRoomTwo) {
     roomBackgroundImage = party.roomTwoBackground;
-  } else if (name === 'green') {
+  } else if (currentRoom === party.idRoomThree) {
     roomBackgroundImage = party.roomThreeBackground;
   } else {
     roomBackgroundImage = party.roomFourBackground;
@@ -109,7 +114,7 @@ const Room: FC<RoomProps> = ({
 
   return (
     <div
-      className={`relative w-500 h-500 inline-block ${defaultBackground ? RoomStyles[name] : ''}`}
+      className={`relative w-500 h-500 inline-block ${defaultBackground ? RoomStyles[(roomBackgroundImage as 'red' | 'blue' | 'green' | 'yellow')] : ''}`}
       style={defaultBackground ? {} : backgroundStyle}
     >
       <Player
