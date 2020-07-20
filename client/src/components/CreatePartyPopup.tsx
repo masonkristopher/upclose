@@ -6,20 +6,13 @@ import {
 } from 'pure-react-carousel';
 import cryptoRandomString from 'crypto-random-string';
 import axios from 'axios';
+import { User } from '../services/constants';
 import SearchPopup from './SearchPopup';
 // to do: does this need to go somewhere else???
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
 interface CreatePartyPopupProps {
-  user: {
-    id: number,
-    nameFirst: string,
-    nameLast: string,
-    username: string,
-    email: string,
-    avatar: string,
-    googleId: string,
-  };
+  user: User,
 }
 
 const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
