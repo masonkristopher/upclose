@@ -1,7 +1,9 @@
 import React, { FC, ReactElement, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Popup from 'reactjs-popup';
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, Image, DotGroup } from 'pure-react-carousel';
+import {
+  CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, Image, DotGroup,
+} from 'pure-react-carousel';
 import axios from 'axios';
 import SearchPopup from './SearchPopup';
 // to do: does this need to go somewhere else???
@@ -31,12 +33,12 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
   });
   const [invitees, setInvitees]: any = useState([]);
   const [popUpNumber, setPopupNumber]: any = useState(0);
-  const [activeSlide, setActiveSlide] = useState(0);
   const [isChecked, setIsChecked] = useState(true);
-  // this should equal how many layouts we have  **************
-  const [totalSlides, setTotalSlides] = useState(2);
   // useHistory allows us to redirect by pushing onto the url
   const history = useHistory();
+  // const [activeSlide, setActiveSlide] = useState(0);
+  // this should equal how many layouts we have  **************
+  // const [totalSlides, setTotalSlides] = useState(2);
 
   // sets partyDetails state to have the party's name
   const setPartyName = (e: any): void => {
@@ -70,7 +72,8 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
     const newPartyDetails = { ...partyDetails };
     newPartyDetails.inviteOnly = !newPartyDetails.inviteOnly;
     setPartyDetails(newPartyDetails);
-  }
+  };
+
   // sends request to server to save the party, sending party details
   const saveParty = () => {
     axios.post('/party/create', {
@@ -80,10 +83,14 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
         // party's id
         const { id } = response.data;
         // add logged in user to UserParty join table
-        axios.post(`user/${user.id}/joins/${id}`);
+        axios.post(`user/${user.id}/joins/${id}`, {
+          inviteStatus: 'accepted',
+        });
         // map through invitees and use their userId + id to add them to UserParty table
         invitees.map((invitee: any) => {
-          axios.post(`user/${invitee.id}/joins/${id}`);
+          axios.post(`user/${invitee.id}/joins/${id}`, {
+            inviteStatus: 'pending',
+          });
         });
         return id;
       })
@@ -95,22 +102,150 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
 
   return (
     <>
+      {/* Start a Party - Open Popup Button */}
       <button type="button" onClick={() => { setPopupNumber(0); setPopupNumber(1); }} className="bg-white hover:text-salmon text-gray-800 py-1 px-2 font-semibold border border-gray-400 rounded-full shadow">Start a Party</button>
+
+      {/* Start a Party - Popup 1 */}
       <Popup onClose={() => { setInvitees([]); }} open={popUpNumber === 1}>
-        <div className="p-8 flex">
-          <button type="button" className="close absolute top-0 right-0" onClick={() => { setPopupNumber(0); setInvitees([]); }}>
-            &times;
-            </button>
-          <h4 className="absolute left-0 top-0 pl-2 pt-2">Create a Party</h4>
-          <div className="flex">
-            <input onChange={setPartyName} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Party Name?" />
-            <input className="float-right" checked={isChecked} onChange={toggleChecked} type="checkbox" />
-            <p className="float-left">Invite only?</p>
+        <>
+          <div className="justify-center text-seaweed items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="relative w-10/12 sm:w-10/12 md:w-2/3 lg:w-1/2 xl:w-1/2 my-6 mx-auto max-w-3xl">
+              {/* content */}
+              <div className="border-0 rounded-lg shadow-lg relative p-8 flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/* header */}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
+                  <h3 className="text-3xl text-seaweed font-semibold">
+                    Create a Party
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => { setPopupNumber(0); setInvitees([]); }}
+                    type="button"
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none hover:shadow-md">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/* body */}
+                <div className="relative p-6 flex-auto">
+                  <label htmlFor="party-name" className="block">
+                    <span className="text-lg font-bold">Party Name</span>
+                    <input onChange={setPartyName} className="form-input mt-1 block w-full" id="party-name" placeholder="My Party" />
+                  </label>
+                  <div className="mt-4">
+                    <div className="mt-2">
+                      <label htmlFor="invite-only" className="inline-flex items-center">
+                        <input type="radio" className="form-radio text-avocado" name="accountType" value="invite" id="invite-only" checked={isChecked} onChange={toggleChecked} />
+                        <span className="ml-2">Invite Only</span>
+                      </label>
+                      <label htmlFor="pubic" className="inline-flex items-center ml-6">
+                        <input type="radio" className="form-radio text-caviar" name="accountType" value="public" id="public" checked={!isChecked} onChange={toggleChecked} />
+                        <span className="ml-2">Public</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                {/* footer */}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                  <button
+                    className="text-caviar background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                    type="button"
+                    style={{ transition: 'all .15s ease' }}
+                    onClick={() => { setPopupNumber(0); setInvitees([]); }}
+                  >
+                    Close
+                  </button>
+
+                  {/* prevent <next> button click unless party name is entered */}
+                  {partyDetails.name === '' && (
+                    <button
+                      className="bg-gray-400 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 cursor-not-allowed"
+                      type="button"
+                      style={{ transition: 'all .15s ease' }}
+                    >
+                      Next
+                    </button>
+                  )}
+                  {partyDetails.name !== '' && (
+                    <button
+                      className="bg-avocado text-white active:bg-salmon font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                      type="button"
+                      style={{ transition: 'all .15s ease' }}
+                      onClick={() => { setPopupNumber(2); }}
+                    >
+                      Next
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-          <button type="button" className="absolute bottom-0 my-2 border border-solid border-1 bg-blue-600 text-orange-300 px-2 max-w-full" onClick={() => { setPopupNumber(2); }}>Confirm party name</button>
-        </div>
+        </>
       </Popup>
-      {/* <Popup open={popUpNumber === 2}>
+
+      {/* Invite Friends - Popup 2 */}
+      <Popup
+        open={popUpNumber === 2}
+        onClose={() => { setInvitees([]); }}
+      >
+        <>
+          <div className="justify-center text-seaweed items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="relative w-10/12 sm:w-10/12 md:w-2/3 lg:w-1/2 xl:w-1/2 my-6 mx-auto max-w-3xl">
+              {/* content */}
+              <div className="border-0 rounded-lg shadow-lg relative p-8 flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/* header */}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
+                  <h3 className="text-3xl text-seaweed font-semibold">
+                    Invite Friends
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => { setPopupNumber(0); setInvitees([]); }}
+                    type="button"
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none hover:shadow-md">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                <SearchPopup
+                  user={user}
+                  setInvitees={setInvitees}
+                  saveParty={saveParty}
+                  setPopupNumber={setPopupNumber}
+                />
+                {/* footer */}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                  <button
+                    className="text-caviar background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                    type="button"
+                    style={{ transition: 'all .15s ease' }}
+                    onClick={() => { setPopupNumber(1); }}
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="bg-avocado text-white active:bg-salmon font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                    type="button"
+                    style={{ transition: 'all .15s ease' }}
+                    onClick={() => { saveParty(); setPopupNumber(0); }}
+                  >
+                    Save Party
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      </Popup>
+    </>
+  );
+};
+
+export default CreatePartyPopup;
+
+/* <Popup open={popUpNumber === 2}>
         <>
           <h4 className="relative left-0 top-0 pl-2 pt-2 font-bold">Select a layout</h4>
           <CarouselProvider
@@ -155,35 +290,5 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
           </CarouselProvider>
           <button type="button" className="relative bottom-0 border border-solid border-1 bg-blue-600 text-orange-300" onClick={() => { setPartyLayout(activeSlide); setPopupNumber(3); }}>Confirm party layout</button>
         </>
-      </Popup> */}
-      <Popup
-        contentStyle={{
-          top: 'auto',
-          left: 'auto',
-          right: 'auto',
-          bottom: 'auto',
-          height: '400px',
-          overflow: 'auto',
-          display: 'flex'
-        }}
-        open={popUpNumber === 2}
-        onClose={() => {setInvitees([]); setPopupNumber(0)}}
-      >
-        <>
-          <div className="flex flex-col">
-            <h4 className="relative pb-1 left-0 top-0 font-bold">Invite people</h4>
-            <SearchPopup
-              user={user}
-              setInvitees={setInvitees}
-              saveParty={saveParty}
-              setPopupNumber={setPopupNumber}
-            />
-          </div>
-          <button type="button" onClick={() => setPopupNumber(1)}>Go back</button>
-        </>
       </Popup>
-    </>
-  );
-};
-
-export default CreatePartyPopup;
+*/
