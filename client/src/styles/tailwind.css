@@ -13701,6 +13701,13 @@ video {
   left: 85px;
 }
 
+.inset-150 {
+  top: 150px;
+  right: 150px;
+  bottom: 150px;
+  left: 150px;
+}
+
 .inset-auto {
   top: auto;
   right: auto;
@@ -13813,6 +13820,16 @@ video {
 .inset-x-85 {
   right: 85px;
   left: 85px;
+}
+
+.inset-y-150 {
+  top: 150px;
+  bottom: 150px;
+}
+
+.inset-x-150 {
+  right: 150px;
+  left: 150px;
 }
 
 .inset-y-auto {
@@ -13993,6 +14010,22 @@ video {
 
 .left-85 {
   left: 85px;
+}
+
+.top-150 {
+  top: 150px;
+}
+
+.right-150 {
+  right: 150px;
+}
+
+.bottom-150 {
+  bottom: 150px;
+}
+
+.left-150 {
+  left: 150px;
 }
 
 .top-auto {
@@ -16282,6 +16315,10 @@ video {
 
 .w-64 {
   width: 16rem;
+}
+
+.w-300 {
+  width: 300px;
 }
 
 .w-auto {
@@ -31752,6 +31789,13 @@ body {
     left: 85px;
   }
 
+  .sm\:inset-150 {
+    top: 150px;
+    right: 150px;
+    bottom: 150px;
+    left: 150px;
+  }
+
   .sm\:inset-auto {
     top: auto;
     right: auto;
@@ -31864,6 +31908,16 @@ body {
   .sm\:inset-x-85 {
     right: 85px;
     left: 85px;
+  }
+
+  .sm\:inset-y-150 {
+    top: 150px;
+    bottom: 150px;
+  }
+
+  .sm\:inset-x-150 {
+    right: 150px;
+    left: 150px;
   }
 
   .sm\:inset-y-auto {
@@ -32044,6 +32098,22 @@ body {
 
   .sm\:left-85 {
     left: 85px;
+  }
+
+  .sm\:top-150 {
+    top: 150px;
+  }
+
+  .sm\:right-150 {
+    right: 150px;
+  }
+
+  .sm\:bottom-150 {
+    bottom: 150px;
+  }
+
+  .sm\:left-150 {
+    left: 150px;
   }
 
   .sm\:top-auto {
@@ -34333,6 +34403,10 @@ body {
 
   .sm\:w-64 {
     width: 16rem;
+  }
+
+  .sm\:w-300 {
+    width: 300px;
   }
 
   .sm\:w-auto {
@@ -49761,6 +49835,13 @@ body {
     left: 85px;
   }
 
+  .md\:inset-150 {
+    top: 150px;
+    right: 150px;
+    bottom: 150px;
+    left: 150px;
+  }
+
   .md\:inset-auto {
     top: auto;
     right: auto;
@@ -49873,6 +49954,16 @@ body {
   .md\:inset-x-85 {
     right: 85px;
     left: 85px;
+  }
+
+  .md\:inset-y-150 {
+    top: 150px;
+    bottom: 150px;
+  }
+
+  .md\:inset-x-150 {
+    right: 150px;
+    left: 150px;
   }
 
   .md\:inset-y-auto {
@@ -50053,6 +50144,22 @@ body {
 
   .md\:left-85 {
     left: 85px;
+  }
+
+  .md\:top-150 {
+    top: 150px;
+  }
+
+  .md\:right-150 {
+    right: 150px;
+  }
+
+  .md\:bottom-150 {
+    bottom: 150px;
+  }
+
+  .md\:left-150 {
+    left: 150px;
   }
 
   .md\:top-auto {
@@ -52342,6 +52449,10 @@ body {
 
   .md\:w-64 {
     width: 16rem;
+  }
+
+  .md\:w-300 {
+    width: 300px;
   }
 
   .md\:w-auto {
@@ -67770,6 +67881,13 @@ body {
     left: 85px;
   }
 
+  .lg\:inset-150 {
+    top: 150px;
+    right: 150px;
+    bottom: 150px;
+    left: 150px;
+  }
+
   .lg\:inset-auto {
     top: auto;
     right: auto;
@@ -67882,6 +68000,16 @@ body {
   .lg\:inset-x-85 {
     right: 85px;
     left: 85px;
+  }
+
+  .lg\:inset-y-150 {
+    top: 150px;
+    bottom: 150px;
+  }
+
+  .lg\:inset-x-150 {
+    right: 150px;
+    left: 150px;
   }
 
   .lg\:inset-y-auto {
@@ -68062,6 +68190,22 @@ body {
 
   .lg\:left-85 {
     left: 85px;
+  }
+
+  .lg\:top-150 {
+    top: 150px;
+  }
+
+  .lg\:right-150 {
+    right: 150px;
+  }
+
+  .lg\:bottom-150 {
+    bottom: 150px;
+  }
+
+  .lg\:left-150 {
+    left: 150px;
   }
 
   .lg\:top-auto {
@@ -70351,6 +70495,10 @@ body {
 
   .lg\:w-64 {
     width: 16rem;
+  }
+
+  .lg\:w-300 {
+    width: 300px;
   }
 
   .lg\:w-auto {
@@ -85779,6 +85927,13 @@ body {
     left: 85px;
   }
 
+  .xl\:inset-150 {
+    top: 150px;
+    right: 150px;
+    bottom: 150px;
+    left: 150px;
+  }
+
   .xl\:inset-auto {
     top: auto;
     right: auto;
@@ -85891,6 +86046,16 @@ body {
   .xl\:inset-x-85 {
     right: 85px;
     left: 85px;
+  }
+
+  .xl\:inset-y-150 {
+    top: 150px;
+    bottom: 150px;
+  }
+
+  .xl\:inset-x-150 {
+    right: 150px;
+    left: 150px;
   }
 
   .xl\:inset-y-auto {
@@ -86071,6 +86236,22 @@ body {
 
   .xl\:left-85 {
     left: 85px;
+  }
+
+  .xl\:top-150 {
+    top: 150px;
+  }
+
+  .xl\:right-150 {
+    right: 150px;
+  }
+
+  .xl\:bottom-150 {
+    bottom: 150px;
+  }
+
+  .xl\:left-150 {
+    left: 150px;
   }
 
   .xl\:top-auto {
@@ -88360,6 +88541,10 @@ body {
 
   .xl\:w-64 {
     width: 16rem;
+  }
+
+  .xl\:w-300 {
+    width: 300px;
   }
 
   .xl\:w-auto {
