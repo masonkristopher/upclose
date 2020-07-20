@@ -7,6 +7,9 @@ module.exports = {
         avocado: '#B8D20B',
         salmon: '#F56C57',
         seaweed: '#231B12',
+      },
+      width: {
+        300: '300px',
       }
     },
     inset: {
@@ -22,6 +25,7 @@ module.exports = {
       75: '75px',
       80: '80px',
       85: '85px',
+      150: '150px',
     }
   },
   variants: {},
