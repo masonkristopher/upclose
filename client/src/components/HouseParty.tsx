@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import ChatSend from './ChatSend';
 import PlayerVideoPanel from './PlayerVideoPanel';
@@ -48,6 +48,11 @@ const HouseParty: FC<HousePartyProps> = ({
 
   const [invited, setInvited]: any = useState(null);
   const [users, setUsers]: any = useState([]);
+  const history = useHistory();
+
+  const goToSettings = () => {
+    history.replace(`/partyProfile/${partyId}`);
+  };
 
   const [party, setParty]: [
     Party,
@@ -189,6 +194,11 @@ const HouseParty: FC<HousePartyProps> = ({
   // to do: make all this render only if a user is invited
   return (
     <div className="pl-8 pt-4">
+      <button onClick={goToSettings} type="button">
+        <svg className="h-6 w-6 fill-current text-gray-500 hover:text-salmon" xmlns="http://www.w3.org/2000/svg">
+          <path xmlns="http://www.w3.org/2000/svg" d="M3.94 6.5L2.22 3.64l1.42-1.42L6.5 3.94c.52-.3 1.1-.54 1.7-.7L9 0h2l.8 3.24c.6.16 1.18.4 1.7.7l2.86-1.72 1.42 1.42-1.72 2.86c.3.52.54 1.1.7 1.7L20 9v2l-3.24.8c-.16.6-.4 1.18-.7 1.7l1.72 2.86-1.42 1.42-2.86-1.72c-.52.3-1.1.54-1.7.7L11 20H9l-.8-3.24c-.6-.16-1.18-.4-1.7-.7l-2.86 1.72-1.42-1.42 1.72-2.86c-.3-.52-.54-1.1-.7-1.7L0 11V9l3.24-.8c.16-.6.4-1.18.7-1.7zM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+        </svg>
+      </button>
       <h1 className="text-xl">Party Name</h1>
       <div className="float-left">
         {/* {party != {}
