@@ -18,7 +18,9 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   const [update, setUpdate]: any = useState(true);
   const [invited, setInvited]: any = useState(false);
   const [changeBackground, setChangeBackground]: any = useState(false);
-  const [tempRoomBackgrounds, setTempRoomBackgrounds]: any = useState({ 0: 'red', 1: 'blue', 2: 'green', 3: 'yellow' });
+  const [tempRoomBackgrounds, setTempRoomBackgrounds]: any = useState({
+    0: 'red', 1: 'blue', 2: 'green', 3: 'yellow',
+  });
   const [changeName, setChangeName]: any = useState(false);
   const [partyName, setPartyName]: any = useState('');
   const [creator, setCreator]: any = useState(false);
@@ -28,7 +30,9 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   // useHistory allows us to redirect by pushing onto the url
   const history = useHistory();
 
-  const { roomOneBackground, roomTwoBackground, roomThreeBackground, roomFourBackground } = party;
+  const {
+    roomOneBackground, roomTwoBackground, roomThreeBackground, roomFourBackground,
+  } = party;
   const backgrounds = [roomOneBackground, roomTwoBackground, roomThreeBackground, roomFourBackground];
 
   const goToParty = () => {
@@ -55,7 +59,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
             // then use setParty to put the party's info into state
             setParty(response.data);
           });
-        return axios.get(`/party/getUsers/${partyId}`)
+        return axios.get(`/party/getUsers/${partyId}`);
       })
       .then((response) => {
         setUsers(response.data);
@@ -148,7 +152,6 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
     lineHeight: 0,
   };
 
-
   return (
     <div className="p-10 grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
       <div className="">
@@ -201,19 +204,36 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
 
         <div className="my-4">
           <button type="button" onClick={() => setChangeBackground(true)} className="bg-seaweed hover:bg-avocado text-white py-1 px-2 font-semibold border border-gray-400 rounded-full shadow">Customize Rooms</button>
-          <Popup open={changeBackground === true} onClose={() => { setChangeBackground(false) }}>
-            <div className="flex flex-col">
-              <h1 className="relative left-0 top-0 pl-4 pt-4 font-bold">Insert a url, or type a basic color</h1>
+          <Popup open={changeBackground === true} onClose={() => { setChangeBackground(false); }}>
+            <div className="flex flex-row p-8">
               <button type="button" className="close absolute top-5 right-5" onClick={() => { exitBackgroundPopup(); }}>
                 <svg className="h-4 w-4 fill-current text-seaweed hover:text-salmon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                   <path xmlns="http://www.w3.org/2000/svg" d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
                 </svg>
               </button>
-              <input onChange={(e) => { editRoomBackgrounds(e, 0) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Top left" />
-              <input onChange={(e) => { editRoomBackgrounds(e, 1) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Top right" />
-              <input onChange={(e) => { editRoomBackgrounds(e, 2) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Bottom left" />
-              <input onChange={(e) => { editRoomBackgrounds(e, 3) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Bottom right" />
-              <button type="button" onClick={() => { saveRoomBackgrounds(); setChangeBackground(false) }}>Save Images</button>
+              <div className="mr-8">
+                <div className="pb-4">
+                  <h1 className="font-bold">Customize Room Backgrounds</h1>
+                  <p className="text-sm">Select a color or copy/paste image URL</p>
+                </div>
+                <input onChange={(e) => { editRoomBackgrounds(e, 0); }} className="flex max-w-full mt-4 border border-solid border-1" type="text" name="colors" list="colors" placeholder="Top Left" />
+                <input onChange={(e) => { editRoomBackgrounds(e, 1); }} className="flex max-w-full mt-4 border border-solid border-1" type="text" name="colors" list="colors" placeholder="Top Right" />
+                <input onChange={(e) => { editRoomBackgrounds(e, 2); }} className="flex max-w-full mt-4 border border-solid border-1" type="text" name="colors" list="colors" placeholder="Bottom Left" />
+                <input onChange={(e) => { editRoomBackgrounds(e, 3); }} className="flex max-w-full mt-4 border border-solid border-1" type="text" name="colors" list="colors" placeholder="Bottom Right" />
+                <button type="button" onClick={() => { saveRoomBackgrounds(); setChangeBackground(false); }} className="bg-seaweed hover:bg-salmon text-white py-2 px-3 font-semibold border border-gray-400 rounded-full shadow my-8">Save</button>
+                <datalist id="colors">
+                  <option label="black" value="black" />
+                  <option label="brown" value="brown" />
+                  <option label="pink" value="pink" />
+                  <option label="red" value="red" />
+                  <option label="purple" value="purple" />
+                  <option label="orange" value="orange" />
+                  <option label="yellow" value="yellow" />
+                  <option label="blue" value="blue" />
+                  <option label="white" value="white" />
+                  <option label="green" value="green" />
+                </datalist>
+              </div>
               <div className="relative" style={containerStyle}>
                 {backgrounds.map((background, index) => (
                   <div
@@ -223,8 +243,8 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
                       backgroundPosition: 'center',
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: 'cover',
-                      height: '50px',
-                      width: '50px',
+                      height: '150px',
+                      width: '150px',
                     }}
                   />
                 ))}
