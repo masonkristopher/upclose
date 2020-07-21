@@ -1,5 +1,8 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, {
+  FC, useState, MouseEvent, KeyboardEvent, useEffect,
+} from 'react';
 import axios from 'axios';
+import moment from 'moment';
 
 // maybe I am a popup, maybe a dropdown menu thing, maybe a separate page
 interface IProps {
@@ -28,11 +31,9 @@ interface IProps {
 const MessagesView: FC<IProps> = ({
   user, clickedUser, showMessages, setShowMessages,
 }) => {
-  const [typedMessage, setTypedMessage]: any = useState('');
+  const [message, setMessage]: any = useState('');
   const [allMessages, setAllMessages]: any = useState([]);
-  // const [check, setCheck]: any = useState(false);
 
-  // grab both user and their combined messages sorted
   const getMessages = () => {
     axios
       .get(`/messages/all/${user.id}/${clickedUser.id}`)
@@ -42,34 +43,42 @@ const MessagesView: FC<IProps> = ({
       .catch(error => console.log(error));
   };
 
-  // useEffect to shift done to true or false every so often
-  // useEffect(() => {
-  //   setCheck(!check);
-  //   console.log('Check if allMessages is updating', allMessages);
-  // });
+  useEffect(() => {
+    getMessages();
+    const interval = setInterval(() => {
+      getMessages();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
-  // useEffect to call getMessages every time done switches
-  // useEffect(() => {
-  //   getMessages();
-  // }, [check]);
-
-  const sendMessage = () => {
+  const sendMessage = (event: MouseEvent | KeyboardEvent) => {
+    event.preventDefault();
     const messageObj = {
-      message: typedMessage,
+      message,
       idSender: user.id,
       idRecipient: clickedUser.id,
     };
     axios
       .post('/messages/send', messageObj)
-      .then(() => showMessages())
-      // .then((response) => setAllMessages(allMessages.concat(response.data)))
+      .then(() => getMessages())
       .catch(error => console.log(error));
+  };
+
+  const onKeyPress = (event: KeyboardEvent) => {
+    if (event.which === 13) sendMessage(event);
   };
 
   return (
     <div>
       <div className="text-blue">
         I am the child of beautiful Messages
+        <button
+          onClick={() => setShowMessages(!showMessages)}
+          type="button"
+          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
+        >
+          back
+        </button>
       </div>
       <div>
         {allMessages.length >= 1
@@ -102,34 +111,25 @@ const MessagesView: FC<IProps> = ({
             <div>Say something!</div>
           )}
       </div>
-      <div className="">
-        <input
-          onChange={(e) => setTypedMessage(e.target.value)}
-          className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-          type="text"
-          value={typedMessage}
-        />
-        <button
-          onClick={() => sendMessage()}
-          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
-          type="button"
-        >
-          Send
-        </button>
-        <button
-          onClick={() => setShowMessages(!showMessages)}
-          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
-          type="button"
-        >
-          Back to Threads
-        </button>
-        <button
-          onClick={() => getMessages()}
-          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
-          type="button"
-        >
-          Show Messages
-        </button>
+      <div className="flex justify-center bg-gray-200">
+        <div>
+          <input
+            value={message}
+            onKeyPress={onKeyPress}
+            onChange={(e) => setMessage(e.target.value)}
+            type="text"
+            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4 "
+          />
+        </div>
+        <div>
+          <button
+            onClick={(e) => sendMessage(e)}
+            type="button"
+            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
+          >
+            send
+          </button>
+        </div>
       </div>
     </div>
   );

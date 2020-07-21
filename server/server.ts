@@ -26,20 +26,26 @@ app.get('*', (req: Request, res: Response): void => {
 
 io.on('connection', socket => {
   // if user joins room
-  socket.on('join room', (playerPosition) => {
+  socket.on('join room', (playerPosition, rooms: string[]) => {
     const newRoom = playerPosition.currentRoom;
     socket.join(newRoom, () => {
-      socket.broadcast.emit('update player', { [socket.id]: playerPosition });
-      io.to(newRoom).emit('user joined room', socket.id);
+      rooms.forEach(room => {
+        socket.to(room).emit('update player', { [socket.id]: playerPosition });
+      });
+      // socket.broadcast.emit('update player', { [socket.id]: playerPosition });
+      socket.to(newRoom).emit('user joined room', socket.id);
     });
   });
 
   // if user switches room
-  socket.on('switch room', (previousRoom: string, newRoom: string) => {
+  socket.on('switch room', (previousRoom: string, newRoom: string, rooms: string[]) => {
     socket.leave(previousRoom, () => {
-      socket.broadcast.emit('user left room', socket.id, newRoom);
+      rooms.forEach(room => {
+        socket.to(room).emit('user left room', socket.id, newRoom);
+      });
+      // socket.broadcast.emit('user left room', socket.id, newRoom);
       socket.join(newRoom, () => {
-        io.to(newRoom).emit('user joined room', socket.id);
+        socket.to(newRoom).emit('user joined room', socket.id);
       });
     });
   });
@@ -52,8 +58,11 @@ io.on('connection', socket => {
     io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
   });
 
-  socket.on('player moved', payload => {
-    socket.broadcast.emit('update player', payload);
+  socket.on('player moved', (position, rooms) => {
+    rooms.forEach(room => {
+      io.to(room).emit('update player', position);
+    });
+    // socket.broadcast.emit('update player', position);
   });
 
   socket.on('chat message', payload => {
@@ -61,7 +70,9 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
-    // emit back to last room that you left
+    // rooms.forEach(room => {
+    //   io.to(room).emit('user left party', socket.id);
+    // });
     socket.broadcast.emit('user left party', socket.id);
     console.log(`user disconnected: ${socket.id}`);
   });
