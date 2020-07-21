@@ -17,6 +17,7 @@ const userRouter = express.Router();
 userRouter.post('/verify', (req, res) => {
   // console.log(req.body, 'beginning of userRoute');
   const { id_token, userObj } = req.body;
+  console.log(userObj, 'userOj')
   const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
   async function verify() {
     const ticket = await client.verifyIdToken({
@@ -42,15 +43,15 @@ userRouter.post('/verify', (req, res) => {
       } else {
         // user is not in database, so let's add the user
         const {
-          Au, Bd, JU, MK, nU, nW,
-        } = userObj.Qt;
+          yu, Cd, OU, PK, sU, sW,
+        } = userObj.Ot;
         const user = {
-          nameFirst: nW,
-          nameLast: nU,
-          username: Bd,
-          email: Au,
-          avatar: MK,
-          googleId: JU,
+          nameFirst: sW,
+          nameLast: sU,
+          username: Cd,
+          email: yu,
+          avatar: PK,
+          googleId: OU,
         };
         createUser(user);
         res.send(user);

@@ -102,7 +102,13 @@ const Room: FC<RoomProps> = ({
   const defaultBackground = roomBackgroundImage === undefined
     || roomBackgroundImage === 'red'
     || roomBackgroundImage === 'blue'
+    || roomBackgroundImage === 'brown'
+    || roomBackgroundImage === 'white'
+    || roomBackgroundImage === 'pink'
+    || roomBackgroundImage === 'black'
+    || roomBackgroundImage === 'purple'
     || roomBackgroundImage === 'green'
+    || roomBackgroundImage === 'orange'
     || roomBackgroundImage === 'yellow';
 
   const backgroundStyle: CSSProperties = {
@@ -114,7 +120,9 @@ const Room: FC<RoomProps> = ({
 
   return (
     <div
-      className={`relative w-500 h-500 inline-block ${defaultBackground ? RoomStyles[(roomBackgroundImage as 'red' | 'blue' | 'green' | 'yellow')] : ''}`}
+    // to do: fix this Roomstyles typescript problem
+    // @ts-ignore
+      className={`relative w-500 h-500 inline-block ${defaultBackground ? (RoomStyles as any)[roomBackgroundImage] : ''}`}
       style={defaultBackground ? {} : backgroundStyle}
     >
       <Player

@@ -124,6 +124,7 @@ const HouseParty: FC<HousePartyProps> = ({
         });
 
         socket.on('user left party', (leavingUserId: string) => {
+          console.log(`user ${leavingUserId} left party`);
           delete positions[leavingUserId];
           delete peers[leavingUserId];
           setPositions({ ...positions });
@@ -159,10 +160,16 @@ const HouseParty: FC<HousePartyProps> = ({
         setUsers(response.data);
       })
       .catch((err) => console.error(err));
+
+    return () => {
+      console.log(`house party unmounted by ${socket.id}`);
+      socket.close();
+    };
   }, []);
 
   useEffect(() => {
     if (positions[playerSocket].currentRoom !== '') {
+      console.log('joining party');
       joinParty();
     }
   }, [party]);
@@ -201,8 +208,6 @@ const HouseParty: FC<HousePartyProps> = ({
       </button>
       <h1 className="text-xl">Party Name</h1>
       <div className="float-left">
-        {/* {party != {}
-        && ( */}
         <Room
           house={house}
           currentRoom={positions[socket.id].currentRoom}
@@ -212,18 +217,16 @@ const HouseParty: FC<HousePartyProps> = ({
           setPositions={setPositions}
           socket={socket}
         />
-        {/* )} */}
       </div>
       <div className="bg-gray-100 md:float-left pl-4">
-        {/* {party != {}
-        && ( */}
+        {party.id && (
         <PlayerVideoPanel
           party={party}
           positions={positions}
           socket={socket}
           userVideo={userVideo}
         />
-        {/* )} */}
+        )}
       </div>
 
       {/* Peer Videos */}

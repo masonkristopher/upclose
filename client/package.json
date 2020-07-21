@@ -24,7 +24,6 @@
     "crypto-random-string": "^3.2.0",
     "fuse.js": "^6.4.0",
     "moment": "^2.27.0",
-    "pure-react-carousel": "^1.27.1",
     "react": "^16.13.1",
     "react-compound-slider": "^0.16.3",
     "react-dom": "^16.13.1",
