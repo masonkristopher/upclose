@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useState, useEffect } from 'react';
 
 interface InboxListItemProps {
   thread: {
@@ -11,14 +11,23 @@ interface InboxListItemProps {
     googleId: string,
   },
   handleMessageView: any,
-  recentMessage: any,
+  recentMessages: any,
 }
 
 const InboxListItem: FC<InboxListItemProps> = ({
   thread,
   handleMessageView,
-  recentMessage,
+  recentMessages,
 }): ReactElement => {
+  const [latest, setLatest] = useState('');
+
+  useEffect(() => {
+    recentMessages.forEach((messageObj: any) => {
+      if (messageObj.idSender === thread.id || messageObj.idRecipient === thread.id) {
+        setLatest(messageObj.message);
+      }
+    });
+  });
   return (
     <div className="bg-seaweed justify-center">
       <div className="bg-salmon justify-center">
@@ -27,7 +36,7 @@ const InboxListItem: FC<InboxListItemProps> = ({
           type="button"
           onClick={() => { handleMessageView(thread); }}
         >
-          {recentMessage}
+          {latest}
         </button>
       </div>
       <div className="flex justify-evenly">

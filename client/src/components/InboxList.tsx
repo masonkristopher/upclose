@@ -20,7 +20,7 @@ const Messages: FC<IProps> = ({ user }) => {
   const [clickedUser, setClickedUser]: any = useState({});
   const [threads, setThreads]: any = useState([]);
   const [showMessages, setShowMessages]: any = useState(clickedUser !== {});
-  const [recentMessage, setRecentMessage]: any = useState('Most recent message');
+  const [recentMessages, setRecentMessages]: any = useState([]);
   const [searching, setSearching]: any = useState(false);
 
   useEffect(() => {
@@ -34,6 +34,14 @@ const Messages: FC<IProps> = ({ user }) => {
             .then(resObj => {
               setThreads((users: any) => [...users, resObj.data]);
             });
+          axios
+            .get(`messages/${user.id}/${id}/last`)
+            .then(res => {
+              console.log('line40', res.data);
+              recentMessages.push(res.data);
+            })
+            .catch(error => console.error(error));
+          
         });
       });
   }, []);
@@ -83,7 +91,7 @@ const Messages: FC<IProps> = ({ user }) => {
                     thread={thread}
                     key={thread.id}
                     handleMessageView={handleMessageView}
-                    recentMessage={recentMessage}
+                    recentMessages={recentMessages}
                   />
                 );
               })}

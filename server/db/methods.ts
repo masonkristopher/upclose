@@ -40,6 +40,7 @@ const getUser = async (googleId) => {
   }
 };
 
+//GET USER BY ID
 const getUserById = async (id) => {
   try {
     return await User.findOne({ where: { id } });
@@ -199,8 +200,9 @@ const updateUserParty = async (idUser, idParty, inviteStatus) => {
   } catch (err) {
     console.error(err)
   }
-}
+};
 
+// GET ALL MESSAGES FOR A SINGLE USER
 const getMessagesWithOneUser = async (idSender, idRecipient) => {
   try {
     return await Message.findAll({
@@ -215,6 +217,7 @@ const getMessagesWithOneUser = async (idSender, idRecipient) => {
   }
 };
 
+// GET ALL IDS WHO USER HAS BEEN MESSAGED BY
 const getUsersSendersIds = async (idRecipient) => {
   try {
     const senders = await Message.findAll({
@@ -232,6 +235,8 @@ const getUsersSendersIds = async (idRecipient) => {
     console.error(err);
   }
 };
+
+// GET ALL IDS WHO USER HAS MESSAGED
 const getUsersRecipientsIds = async (idSender) => {
   try {
     const recipients = await Message.findAll({
@@ -250,6 +255,7 @@ const getUsersRecipientsIds = async (idSender) => {
   }
 };
 
+// GET ALL IDS OF USERS WHO USER HAS MESSAGED/BEEN MESSAGED BY
 const getAllUsersThreads = async (userId) => {
   try {
     const recipients = await getUsersSendersIds(userId);
@@ -267,6 +273,7 @@ const getAllUsersThreads = async (userId) => {
   }
 };
 
+// GET ALL MESSAGES FOR A SINGLE USER
 const getAllUserMessages = async (idSender, idRecipient) => {
   try {
     return await Message.findAll({
@@ -282,9 +289,19 @@ const getAllUserMessages = async (idSender, idRecipient) => {
   }
 };
 
+// CREATE NEW MESSAGE
 const sendUserMessage = async (messageObj) => {
   try {
     return await Message.create(messageObj);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// GET MOST RECENT MESSAGE BETWEEN TWO USERS
+const getLatestMessage = async (idSender, idRecipient) => {
+  try {
+    return await Message.findOne({ where: { idSender, idRecipient }, order: [['updatedAt', 'DESC']] });
   } catch (error) {
     console.log(error);
   }
@@ -312,4 +329,5 @@ export {
   getAllUsersThreads,
   getAllUserMessages,
   sendUserMessage,
+  getLatestMessage,
 };
