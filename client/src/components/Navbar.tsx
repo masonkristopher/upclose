@@ -61,7 +61,6 @@ const Navbar = ({
             {user && (<li className="p-2"><Link to="/profile">Profile</Link></li>)}
             {user && (<li className="p-2"><Link to="/neighborhood">Neighborhood</Link></li>)}
             {user && (<li className="p-2"><Link to="/messages">Messages</Link></li>)}
-            {user && (<li className="p-2"><Link to="/testParty/1">Test Party</Link></li>)}
           </ul>
 
           <ul className="flex items-center">
@@ -169,18 +168,6 @@ const Navbar = ({
           {!user && (
             <h1>
               Please Log In to see your messages!
-            </h1>
-          )}
-        </Route>
-        <Route path="/testParty/:idParty">
-          {user && (
-            <HouseParty
-              user={user}
-            />
-          )}
-          {!user && (
-            <h1>
-              Please Log In to go to the party!
             </h1>
           )}
         </Route>
