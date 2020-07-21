@@ -1,16 +1,27 @@
 import express from 'express';
-import { getAllUserMessages, getAllUsersThreads, sendUserMessage } from '../db/methods';
+import { getAllUserMessages, getAllUsersThreads, sendUserMessage, getLatestMessage } from '../db/methods';
 
 const messagesRouter = express.Router();
 
-// messagesRouter.get('/all/:idSender/:idRecipient', (req, res) => {
-//   const { idSender, idRecipient } = req.params;
-//   getMessagesWithOneUser(idSender, idRecipient)
-//     .then(messages => {
-//       res.send(messages);
-//     })
-//     .catch(err => console.error(err));
-// });
+messagesRouter.get('/:idSender/:idRecipient/last', (req, res) => {
+  const { idSender, idRecipient } = req.params;
+  getLatestMessage(idSender, idRecipient)
+    .then((message) => {
+      res.send(message);
+    })
+  // getAllUserMessages(idSender, idRecipient)
+  //   .then((currentUserMessages) => {
+  //     getAllUserMessages(idRecipient, idSender)
+  //       .then((clickedUserMessages) => {
+  //         const allMessages = currentUserMessages
+  //           .concat(clickedUserMessages)
+  //           .sort((a: any, b: any) => a.id - b.id);
+  //         res.send(allMessages[allMessages.length - 1]);
+  //       })
+  //       .catch((error) => console.error(error));
+  //   })
+  //   .catch((err) => console.error(err));
+});
 
 messagesRouter.get('/all/:idSender/:idRecipient', (req, res) => {
   const { idSender, idRecipient } = req.params;

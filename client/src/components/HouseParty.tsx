@@ -11,6 +11,9 @@ import Room from './Room';
 import Video from './Video';
 
 import {
+  createHouse,
+  House,
+  Party,
   Peers,
   Position,
   Positions,
@@ -34,7 +37,7 @@ const HouseParty: FC<HousePartyProps> = ({
   user,
   initialPlayerPosition = {
     avatar: user.avatar,
-    currentRoom: 'red',
+    currentRoom: '',
     top: randomPosition(),
     left: randomPosition(),
   },
@@ -44,13 +47,22 @@ const HouseParty: FC<HousePartyProps> = ({
   const playerSocket = socket.id;
 
   const [invited, setInvited]: any = useState(null);
-  const [party, setParty]: any = useState({});
   const [users, setUsers]: any = useState([]);
   const history = useHistory();
 
   const goToSettings = () => {
     history.replace(`/partyProfile/${partyId}`);
   };
+
+  const [party, setParty]: [
+    Party,
+    Dispatch<SetStateAction<Party>>,
+  ] = useState({});
+
+  const [house, setHouse]: [
+    House,
+    Dispatch<SetStateAction<House>>,
+  ] = useState({});
 
   const [peers, setPeers]: [
     Peers,
@@ -67,11 +79,13 @@ const HouseParty: FC<HousePartyProps> = ({
   const userVideo = useRef<HTMLVideoElement>(null);
 
   const joinParty = () => {
+    const rooms = Object.keys(house);
+    console.log('rooms:', rooms);
     navigator.mediaDevices
       .getUserMedia({ video: videoConstraints, audio: true })
       .then((stream) => {
         (userVideo.current as HTMLVideoElement).srcObject = stream;
-        socket.emit('join room', positions[playerSocket]);
+        socket.emit('join room', positions[playerSocket], rooms);
 
         // remove user from peers but not positions
         socket.on('user left room', (leavingUserId: string, newRoom: string) => {
@@ -84,7 +98,7 @@ const HouseParty: FC<HousePartyProps> = ({
         // create new peer for new other users in room
         socket.on('user joined room', (joiningUserId: string) => {
           if (joiningUserId !== socket.id) {
-            socket.emit('player moved', { [socket.id]: positions[socket.id] });
+            socket.emit('player moved', { [socket.id]: positions[socket.id] }, rooms);
             const peer = createPeer(socket, joiningUserId, socket.id, stream);
             peers[joiningUserId] = peer;
             setPeers({ ...peers });
@@ -116,22 +130,29 @@ const HouseParty: FC<HousePartyProps> = ({
           setPeers({ ...peers });
         });
 
-        socket.on('update player', (payload: any) => {
-          const playerId = Object.keys(payload)[0];
-          positions[playerId] = payload[playerId];
-          setPositions({ ...positions });
+        socket.on('update player', (position: Record<string, Position>) => {
+          const playerId = Object.keys(position)[0];
+          if (playerId !== playerSocket) {
+            positions[playerId] = position[playerId];
+            setPositions({ ...positions });
+          }
         });
       });
   };
 
   // Runs once when HouseParty component initially renders
   useEffect(() => {
-    joinParty();
     // should query the database and find the party we need on render
     axios.get(`/party/${partyId}`)
-      .then((response) => {
+      .then(({ data }) => {
         // then use setParty to put the party's info into state
-        setParty(response.data);
+        const {
+          idRoomOne, idRoomTwo, idRoomThree, idRoomFour,
+        } = data;
+        positions[playerSocket].currentRoom = idRoomOne;
+        setHouse(createHouse(idRoomOne, idRoomTwo, idRoomThree, idRoomFour));
+        setPositions({ ...positions });
+        setParty(data);
         return axios.get(`/party/getUsers/${partyId}`);
       })
       .then((response) => {
@@ -139,6 +160,12 @@ const HouseParty: FC<HousePartyProps> = ({
       })
       .catch((err) => console.error(err));
   }, []);
+
+  useEffect(() => {
+    if (positions[playerSocket].currentRoom !== '') {
+      joinParty();
+    }
+  }, [party]);
 
   // watches users for changes, then checks that the logged in user is an invited user
   useEffect(() => {
@@ -174,21 +201,29 @@ const HouseParty: FC<HousePartyProps> = ({
       </button>
       <h1 className="text-xl">Party Name</h1>
       <div className="float-left">
+        {/* {party != {}
+        && ( */}
         <Room
-          name={positions[socket.id].currentRoom}
+          house={house}
+          currentRoom={positions[socket.id].currentRoom}
           party={party}
           positions={positions}
           setPeers={setPeers}
           setPositions={setPositions}
           socket={socket}
         />
+        {/* )} */}
       </div>
       <div className="bg-gray-100 md:float-left pl-4">
+        {/* {party != {}
+        && ( */}
         <PlayerVideoPanel
+          party={party}
           positions={positions}
           socket={socket}
           userVideo={userVideo}
         />
+        {/* )} */}
       </div>
 
       {/* Peer Videos */}
