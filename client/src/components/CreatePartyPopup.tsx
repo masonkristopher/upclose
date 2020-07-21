@@ -4,21 +4,15 @@ import Popup from 'reactjs-popup';
 import {
   CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, Image, DotGroup,
 } from 'pure-react-carousel';
+import cryptoRandomString from 'crypto-random-string';
 import axios from 'axios';
+import { User } from '../services/constants';
 import SearchPopup from './SearchPopup';
 // to do: does this need to go somewhere else???
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
 interface CreatePartyPopupProps {
-  user: {
-    id: number,
-    nameFirst: string,
-    nameLast: string,
-    username: string,
-    email: string,
-    avatar: string,
-    googleId: string,
-  };
+  user: User,
 }
 
 const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
@@ -30,6 +24,10 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
     idLayout: 0,
     idCreator: user.id,
     inviteOnly: true,
+    idRoomOne: '',
+    idRoomTwo: '',
+    idRoomThree: '',
+    idRoomFour: '',
   });
   const [invitees, setInvitees]: any = useState([]);
   const [popUpNumber, setPopupNumber]: any = useState(0);
@@ -76,6 +74,11 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
 
   // sends request to server to save the party, sending party details
   const saveParty = () => {
+    console.log(cryptoRandomString({length: 150}));
+    partyDetails.idRoomOne = cryptoRandomString({length: 10});
+    partyDetails.idRoomTwo = cryptoRandomString({length: 10});
+    partyDetails.idRoomThree = cryptoRandomString({length: 10});
+    partyDetails.idRoomFour = cryptoRandomString({length: 10});
     axios.post('/party/create', {
       ...partyDetails,
     })

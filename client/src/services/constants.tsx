@@ -2,13 +2,13 @@ import Peer from 'simple-peer';
 
 /* User */
 export interface User {
-  id: number,
-  nameFirst: string,
-  nameLast: string,
-  username: string,
-  email: string,
-  avatar: string,
-  googleId: string,
+  id: number;
+  nameFirst: string;
+  nameLast: string;
+  username: string;
+  email: string;
+  avatar: string;
+  googleId: string;
 }
 
 /* Video */
@@ -19,46 +19,46 @@ export const videoConstraints: MediaTrackConstraints = {
 
 /* House */
 export interface Position {
-  avatar: string,
-  currentRoom: layout,
-  top: number,
-  left: number,
+  avatar: string;
+  currentRoom: string;
+  top: number;
+  left: number;
 }
 
 export type Peers = Record<string, Peer.Instance>;
 export type Positions = Record<string, Position>;
 
-export type layout = 'red' | 'green' | 'blue' | 'yellow';
-
 interface Room {
-  xChange: layout,
-  yChange: layout,
+  xChange: string;
+  yChange: string;
 }
 
-interface House {
-  red: Room,
-  blue: Room,
-  green: Room,
-  yellow: Room,
-}
+export type House = Record<string, Room>;
 
-export const house: House = {
-  red: {
-    xChange: 'blue',
-    yChange: 'green',
-  },
-  blue: {
-    xChange: 'red',
-    yChange: 'yellow',
-  },
-  green: {
-    xChange: 'yellow',
-    yChange: 'red',
-  },
-  yellow: {
-    xChange: 'green',
-    yChange: 'blue',
-  },
+export const createHouse = (
+  idRoomOne: string,
+  idRoomTwo: string,
+  idRoomThree: string,
+  idRoomFour: string,
+): House => {
+  return {
+    [idRoomOne]: {
+      xChange: idRoomTwo,
+      yChange: idRoomThree,
+    },
+    [idRoomTwo]: {
+      xChange: idRoomOne,
+      yChange: idRoomFour,
+    },
+    [idRoomThree]: {
+      xChange: idRoomFour,
+      yChange: idRoomOne,
+    },
+    [idRoomFour]: {
+      xChange: idRoomThree,
+      yChange: idRoomTwo,
+    },
+  };
 };
 
 /* Room */
@@ -73,10 +73,16 @@ export interface Direction {
 }
 
 export enum RoomStyles {
-  red = 'bg-red-300',
-  green = 'bg-green-300',
-  blue = 'bg-blue-300',
-  yellow = 'bg-yellow-300',
+  red = 'bg-myred',
+  green = 'bg-mygreen',
+  blue = 'bg-myblue',
+  yellow = 'bg-myyellow',
+  orange = 'bg-myorange',
+  purple = 'bg-mypurple',
+  pink = 'bg-mypink',
+  white = 'bg-mywhite',
+  black = 'bg-myblack',
+  brown = 'bg-mybrown'
 }
 
 /* Player */
@@ -87,3 +93,22 @@ export const randomPosition = () => {
   }
   return x;
 };
+
+/* Party */
+export interface Party {
+  id?: number,
+  name?: string,
+  idLayout?: number,
+  idCreator?: number,
+  idRoomOne?: string,
+  idRoomTwo?:string,
+  idRoomThree?:string,
+  idRoomFour?:string,
+  roomOneBackground?: string,
+  roomTwoBackground?: string,
+  roomThreeBackground?: string,
+  roomFourBackground?: string,
+  inviteOnly?: boolean,
+  createdAt?: string,
+  updatedAt?: string,
+}
