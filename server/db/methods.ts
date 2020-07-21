@@ -301,13 +301,11 @@ const sendUserMessage = async (messageObj) => {
 // GET MOST RECENT MESSAGE BETWEEN TWO USERS
 const getLatestMessage = async (idSender, idRecipient) => {
   try {
-    const latest = await Message.findOne({ where: { idSender, idRecipient }, order: [['updatedAt', 'DESC']] });
-    console.log(latest);
+    return await Message.findOne({ where: { idSender, idRecipient }, order: [['updatedAt', 'DESC']] });
   } catch (error) {
     console.log(error);
   }
 };
-
 
 export {
   createUser,
