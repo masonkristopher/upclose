@@ -3,15 +3,17 @@ import React, { FC, ReactElement } from 'react';
 import Controls from './Controls';
 import Radar from './Radar';
 
-import { Positions } from '../services/constants';
+import { Party, Positions } from '../services/constants';
 
 interface PlayerVideoPanelProps {
+  party: Party;
   positions: Positions;
-  socket: SocketIOClient.Socket,
-  userVideo: React.RefObject<HTMLVideoElement>,
+  socket: SocketIOClient.Socket;
+  userVideo: React.RefObject<HTMLVideoElement>;
 }
 
 const PlayerVideoPanel: FC<PlayerVideoPanelProps> = ({
+  party,
   positions,
   socket,
   userVideo,
@@ -28,7 +30,7 @@ const PlayerVideoPanel: FC<PlayerVideoPanelProps> = ({
 
       {/* Radar */}
       <div className="float-right">
-        <Radar positions={positions} socket={socket} />
+        <Radar party={party} positions={positions} socket={socket} />
       </div>
     </div>
   );
