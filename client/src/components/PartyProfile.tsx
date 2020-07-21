@@ -92,6 +92,14 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
     });
   }, [users]);
 
+  // once party is updated, set the temporary backgrounds to match the actual party's backgrounds
+  useEffect(() => {
+    backgrounds.forEach((background, index) => {
+      tempRoomBackgrounds[index] = background;
+    });
+    setTempRoomBackgrounds(tempRoomBackgrounds);
+  }, [party]);
+
   const editPartyName = () => {
     setChangeName(false);
     party.name = partyName;
@@ -146,6 +154,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
     setChangeBackground(false);
   };
 
+  // to do: maybe make this height and width more flexible?
   const containerStyle: CSSProperties = {
     height: '300px',
     width: '300px',
