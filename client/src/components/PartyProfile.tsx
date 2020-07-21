@@ -220,11 +220,6 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
                   <path xmlns="http://www.w3.org/2000/svg" d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
                 </svg>
               </button>
-              {/* <input onChange={(e) => { editRoomBackgrounds(e, 0) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Top left" />
-              <input onChange={(e) => { editRoomBackgrounds(e, 1) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Top right" />
-              <input onChange={(e) => { editRoomBackgrounds(e, 2) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Bottom left" />
-              <input onChange={(e) => { editRoomBackgrounds(e, 3) }} className="flex max-w-full mt-4 border border-solid border-1" type="text" placeholder="Bottom right" />
-              <button type="button" onClick={() => { saveRoomBackgrounds(); setChangeBackground(false); }}>Save Images</button> */}
               <div className="mr-8">
                 <div className="pb-4">
                   <h1 className="font-bold">Customize Room Backgrounds</h1>
