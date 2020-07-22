@@ -84,7 +84,7 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
             Your parties:
             <ul>
               {parties.map((party: any) => (
-                <div className="grid grid-cols-2">
+                <div key={party.id} className="grid grid-cols-2">
                   <li>
                     <button type="button" onClick={() => { toParty(party.id); }}>{party.name}</button>
                   </li>
