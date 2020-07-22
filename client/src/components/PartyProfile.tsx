@@ -197,6 +197,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
           <div className="relative" style={containerStyle}>
             {backgrounds.map((background) => (
               <div
+                key={background}
                 className={`inline-block bg-my${background}`}
                 style={{
                   backgroundImage: `url(${background})`,
@@ -246,6 +247,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
               <div className="relative" style={containerStyle}>
                 {backgrounds.map((background, index) => (
                   <div
+                    key={background}
                     className={`inline-block bg-my${tempRoomBackgrounds[index]}`}
                     style={{
                       backgroundImage: `url(${tempRoomBackgrounds[index]})`,
