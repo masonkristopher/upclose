@@ -1,15 +1,10 @@
 import React, { FC, ReactElement, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Popup from 'reactjs-popup';
-import {
-  CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, Image, DotGroup,
-} from 'pure-react-carousel';
 import cryptoRandomString from 'crypto-random-string';
 import axios from 'axios';
 import { User } from '../services/constants';
 import SearchPopup from './SearchPopup';
-// to do: does this need to go somewhere else???
-import 'pure-react-carousel/dist/react-carousel.es.css';
 
 interface CreatePartyPopupProps {
   user: User,
@@ -34,9 +29,6 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
   const [isChecked, setIsChecked] = useState(true);
   // useHistory allows us to redirect by pushing onto the url
   const history = useHistory();
-  // const [activeSlide, setActiveSlide] = useState(0);
-  // this should equal how many layouts we have  **************
-  // const [totalSlides, setTotalSlides] = useState(2);
 
   // sets partyDetails state to have the party's name
   const setPartyName = (e: any): void => {
@@ -44,26 +36,6 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
     copy.name = e.target.value;
     setPartyDetails(copy);
   };
-  // // sets partyDetails state to have the party's layout
-  // const setPartyLayout = (e: number): void => {
-  //   const copy = { ...partyDetails };
-  //   copy.idLayout = e;
-  //   setPartyDetails(copy);
-  // };
-  // // sets the active slide when the back button is clicked
-  // const handleBack = () => {
-  //   setActiveSlide(activeSlide - 1);
-  //   if (activeSlide <= 0) {
-  //     setActiveSlide(0);
-  //   }
-  // };
-  // // sets the active slide when the next button is clicked
-  // const handleNext = () => {
-  //   setActiveSlide(activeSlide + 1);
-  //   if (activeSlide >= totalSlides - 1) {
-  //     setActiveSlide(totalSlides);
-  //   }
-  // };
 
   const toggleChecked = () => {
     setIsChecked(!isChecked);
@@ -74,7 +46,6 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
 
   // sends request to server to save the party, sending party details
   const saveParty = () => {
-    console.log(cryptoRandomString({length: 150}));
     partyDetails.idRoomOne = cryptoRandomString({length: 10});
     partyDetails.idRoomTwo = cryptoRandomString({length: 10});
     partyDetails.idRoomThree = cryptoRandomString({length: 10});
@@ -247,51 +218,3 @@ const CreatePartyPopup: FC<CreatePartyPopupProps> = ({
 };
 
 export default CreatePartyPopup;
-
-/* <Popup open={popUpNumber === 2}>
-        <>
-          <h4 className="relative left-0 top-0 pl-2 pt-2 font-bold">Select a layout</h4>
-          <CarouselProvider
-            className="max-w-full max-h-full"
-            naturalSlideWidth={100}
-            naturalSlideHeight={125}
-            totalSlides={totalSlides}
-          >
-            <Slider
-              className="slider"
-            >
-              <Slide
-                index={0}
-              >
-                <Image
-                  hasMasterSpinner={false}
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cartesian_coordinates_2D.svg/1200px-Cartesian_coordinates_2D.svg.png"
-                  className="max-w-full max-h-full"
-                />
-              </Slide>
-              <Slide
-                index={1}
-              >
-                <Image
-                  hasMasterSpinner={false}
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Cartesian_coordinates_2D.svg/1200px-Cartesian_coordinates_2D.svg.png"
-                  className="max-w-full max-h-full"
-                />
-              </Slide>
-            </Slider>
-            <DotGroup />
-            <ButtonBack
-              onClick={handleBack}
-            >
-              Back
-            </ButtonBack>
-            <ButtonNext
-              onClick={handleNext}
-            >
-              Next
-            </ButtonNext>
-          </CarouselProvider>
-          <button type="button" className="relative bottom-0 border border-solid border-1 bg-blue-600 text-orange-300" onClick={() => { setPartyLayout(activeSlide); setPopupNumber(3); }}>Confirm party layout</button>
-        </>
-      </Popup>
-*/

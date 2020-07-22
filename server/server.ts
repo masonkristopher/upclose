@@ -20,7 +20,7 @@ app.use(cors());
 // routes
 app.use('/', routes);
 app.use(express.static(`${path.resolve('./')}/client/build`));
-app.get('*', (req: Request, res: Response): void => {
+app.get('*', (req: Request, res: Response) => {
   res.sendFile(`${path.resolve('./')}/client/build/index.html`);
 });
 
@@ -32,7 +32,6 @@ io.on('connection', socket => {
       rooms.forEach(room => {
         socket.to(room).emit('update player', { [socket.id]: playerPosition });
       });
-      // socket.broadcast.emit('update player', { [socket.id]: playerPosition });
       socket.to(newRoom).emit('user joined room', socket.id);
     });
   });
@@ -43,7 +42,6 @@ io.on('connection', socket => {
       rooms.forEach(room => {
         socket.to(room).emit('user left room', socket.id, newRoom);
       });
-      // socket.broadcast.emit('user left room', socket.id, newRoom);
       socket.join(newRoom, () => {
         socket.to(newRoom).emit('user joined room', socket.id);
       });
@@ -62,7 +60,6 @@ io.on('connection', socket => {
     rooms.forEach(room => {
       io.to(room).emit('update player', position);
     });
-    // socket.broadcast.emit('update player', position);
   });
 
   socket.on('chat message', payload => {

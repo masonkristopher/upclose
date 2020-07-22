@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, Dispatch, SetStateAction } from 'react';
 import axios from 'axios';
 import {
   BrowserRouter as Router,
@@ -12,25 +12,19 @@ import Neighborhood from './Neighborhood';
 import Messages from './InboxList';
 import HouseParty from './HouseParty';
 import PartyProfile from './PartyProfile';
-// import UserContext from './contexts/UserContext';
 
-// interface NavbarProps {
-//   user: {
-//     id: number;
-//     nameFirst: string;
-//     nameLast: string;
-//     username: string;
-//     email: string;
-//     avatar: string;
-//     googleId: string;
-//   };
-// }
+import { User } from '../services/constants';
 
-const Navbar = ({
+interface NavbarProps {
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
+}
+
+const Navbar: FC<NavbarProps> = ({
   // these come from App, and will alter App's user
   setUser,
   user,
-}: any) => {
+}) => {
   // triggers when a user successfully logs out; should alert the user
   const logout = () => {
     setUser(null);
@@ -61,7 +55,6 @@ const Navbar = ({
             {user && (<li className="p-2"><Link to="/profile">Profile</Link></li>)}
             {user && (<li className="p-2"><Link to="/neighborhood">Neighborhood</Link></li>)}
             {user && (<li className="p-2"><Link to="/messages">Messages</Link></li>)}
-            {user && (<li className="p-2"><Link to="/testParty/1">Test Party</Link></li>)}
           </ul>
 
           <ul className="flex items-center">
@@ -169,18 +162,6 @@ const Navbar = ({
           {!user && (
             <h1>
               Please Log In to see your messages!
-            </h1>
-          )}
-        </Route>
-        <Route path="/testParty/:idParty">
-          {user && (
-            <HouseParty
-              user={user}
-            />
-          )}
-          {!user && (
-            <h1>
-              Please Log In to go to the party!
             </h1>
           )}
         </Route>
