@@ -20,14 +20,14 @@ const Messages: FC<IProps> = ({ user }) => {
   const [clickedUser, setClickedUser]: any = useState({});
   const [threads, setThreads]: any = useState([]);
   const [showMessages, setShowMessages]: any = useState(clickedUser !== {});
-  const [recentMessages, setRecentMessages]: any = useState([]);
+  const [recentMessages, setRecentMessages]: any = useState({});
   const [searching, setSearching]: any = useState(false);
 
   useEffect(() => {
     axios
       .get(`messages/threads/${user.id}`)
       .then(response => {
-        console.log(response);
+        // console.log(response);
         response.data.forEach((id: number) => {
           axios
             .get(`user/${id}`)
@@ -37,11 +37,10 @@ const Messages: FC<IProps> = ({ user }) => {
           axios
             .get(`messages/${user.id}/${id}/last`)
             .then(res => {
-              console.log('line40', res.data);
-              recentMessages.push(res.data);
+              recentMessages[id] = res.data;
+              setRecentMessages({ ...recentMessages });
             })
             .catch(error => console.error(error));
-          
         });
       });
   }, []);

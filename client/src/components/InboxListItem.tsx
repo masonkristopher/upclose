@@ -22,12 +22,15 @@ const InboxListItem: FC<InboxListItemProps> = ({
   const [latest, setLatest] = useState('');
 
   useEffect(() => {
-    recentMessages.forEach((messageObj: any) => {
-      if (messageObj.idSender === thread.id || messageObj.idRecipient === thread.id) {
-        setLatest(messageObj.message);
+    console.log(recentMessages);
+    Object.keys(recentMessages).forEach((id: any) => {
+      if (recentMessages[id].idSender === thread.id
+        || recentMessages[id].idRecipient === thread.id) {
+        setLatest(recentMessages[id].message);
       }
     });
-  });
+  }, [recentMessages]);
+
   return (
     <div className="bg-seaweed justify-center">
       <div className="bg-salmon justify-center">
