@@ -301,7 +301,9 @@ const sendUserMessage = async (messageObj) => {
 // GET MOST RECENT MESSAGE BETWEEN TWO USERS
 const getLatestMessage = async (idSender, idRecipient) => {
   try {
-    return await Message.findOne({ where: { idSender, idRecipient }, order: [['updatedAt', 'DESC']] });
+    const latest = await Message.findOne({ where: { idSender, idRecipient }, order: [['updatedAt', 'DESC']] });
+
+    return latest === undefined ? 'could not retrieve message' : latest;
   } catch (error) {
     console.log(error);
   }

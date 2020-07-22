@@ -60,7 +60,10 @@ const MessagesView: FC<IProps> = ({
     };
     axios
       .post('/messages/send', messageObj)
-      .then(() => getMessages())
+      .then(() => {
+        getMessages();
+        setMessage('');
+      })
       .catch(error => console.log(error));
   };
 

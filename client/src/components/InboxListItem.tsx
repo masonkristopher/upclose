@@ -22,14 +22,17 @@ const InboxListItem: FC<InboxListItemProps> = ({
   const [latest, setLatest] = useState('');
 
   useEffect(() => {
-    recentMessages.forEach((messageObj: any) => {
-      if (messageObj.idSender === thread.id || messageObj.idRecipient === thread.id) {
-        setLatest(messageObj.message);
+    // console.log(recentMessages);
+    Object.keys(recentMessages).forEach((id: any) => {
+      if (recentMessages[id].idSender === thread.id
+        || recentMessages[id].idRecipient === thread.id) {
+        setLatest(recentMessages[id].message);
       }
     });
-  });
+  }, [recentMessages]);
+
   return (
-    <div className="bg-seaweed justify-center">
+    <div className="justify-center m-4">
       <div className="bg-salmon justify-center">
         <button
           className="bg-salmon text-seaweed font-bold my-1 py-1 px-2 rounded"
@@ -39,13 +42,13 @@ const InboxListItem: FC<InboxListItemProps> = ({
           {latest}
         </button>
       </div>
-      <div className="flex justify-evenly">
+      <div className="flex p-2">
         <img
-          className="rounded-full h-10 w-10 z-10 my-8 mx-8"
+          className="rounded-full align-middle h-10 w-10 float-left ml-2"
           src={thread.avatar}
           alt=""
         />
-        <p className="text-white font-bold my-8 mx-8">{thread.username}</p>
+        <p className="text-seaweed align-middle p-2 font-bold">{thread.username}</p>
       </div>
     </div>
   );

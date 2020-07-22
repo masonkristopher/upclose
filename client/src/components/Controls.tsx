@@ -8,8 +8,13 @@ interface ControlPanelProps {
 const ControlPanel: FC<ControlPanelProps> = ({ userVideo }): ReactElement => {
   const [videoSwitchToggle, setVideoSwitchToggle] = useState(true);
   const [audioSwitchToggle, setAudioSwitchToggle] = useState(true);
-  let videoSwitch = true;
-  let audioSwitch = true;
+  const { AudioContext } = window;
+  const audioCtx = new AudioContext();
+  const convolver = audioCtx.createConvolver();
+  const biquadFilter = audioCtx.createBiquadFilter();
+  const gainNode = audioCtx.createGain();
+  let videoSwitch = videoSwitchToggle;
+  let audioSwitch = audioSwitchToggle;
 
   const mute = () => {
     if (userVideo.current && userVideo.current.srcObject) {
@@ -39,6 +44,18 @@ const ControlPanel: FC<ControlPanelProps> = ({ userVideo }): ReactElement => {
       return 'M 5 9 C 2.199219 9 0 11.199219 0 14 L 0 36 C 0 38.800781 2.199219 41 5 41 L 32 41 C 34.800781 41 37 38.800781 37 36 L 37 14 C 37 11.199219 34.800781 9 32 9 Z M 50 12.3125 L 39 18.1875 L 39 31.8125 L 50 37.6875 Z';
     } 
     return 'M 0.90625 -0.03125 C 0.863281 -0.0234375 0.820313 -0.0117188 0.78125 0 C 0.40625 0.0664063 0.105469 0.339844 0 0.703125 C -0.105469 1.070313 0.00390625 1.460938 0.28125 1.71875 L 48.28125 49.71875 C 48.679688 50.117188 49.320313 50.117188 49.71875 49.71875 C 50.117188 49.320313 50.117188 48.679688 49.71875 48.28125 L 37 35.5625 L 37 14 C 37 11.199219 34.800781 9 32 9 L 10.4375 9 L 1.71875 0.28125 C 1.511719 0.0585938 1.210938 -0.0546875 0.90625 -0.03125 Z M 5 9 C 2.300781 9 0 11.300781 0 14 L 0 36 C 0 38.800781 2.199219 41 5 41 L 32 41 C 33.398438 41 34.601563 40.394531 35.5 39.59375 Z M 50 12.3125 L 39 18.25 L 39 31.75 L 50 37.6875 Z';
+  };
+
+  const verb = () => {
+    if (userVideo.current && userVideo.current.srcObject) {
+      const source = audioCtx.createMediaStreamSource(userVideo.current.srcObject as MediaStream);
+      console.log('verbclicked', source);
+      source.connect(audioCtx.destination);
+      source.connect(convolver);
+      convolver.connect(gainNode);
+      gainNode.connect(biquadFilter);
+      biquadFilter.connect(audioCtx.destination);
+    }
   };
 
   return (
@@ -73,6 +90,7 @@ const ControlPanel: FC<ControlPanelProps> = ({ userVideo }): ReactElement => {
       </button>
       {/* Effect control switches */}
       <button
+        onClick={verb}
         type="button"
         className="bg-gray-300 flex space-x-4 hover:bg-gray-400 text-gray-600 font-bold py-1 px-4 rounded-r"
       >

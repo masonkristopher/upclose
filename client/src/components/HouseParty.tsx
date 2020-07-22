@@ -208,6 +208,7 @@ const HouseParty: FC<HousePartyProps> = ({
       </button>
       <h1 className="text-xl">Party Name</h1>
       <div className="float-left">
+        {positions[socket.id] && (
         <Room
           house={house}
           currentRoom={positions[socket.id].currentRoom}
@@ -217,6 +218,7 @@ const HouseParty: FC<HousePartyProps> = ({
           setPositions={setPositions}
           socket={socket}
         />
+        )}
       </div>
       <div className="bg-gray-100 md:float-left pl-4">
         {party.id && (
@@ -232,16 +234,17 @@ const HouseParty: FC<HousePartyProps> = ({
       {/* Peer Videos */}
       <div className="bg-gray-100 md:float-left pl-4">
         {Object.keys(peers).map((socketId: string) => {
-          return (
-            <Video
-              key={socketId}
-              id={socketId}
-              peer={peers[socketId]}
-              positionA={positions[socketId]}
-              positionB={positions[playerSocket]}
-              positions={positions}
-            />
-          );
+          if (positions[socketId]) {
+            return (
+              <Video
+                key={socketId}
+                peer={peers[socketId]}
+                positionA={positions[socketId]}
+                positionB={positions[playerSocket]}
+                positions={positions}
+              />
+            );
+          }
         })}
       </div>
 
