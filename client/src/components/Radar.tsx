@@ -54,11 +54,17 @@ const Radar: FC<RadarProps> = ({
         return (backgrounds[i] === 'red'
           || backgrounds[i] === 'blue'
           || backgrounds[i] === 'green'
-          || backgrounds[i] === 'yellow')
+          || backgrounds[i] === 'yellow'
+          || backgrounds[i] === 'purple'
+          || backgrounds[i] === 'brown'
+          || backgrounds[i] === 'black'
+          || backgrounds[i] === 'white'
+          || backgrounds[i] === 'pink'
+          || backgrounds[i] === 'orange')
           ? (
             <div
               key={room}
-              className={`inline-block ${RoomStyles[(backgrounds[i] as 'red' | 'blue' | 'green' | 'yellow')]}`}
+              className={`inline-block ${RoomStyles[(backgrounds[i] as 'red' | 'blue' | 'green' | 'yellow' | 'purple' | 'brown' | 'pink' | 'white' | 'black' | 'orange')]}`}
               style={defaultRoomStyle}
             />
           )
