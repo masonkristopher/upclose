@@ -59,22 +59,19 @@ const Messages: FC<IProps> = ({ user }) => {
   };
 
   return (
-    <div className="bg-seaweed">
+    <div className="p-10">
       {!showMessages
         ? (<div><MessagesView clickedUser={clickedUser} user={user} showMessages={showMessages} setShowMessages={setShowMessages} /></div>)
         : (
           <div className="">
-            <div className="flex justify-evenly">
-              <h1 className="text-avocado font-bold text-xl mb-2">Messages</h1>
-              <div className="text-right">
-                <button
-                  className="bg-avocado hover:text-white text-seaweed font-bold my-1 py-1 px-2 rounded"
-                  type="button"
-                  onClick={() => { setSearching(!searching); }}
-                >
-                  New
-                </button>
-              </div>
+            <div className="flex justify-evenly mb-6">
+              <button
+                className="bg-avocado hover:text-white text-seaweed font-bold my-1 py-1 px-2 rounded"
+                type="button"
+                onClick={() => { setSearching(!searching); }}
+              >
+                Start New Thread
+              </button>
             </div>
             {searching
               ? (
@@ -83,7 +80,7 @@ const Messages: FC<IProps> = ({ user }) => {
                 </div>
               )
               : null}
-            <div className="flex justify-around">
+            <div className="flex float-left">
               {threads.map((thread: any) => {
                 return (
                   <InboxListItem
