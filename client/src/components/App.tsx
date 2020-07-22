@@ -2,8 +2,10 @@ import React, { useState, useEffect, FC } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
 
+import { User } from '../services/constants';
+
 const App:FC = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   // when the app loads, check if the user is logged in with google
   useEffect(() => {
     // loads the gapi. we use (window as any) b/c gapi does not exist on window until our script
