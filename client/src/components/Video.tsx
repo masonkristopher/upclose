@@ -10,7 +10,6 @@ interface VideoProps {
   peer: Peer.Instance;
   positionA: Position;
   positionB: Position;
-  id: string;
   positions: Positions;
 }
 
@@ -19,7 +18,6 @@ const Video: FC<VideoProps> = ({
   positionA,
   positionB,
   positions,
-  id,
 }): ReactElement => {
   const ref: any = useRef<HTMLVideoElement>(null);
   const [showVolume, setShowVolume]: any = useState(0);
@@ -39,7 +37,6 @@ const Video: FC<VideoProps> = ({
     } else {
       volume *= 1 - ((distance - 50) / 400);
     }
-    console.log(volume);
     if (volume >= 0 && volume <= 1) {
       ref.current.volume = volume;
       setShowVolume(volume);
@@ -56,7 +53,6 @@ const Video: FC<VideoProps> = ({
 
   useEffect(() => {
     setVolume(getDistance(positionA, positionB));
-    console.log('positionA', id, ref.current.volume);
   }, [positions]);
 
   return (

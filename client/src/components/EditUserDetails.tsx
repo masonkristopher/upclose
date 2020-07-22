@@ -15,7 +15,8 @@ interface EditUserDetailsProps {
   setUser: any
 }
 const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user, setUser }) => {
-  const [id, setId] = useState(user.id);
+  // const [id, setId] = useState(user.id);
+  const { id } = user;
   const [username, setUsername] = useState(user.username);
   const [nameFirst, setNameFirst] = useState(user.nameFirst);
   const [nameLast, setNameLast] = useState(user.nameLast);
