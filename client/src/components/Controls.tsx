@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { FC, ReactElement, useEffect } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 interface ControlPanelProps {
   userVideo: React.RefObject<HTMLVideoElement>,
@@ -32,6 +32,7 @@ const ControlPanel: FC<ControlPanelProps> = ({ userVideo }): ReactElement => {
     if (userVideo.current && userVideo.current.srcObject) {
       const source = audioCtx.createMediaStreamSource(userVideo.current.srcObject as MediaStream);
       console.log('verbclicked', source);
+      source.connect(audioCtx.destination);
       source.connect(convolver);
       convolver.connect(gainNode);
       gainNode.connect(biquadFilter);
