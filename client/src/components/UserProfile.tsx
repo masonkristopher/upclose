@@ -42,6 +42,13 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
       });
   };
 
+  const removeUser = (userId: number, partyId: number) => {
+    axios.delete(`/user/userParty/${userId}/${partyId}`)
+      .then(() => {
+        setPartyChange(!partyChange);
+      });
+  };
+
   return (
     <div className="grid grid-cols-2">
       <div className="p-8 content-center flex">
@@ -88,7 +95,17 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
                   <li>
                     <button type="button" onClick={() => { toParty(party.id); }}>{party.name}</button>
                   </li>
-                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { deleteParty(party.id); }}>Delete party</button>
+                  {user.id === party.idCreator && (
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { deleteParty(party.id); }}>
+                      Delete party
+                    </button>
+                  )}
+                  {user.id !== party.idCreator && (
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { removeUser(user.id, party.id); }}>
+                      Leave party
+                    </button>
+                  )}
+
                 </div>
               ))}
             </ul>
