@@ -125,10 +125,12 @@ const Room: FC<RoomProps> = ({
       className={`relative w-500 h-500 inline-block ${defaultBackground ? (RoomStyles as any)[roomBackgroundImage] : ''}`}
       style={defaultBackground ? {} : backgroundStyle}
     >
+      {positions[socket.id] && (
       <Player
         handlePlayerMovement={handlePlayerMovement}
         position={positions[socket.id]}
       />
+      )}
       {Object.keys(positions).filter(socketId => {
         return socketId !== socket.id
           && positions[socketId].currentRoom === positions[socket.id].currentRoom;
