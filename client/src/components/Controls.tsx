@@ -6,6 +6,11 @@ interface ControlPanelProps {
 }
 
 const ControlPanel: FC<ControlPanelProps> = ({ userVideo }): ReactElement => {
+  const { AudioContext } = window;
+  const audioCtx = new AudioContext();
+  const convolver = audioCtx.createConvolver();
+  const biquadFilter = audioCtx.createBiquadFilter();
+  const gainNode = audioCtx.createGain();
   let videoSwitch = true;
   let audioSwitch = true;
 
@@ -20,6 +25,18 @@ const ControlPanel: FC<ControlPanelProps> = ({ userVideo }): ReactElement => {
     if (userVideo.current && userVideo.current.srcObject) {
       videoSwitch = !videoSwitch;
       (userVideo.current.srcObject as MediaStream).getVideoTracks()[0].enabled = videoSwitch;
+    }
+  };
+
+  const verb = () => {
+    if (userVideo.current && userVideo.current.srcObject) {
+      const source = audioCtx.createMediaStreamSource(userVideo.current.srcObject as MediaStream);
+      console.log('verbclicked', source);
+      source.connect(audioCtx.destination);
+      source.connect(convolver);
+      convolver.connect(gainNode);
+      gainNode.connect(biquadFilter);
+      biquadFilter.connect(audioCtx.destination);
     }
   };
 
@@ -55,6 +72,7 @@ const ControlPanel: FC<ControlPanelProps> = ({ userVideo }): ReactElement => {
       </button>
       {/* Effect control switches */}
       <button
+        onClick={verb}
         type="button"
         className="bg-gray-300 flex space-x-4 hover:bg-gray-400 text-gray-600 font-bold py-1 px-4 rounded-r"
       >

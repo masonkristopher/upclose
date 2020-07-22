@@ -3,12 +3,26 @@ import { getAllUserMessages, getAllUsersThreads, sendUserMessage, getLatestMessa
 
 const messagesRouter = express.Router();
 
-messagesRouter.get('/:idSender/:idRecipient/last', (req, res) => {
+messagesRouter.get('/:idSender/:idRecipient/last', async (req, res) => {
   const { idSender, idRecipient } = req.params;
-  getLatestMessage(idSender, idRecipient)
-    .then((message) => {
-      res.send(message);
-    })
+  try {
+    await getLatestMessage(idSender, idRecipient)
+      .then((message) => {
+        if (message === null) {
+          getLatestMessage(idRecipient, idSender)
+            .then((reversed) => {
+              console.log('REVERSED', reversed);
+              res.send(reversed);
+            });
+        } else {
+          res.send(message);
+          console.log('this is the else on line 19');
+          console.log(message);
+        }
+      });
+  } catch (err) {
+    console.error(err);
+  }
   // getAllUserMessages(idSender, idRecipient)
   //   .then((currentUserMessages) => {
   //     getAllUserMessages(idRecipient, idSender)
