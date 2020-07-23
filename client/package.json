@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "crypto-random-string": "^3.2.0",
     "fuse.js": "^6.4.0",
+    "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-compound-slider": "^0.16.3",
