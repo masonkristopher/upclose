@@ -40,7 +40,7 @@ const getUser = async (googleId) => {
   }
 };
 
-//GET USER BY ID
+// GET USER BY ID
 const getUserById = async (id) => {
   try {
     return await User.findOne({ where: { id } });
