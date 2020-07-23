@@ -25,6 +25,7 @@ app.get('*', (req: Request, res: Response) => {
 });
 
 io.on('connection', socket => {
+  console.log(`${socket.id} connected`);
   // if user joins room
   socket.on('join room', (playerPosition, rooms: string[]) => {
     const newRoom = playerPosition.currentRoom;
@@ -64,6 +65,10 @@ io.on('connection', socket => {
 
   socket.on('chat message', payload => {
     socket.broadcast.emit('sending chat message', payload);
+  });
+
+  socket.on('left party', () => {
+    socket.broadcast.emit('user left party', socket.id);
   });
 
   socket.on('disconnect', () => {
