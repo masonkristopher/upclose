@@ -85,6 +85,8 @@ export enum RoomStyles {
   brown = 'bg-mybrown'
 }
 
+export type RoomStyle = 'red' | 'green' | 'blue' | 'yellow' | 'orange' | 'purple' | 'pink' | 'white' | 'black' | 'brown';
+
 /* Player */
 export const randomPosition = () => {
   let x = Math.floor(Math.random() * 500);
