@@ -19,7 +19,12 @@ module.exports = {
         mybrown: '#8B4513'
       },
       width: {
+        175: '175px',
         300: '300px',
+      },
+      height: {
+        400: '400px',
+        500: '500px',
       }
     },
     inset: {

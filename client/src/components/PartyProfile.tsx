@@ -87,7 +87,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
         setCreator(true);
       }
       if (invitedUser.id === party.idCreator) {
-        setHost(user);
+        setHost(invitedUser);
       }
     });
   }, [users]);
