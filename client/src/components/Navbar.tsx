@@ -1,5 +1,6 @@
 import React, { FC, Dispatch, SetStateAction } from 'react';
 import axios from 'axios';
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,6 +13,8 @@ import Neighborhood from './Neighborhood';
 import Messages from './InboxList';
 import HouseParty from './HouseParty';
 import PartyProfile from './PartyProfile';
+import Logo from './Logo';
+
 
 import { User } from '../services/constants';
 
@@ -59,7 +62,12 @@ const Navbar: FC<NavbarProps> = ({
 
           <ul className="flex items-center">
             {/* in the middle */}
-            <li className="p-2"><Link to="/">Home</Link></li>
+            <Logo height={1} width={1} />
+            <li className="p-2">
+              <Link to="/">
+                <Logo height={60} width={60} />
+              </Link>
+            </li>
           </ul>
           {/* <!-- to the right  --> */}
           <ul className="flex items-left">
