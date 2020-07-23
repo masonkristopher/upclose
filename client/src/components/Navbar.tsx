@@ -1,5 +1,6 @@
-import React, { FC, Dispatch, SetStateAction } from 'react';
+import React, { FC, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import axios from 'axios';
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,13 +8,16 @@ import {
   Link,
 } from 'react-router-dom';
 import { GoogleLogout, GoogleLogin } from 'react-google-login';
+import { debounce } from 'lodash';
 import UserProfile from './UserProfile';
 import Neighborhood from './Neighborhood';
 import Messages from './InboxList';
 import HouseParty from './HouseParty';
 import PartyProfile from './PartyProfile';
+import Logo from './Logo';
 
-import { User } from '../services/constants';
+
+import { User, Party } from '../services/constants';
 
 interface NavbarProps {
   user: User | null;
@@ -25,13 +29,40 @@ const Navbar: FC<NavbarProps> = ({
   setUser,
   user,
 }) => {
+  const [parties, setParties] = useState([]);
+  const [hasPending, setHasPending] = useState(false);
+
+  const getParties = () => {
+    if (user) {
+      axios.get(`/party/all/${user.id}`)
+        .then((response) => {
+          setParties(response.data);
+        });
+    }
+  };
+
+  const debouncedGetParties = debounce(getParties, 2000);
+
+  useEffect(() => {
+    debouncedGetParties();
+  });
+
+  // checks that none of the parties has a pending invite
+  useEffect(() => {
+    let needsToChange = false;
+    parties.forEach((party: Party) => {
+      if (party.inviteStatus === 'pending') {
+        needsToChange = true;
+      }
+    });
+    setHasPending(needsToChange);
+  }, [parties]);
+
   // triggers when a user successfully logs out; should alert the user
   const logout = () => {
     setUser(null);
     console.log('logged out');
   };
-
-  const client_id = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
   // the response from google after the login
   const responseGoogle = (response: any) => {
@@ -52,14 +83,27 @@ const Navbar: FC<NavbarProps> = ({
         <nav className="px-4 flex justify-between bg-white h-16 border-b-2">
           {/* <!-- top bar left --> */}
           <ul className="flex items-center">
-            {user && (<li className="p-2"><Link to="/profile">Profile</Link></li>)}
-            {user && (<li className="p-2"><Link to="/neighborhood">Neighborhood</Link></li>)}
-            {user && (<li className="p-2"><Link to="/messages">Messages</Link></li>)}
+            {user && (<li className="p-2 flex"><Link to="/profile">Profile</Link></li>)}
+            {user && hasPending === false && (<li className="p-2 flex"><Link to="/neighborhood">Neighborhood</Link></li>)}
+            {user && hasPending && (
+            <li className="p-2 flex">
+              <div className="relative flex justify-center py-1">
+                <img className="absolute top-0 right-0 h-3 w-3" src="https://img.icons8.com/color/344/high-importance--v1.png" alt="notification" />
+                <Link to="/neighborhood">Neighborhood</Link>
+              </div>
+            </li>
+            )}
+            {user && (<li className="p-2 flex"><Link to="/messages">Messages</Link></li>)}
           </ul>
 
           <ul className="flex items-center">
             {/* in the middle */}
-            <li className="p-2"><Link to="/">Home</Link></li>
+            <Logo height={1} width={1} />
+            <li className="p-2">
+              <Link to="/">
+                <Logo height={60} width={60} />
+              </Link>
+            </li>
           </ul>
           {/* <!-- to the right  --> */}
           <ul className="flex items-left">
@@ -135,6 +179,7 @@ const Navbar: FC<NavbarProps> = ({
           {user && (
             <Neighborhood
               user={user}
+              parties={parties}
             />
           )}
           {!user && (
