@@ -64,8 +64,6 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
             <h2 className="text-gray-800 text-2xl mt-2 md:mt-0 md:text-3xl font-semibold">{user.username}</h2>
             <p className="mt-2 text-gray-600">{user.email}</p>
             <p className="mt-2 text-gray-600">
-              Full name:
-              &nbsp;
               {user.nameFirst}
               &nbsp;
               {user.nameLast}
@@ -75,7 +73,7 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
               <button
                 type="button"
                 onClick={() => setShowEditForm(!showEditForm)}
-                className="rounded shadow-md flex items-center bg-seaweed px-4 py-2 text-white hover:text-salmon"
+                className="rounded shadow-md flex items-center bg-seaweed px-4 py-2 text-white font-bold hover:bg-caviar"
               >
                 Edit User Details
               </button>
@@ -83,31 +81,33 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
           </div>
         </div>
       )}
-      <div>
+      <div className="mt-20">
         {parties && (
-          <h1>
-            Your parties:
-            <ul>
-              {parties.map((party: any) => (
-                <div key={party.id} className="grid grid-cols-2">
-                  <li>
-                    <button type="button" onClick={() => { toParty(party.id); }}>{party.name}</button>
-                  </li>
-                  {user.id === party.idCreator && (
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { deleteParty(party.id); }}>
-                      Delete party
-                    </button>
-                  )}
-                  {user.id !== party.idCreator && (
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 py-1 px-2 rounded" type="button" onClick={() => { removeUser(user.id, party.id); }}>
-                      Leave party
-                    </button>
-                  )}
+          <div className="p-8">
+            <h2 className="text-gray-800 text-2xl mt-2 md:mt-0 md:text-3xl font-semibold">Parties</h2>
+            <div className="p-4">
+              <ul>
+                {parties.map((party: any) => (
+                  <div key={party.id} className="mb-4">
+                    <li>
+                      <button type="button" onClick={() => { toParty(party.id); }} className="text-lg float-left align-middle mr-2 font-bold hover:text-salmon">{party.name}</button>
+                      {user.id === party.idCreator && (
+                        <button className="rounded shadow-md flex items-center bg-gray-500 px-1 py-1 text-white text-xs font-bold hover:bg-salmon align-middle" type="button" onClick={() => { deleteParty(party.id); }}>
+                          Delete
+                        </button>
+                      )}
+                      {user.id !== party.idCreator && (
+                        <button className="rounded shadow-md flex items-center bg-gray-500 px-1 py-1 text-white text-xs font-bold hover:bg-avocado align-middle" type="button" onClick={() => { removeUser(user.id, party.id); }}>
+                          Leave
+                        </button>
+                      )}
+                    </li>
 
-                </div>
-              ))}
-            </ul>
-          </h1>
+                  </div>
+                ))}
+              </ul>
+            </div>
+          </div>
         )}
       </div>
       <div></div>

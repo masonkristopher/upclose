@@ -89,7 +89,7 @@ const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user, setU
           <button
             type="button"
             onClick={(e) => changeUserDetails(e)}
-            className="rounded shadow-md flex items-center bg-seaweed px-4 py-2 text-white hover:text-salmon"
+            className="rounded shadow-md flex items-center bg-seaweed px-4 py-2 text-white font-bold hover:bg-caviar"
           >
             Save Changes
           </button>
