@@ -38,7 +38,7 @@ const Navbar: FC<NavbarProps> = ({
     }
   };
 
-  const debouncedGetParties = debounce(getParties, 3500);
+  const debouncedGetParties = debounce(getParties, 2000);
 
   useEffect(() => {
     debouncedGetParties();
@@ -171,6 +171,7 @@ const Navbar: FC<NavbarProps> = ({
           {user && (
             <Neighborhood
               user={user}
+              parties={parties}
             />
           )}
           {!user && (
