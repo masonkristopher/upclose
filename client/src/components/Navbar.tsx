@@ -14,6 +14,7 @@ import Neighborhood from './Neighborhood';
 import Messages from './InboxList';
 import HouseParty from './HouseParty';
 import PartyProfile from './PartyProfile';
+import Landing from './Landing';
 import Logo from './Logo';
 
 
@@ -100,7 +101,7 @@ const Navbar: FC<NavbarProps> = ({
             {/* in the middle */}
             <Logo height={1} width={1} />
             <li className="p-2">
-              <Link to="/">
+              <Link to="/landing">
                 <Logo height={60} width={60} />
               </Link>
             </li>
@@ -149,6 +150,9 @@ const Navbar: FC<NavbarProps> = ({
       </div>
 
       <Switch>
+        <Route path="/landing">
+          <Landing />
+        </Route>
         <Route path="/partyProfile/:partyId">
           {user && (
             <PartyProfile
