@@ -33,7 +33,7 @@ const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user, setU
       email,
       avatar,
     };
-    console.log(userObj);
+    // console.log(userObj);
     // make request to change user details
     axios.put('/user/profile/edit', { userObj })
       .then(() => {

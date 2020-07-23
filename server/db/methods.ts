@@ -285,7 +285,7 @@ const getAllUserMessages = async (idSender, idRecipient) => {
       raw: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -294,7 +294,7 @@ const sendUserMessage = async (messageObj) => {
   try {
     return await Message.create(messageObj);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -305,7 +305,7 @@ const getLatestMessage = async (idSender, idRecipient) => {
 
     return latest === undefined ? 'could not retrieve message' : latest;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
