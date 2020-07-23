@@ -162,8 +162,8 @@ const HouseParty: FC<HousePartyProps> = ({
       .catch((err) => console.error(err));
 
     return () => {
-      console.log(`house party unmounted by ${socket.id}`);
-      socket.close();
+      console.log(`user ${socket.id} left party`);
+      socket.emit('left party');
     };
   }, []);
 
