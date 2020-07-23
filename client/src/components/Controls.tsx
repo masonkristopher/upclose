@@ -50,7 +50,7 @@ const ControlPanel: FC<ControlPanelProps> = ({ userVideo }): ReactElement => {
   const verb = () => {
     if (userVideo.current && userVideo.current.srcObject) {
       const source = audioCtx.createMediaStreamSource(userVideo.current.srcObject as MediaStream);
-      console.log('verbclicked', source);
+      // console.log('verbclicked', source);
       source.connect(audioCtx.destination);
       source.connect(convolver);
       convolver.connect(gainNode);
