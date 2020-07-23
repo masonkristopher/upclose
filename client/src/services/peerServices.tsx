@@ -1,5 +1,4 @@
 import Peer from 'simple-peer';
-// import io from 'socket.io-client';
 
 const createPeer = (
   socket: SocketIOClient.Socket,
