@@ -46,50 +46,55 @@ const EditUserDetails: FC<EditUserDetailsProps> = ({ setShowEditForm, user, setU
   };
 
   return (
-    <div>
-      <div className="flex flex-wrap -mx-3 mb-6">
+    <div className="mt-20">
+      <div className="max-w-md mx-auto py-4 px-8 bg-white shadow-lg rounded-lg">
+        <div className="flex justify-center md:justify-end -mt-16">
+          <img className="w-30 h-30 object-cover rounded-full border-4 border-white shadow-lg" alt="Testimonial avatar" src={user.avatar} />
+        </div>
         <div className="w-full px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
+          <p className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Username
-          </label>
-          <input onChange={(e) => setUsername(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="text" value={username} />
+          </p>
+          <input onChange={(e) => setUsername(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" value={username} />
         </div>
-      </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
+
         <div className="w-full px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
+          <p className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             First Name
-          </label>
-          <input onChange={(e) => setNameFirst(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="text" value={nameFirst} />
+          </p>
+          <input onChange={(e) => setNameFirst(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" value={nameFirst} />
         </div>
-      </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
+
         <div className="w-full px-3">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
+          <p className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Last Name
-          </label>
-          <input onChange={(e) => setNameLast(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="text" value={nameLast} />
+          </p>
+          <input onChange={(e) => setNameLast(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" value={nameLast} />
         </div>
-      </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
+
+        <div className="w-full px-3">
+          <p className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Email
-          </label>
-          <input onChange={(e) => setEmail(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" value={email} />
+          </p>
+          <input onChange={(e) => setEmail(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" value={email} />
         </div>
-      </div>
-      <div className="flex flex-wrap -mx-3 mb-6">
-        <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
+
+        <div className="w-full px-3">
+          <p className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Avatar
-          </label>
-          <input onChange={(e) => setAvatar(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" value={avatar} />
+          </p>
+          <input onChange={(e) => setAvatar(e.target.value)} className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" value={avatar} />
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            type="button"
+            onClick={(e) => changeUserDetails(e)}
+            className="rounded shadow-md flex items-center bg-seaweed px-4 py-2 text-white hover:text-salmon"
+          >
+            Save Changes
+          </button>
         </div>
       </div>
-      <button onClick={(e) => changeUserDetails(e)} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4" type="button">
-        Submit
-      </button>
     </div>
   );
 };

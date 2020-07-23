@@ -50,41 +50,39 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
   };
 
   return (
-    <div className="grid grid-cols-2">
-      <div className="p-8 content-center flex">
-        {showEditForm ? (
-          <EditUserDetails setShowEditForm={setShowEditForm} user={user} setUser={setUser} />
-        ) : (
-          <div>
-            <img
-              className="flex-col object-cover rounded-full p-4 max-w-sm max-h-sm"
-              src={user.avatar}
-              alt={user.username}
-            />
-            <h3>Username</h3>
-            <p className="text-gray-900 font-bold text-xl mb-2">
-              {user.username}
-            </p>
-            <h3>First Name</h3>
-            <p className="text-gray-900 font-bold text-xl mb-2">
+    <div className="grid grid-cols-4">
+      <div></div>
+      {showEditForm ? (
+        <EditUserDetails setShowEditForm={setShowEditForm} user={user} setUser={setUser} />
+      ) : (
+        <div className="mt-20">
+          <div className="max-w-md mx-auto py-4 px-8 bg-white shadow-lg rounded-lg">
+            <div className="flex justify-center md:justify-end -mt-16">
+              <img className="w-30 h-30 object-cover rounded-full border-4 border-white shadow-lg" alt="Testimonial avatar" src={user.avatar} />
+            </div>
+
+            <h2 className="text-gray-800 text-2xl mt-2 md:mt-0 md:text-3xl font-semibold">{user.username}</h2>
+            <p className="mt-2 text-gray-600">{user.email}</p>
+            <p className="mt-2 text-gray-600">
+              Full name:
+              &nbsp;
               {user.nameFirst}
-            </p>
-            <h3>Last Name</h3>
-            <p className="text-gray-900 font-bold text-xl mb-2">
+              &nbsp;
               {user.nameLast}
             </p>
-            <h3>Email</h3>
-            <p className="text-gray-900 font-bold text-xl mb-2">{user.email}</p>
-            <button
-              onClick={() => setShowEditForm(!showEditForm)}
-              className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-blue-400 rounded shadow m-4"
-              type="button"
-            >
-              Edit User Details
-            </button>
+
+            <div className="flex justify-end mt-4">
+              <button
+                type="button"
+                onClick={() => setShowEditForm(!showEditForm)}
+                className="rounded shadow-md flex items-center bg-seaweed px-4 py-2 text-white hover:text-salmon"
+              >
+                Edit User Details
+              </button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <div>
         {parties && (
           <h1>
@@ -112,6 +110,7 @@ const UserProfile: FC<UserProfileProps> = ({ user, setUser }) => {
           </h1>
         )}
       </div>
+      <div></div>
     </div>
   );
 };
