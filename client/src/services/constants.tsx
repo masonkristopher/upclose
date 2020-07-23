@@ -109,6 +109,7 @@ export interface Party {
   roomThreeBackground?: string,
   roomFourBackground?: string,
   inviteOnly?: boolean,
+  inviteStatus?: string,
   createdAt?: string,
   updatedAt?: string,
 }
