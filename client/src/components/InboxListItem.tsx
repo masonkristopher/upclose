@@ -22,7 +22,7 @@ const InboxListItem: FC<InboxListItemProps> = ({
   const [latest, setLatest] = useState('');
 
   useEffect(() => {
-    console.log(recentMessages);
+    // console.log(recentMessages);
     Object.keys(recentMessages).forEach((id: any) => {
       if (recentMessages[id].idSender === thread.id
         || recentMessages[id].idRecipient === thread.id) {
