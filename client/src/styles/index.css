@@ -102,3 +102,7 @@ body {
   position: absolute;
   left: 20px;
 }
+
+.clickDIV {
+  cursor: pointer;
+}
