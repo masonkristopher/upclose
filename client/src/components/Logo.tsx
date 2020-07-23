@@ -16,7 +16,8 @@ const Logo: FC<LogoProps> = ({
       version="1.1"
       width={width}
       height={height}
-      viewBox="0, 0, ,383.33333333333337"
+      viewBox="0, 0, 400, 400"
+      background-size="200px 200px"
     >
       <path
         id="path0"
