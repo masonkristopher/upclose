@@ -68,7 +68,7 @@ userRouter.put('/profile/edit', (req, res) => {
       // console.log(data);
       res.send('changed user data');
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 });
 
 // add a user and its inviteStatus to the userParty table

@@ -11,13 +11,13 @@ messagesRouter.get('/:idSender/:idRecipient/last', async (req, res) => {
         if (message === null) {
           getLatestMessage(idRecipient, idSender)
             .then((reversed) => {
-              console.log('REVERSED', reversed);
+              // console.log('REVERSED', reversed);
               res.send(reversed);
             });
         } else {
           res.send(message);
-          console.log('this is the else on line 19');
-          console.log(message);
+          // console.log('this is the else on line 19');
+          // console.log(message);
         }
       });
   } catch (err) {
