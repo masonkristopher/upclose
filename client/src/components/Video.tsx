@@ -60,9 +60,7 @@ const Video: FC<VideoProps> = ({
       <video ref={ref} playsInline autoPlay>
         <track />
       </video>
-      user volume:
-      { Math.round(showVolume * 100) }
-      %
+      <p>{`Volume ${Math.round(showVolume * 100)}%`}</p>
     </div>
   );
 };
