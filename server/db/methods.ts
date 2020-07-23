@@ -40,7 +40,7 @@ const getUser = async (googleId) => {
   }
 };
 
-//GET USER BY ID
+// GET USER BY ID
 const getUserById = async (id) => {
   try {
     return await User.findOne({ where: { id } });
@@ -285,7 +285,7 @@ const getAllUserMessages = async (idSender, idRecipient) => {
       raw: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -294,16 +294,18 @@ const sendUserMessage = async (messageObj) => {
   try {
     return await Message.create(messageObj);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
 // GET MOST RECENT MESSAGE BETWEEN TWO USERS
 const getLatestMessage = async (idSender, idRecipient) => {
   try {
-    return await Message.findOne({ where: { idSender, idRecipient }, order: [['updatedAt', 'DESC']] });
+    const latest = await Message.findOne({ where: { idSender, idRecipient }, order: [['updatedAt', 'DESC']] });
+
+    return latest === undefined ? 'could not retrieve message' : latest;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

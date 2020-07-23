@@ -17,7 +17,7 @@ const userRouter = express.Router();
 userRouter.post('/verify', (req, res) => {
   // console.log(req.body, 'beginning of userRoute');
   const { id_token, userObj } = req.body;
-  console.log(userObj, 'userOj')
+  // console.log(userObj, 'userOj')
   const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
   async function verify() {
     const ticket = await client.verifyIdToken({
@@ -61,14 +61,14 @@ userRouter.post('/verify', (req, res) => {
 });
 
 userRouter.put('/profile/edit', (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { userObj } = req.body;
   updateUser(userObj)
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       res.send('changed user data');
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 });
 
 // add a user and its inviteStatus to the userParty table

@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import CreatePartyPopup from './CreatePartyPopup';
 
 const Tab = ({
-  tab, openTab, setOpenTab, name,
+  tab, openTab, setOpenTab, name, color
 }: any) => {
-  const color = 'caviar';
+  // const color = 'caviar';
   return (
     <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
       <a
@@ -82,10 +82,10 @@ const NeighborhoodTabs = ({ parties, user }: any) => {
       <div className="flex flex-wrap">
         <div className="w-full">
           <ul className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row" role="tablist">
-            <Tab tab={1} openTab={openTab} setOpenTab={setOpenTab} name="All" />
-            <Tab tab={2} openTab={openTab} setOpenTab={setOpenTab} name="Public" />
-            <Tab tab={3} openTab={openTab} setOpenTab={setOpenTab} name="Private" />
-            <Tab tab={4} openTab={openTab} setOpenTab={setOpenTab} name="Invites" />
+            <Tab tab={1} openTab={openTab} setOpenTab={setOpenTab} name="All" color="seaweed" />
+            <Tab tab={2} openTab={openTab} setOpenTab={setOpenTab} name="Public" color="avocado" />
+            <Tab tab={3} openTab={openTab} setOpenTab={setOpenTab} name="Private" color="salmon" />
+            <Tab tab={4} openTab={openTab} setOpenTab={setOpenTab} name="Invites" color="caviar" />
           </ul>
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
             <div className="px-4 py-5 flex-auto">
