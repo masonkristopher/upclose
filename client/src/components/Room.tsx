@@ -1,4 +1,6 @@
-import React, { Dispatch, FC, ReactElement, SetStateAction } from 'react';
+import React, {
+  Dispatch, FC, ReactElement, SetStateAction,
+} from 'react';
 import { CSSProperties } from 'styled-components';
 
 import Player from './Player';
@@ -12,6 +14,7 @@ import {
   Position,
   Positions,
   roomSize,
+  RoomStyle,
   RoomStyles,
 } from '../services/constants';
 
@@ -120,9 +123,7 @@ const Room: FC<RoomProps> = ({
 
   return (
     <div
-    // to do: fix this Roomstyles typescript problem
-    // @ts-ignore
-      className={`relative w-500 h-500 inline-block ${defaultBackground ? (RoomStyles as any)[roomBackgroundImage] : ''}`}
+      className={`relative rounded w-500 h-500 inline-block ${defaultBackground ? RoomStyles[roomBackgroundImage as RoomStyle] : ''}`}
       style={defaultBackground ? {} : backgroundStyle}
     >
       {positions[socket.id] && (
