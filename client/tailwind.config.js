@@ -3,20 +3,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        caviar: '#F77604',
-        avocado: '#B8D20B',
-        salmon: '#F56C57',
+        caviar: '#FAAF54',
+        avocado: '#9CD58C',
+        salmon: '#EC6262',
         seaweed: '#231B12',
         myblack: '#000000',
         mywhite: '#FFFFFF',
-        myred: '#FF0000',
-        myorange: '#FF8C00',
-        myyellow: '#FFFF00',
-        mygreen: '#4AC948',
-        myblue: '#0000FF',
-        mypurple: '#9400D3',
-        mypink: '#FF69B4',
-        mybrown: '#8B4513'
+        myred: '#EC6262',
+        myorange: '#FAAF54',
+        myyellow: '#FFDB6E',
+        mygreen: '#9CD58C',
+        myblue: '#5BB2D7',
+        mypurple: '#9974BE',
+        mypink: '#F4A4A4',
+        mybrown: '#A06240'
       },
       width: {
         175: '175px',

@@ -39,6 +39,7 @@ const Messages: FC<IProps> = ({ user }) => {
             .then(res => {
               recentMessages[id] = res.data;
               setRecentMessages({ ...recentMessages });
+              console.log(recentMessages);
             })
             .catch(error => console.error(error));
         });
@@ -60,40 +61,51 @@ const Messages: FC<IProps> = ({ user }) => {
 
   return (
     <div className="p-10">
-      {!showMessages
-        ? (<div><MessagesView clickedUser={clickedUser} user={user} showMessages={showMessages} setShowMessages={setShowMessages} /></div>)
-        : (
-          <div className="">
-            <div className="flex justify-evenly mb-6">
-              <button
-                className="bg-avocado hover:text-white text-seaweed font-bold my-1 py-1 px-2 rounded"
-                type="button"
-                onClick={() => { setSearching(!searching); }}
-              >
-                Start New Thread
-              </button>
-            </div>
-            {searching
-              ? (
-                <div className="text-middle">
-                  <SearchMessage setClickedUser={setClickedUser} showMessages={showMessages} setShowMessages={setShowMessages} />
-                </div>
-              )
-              : null}
-            <div className="flex float-left">
-              {threads.map((thread: any) => {
-                return (
-                  <InboxListItem
-                    thread={thread}
-                    key={thread.id}
-                    handleMessageView={handleMessageView}
-                    recentMessages={recentMessages}
-                  />
-                );
-              })}
-            </div>
+      {!showMessages ? (
+        <div>
+          <MessagesView
+            clickedUser={clickedUser}
+            user={user}
+            showMessages={showMessages}
+            setShowMessages={setShowMessages}
+          />
+        </div>
+      ) : (
+        <div className="clickDIV">
+          <div className="flex justify-evenly mb-6 pt-8">
+            <button
+              className="bg-avocado hover:text-white text-seaweed font-bold my-1 py-1 px-2 rounded"
+              type="button"
+              onClick={() => {
+                setSearching(!searching);
+              }}
+            >
+              Start New Thread
+            </button>
           </div>
-        )}
+          {searching ? (
+            <div className="pt-6">
+              <SearchMessage
+                setClickedUser={setClickedUser}
+                showMessages={showMessages}
+                setShowMessages={setShowMessages}
+              />
+            </div>
+          ) : null}
+          <div className="flex justify-around pt-8">
+            {threads.map((thread: any) => {
+              return (
+                <InboxListItem
+                  thread={thread}
+                  key={thread.id}
+                  handleMessageView={handleMessageView}
+                  recentMessages={recentMessages}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

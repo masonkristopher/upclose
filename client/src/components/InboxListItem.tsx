@@ -1,4 +1,6 @@
-import React, { FC, ReactElement, useState, useEffect } from 'react';
+import React, {
+  FC, ReactElement, useState, useEffect,
+} from 'react';
 
 interface InboxListItemProps {
   thread: {
@@ -20,36 +22,69 @@ const InboxListItem: FC<InboxListItemProps> = ({
   recentMessages,
 }): ReactElement => {
   const [latest, setLatest] = useState('');
-
+  const [messageObj, setMessageObj]: any = useState({});
   useEffect(() => {
     // console.log(recentMessages);
     Object.keys(recentMessages).forEach((id: any) => {
       if (recentMessages[id].idSender === thread.id
         || recentMessages[id].idRecipient === thread.id) {
+        setMessageObj(recentMessages[id]);
         setLatest(recentMessages[id].message);
       }
     });
   }, [recentMessages]);
 
   return (
-    <div className="justify-center m-4">
-      <div className="bg-salmon justify-center">
-        <button
-          className="bg-salmon text-seaweed font-bold my-1 py-1 px-2 rounded"
-          type="button"
-          onClick={() => { handleMessageView(thread); }}
-        >
-          {latest}
-        </button>
-      </div>
-      <div className="flex p-2">
-        <img
-          className="rounded-full align-middle h-10 w-10 float-left ml-2"
-          src={thread.avatar}
-          alt=""
-        />
-        <p className="text-seaweed align-middle p-2 font-bold">{thread.username}</p>
-      </div>
+    <div 
+      className="justify-center"
+    >
+      {messageObj.idSender === thread.id ? (
+        <div>
+          <div
+            className="speech-bubble-left"
+            onClick={() => {
+              handleMessageView(thread);
+            }}
+          >
+            <p>
+              <strong>{latest}</strong>
+            </p>
+          </div>
+          <div className="flex p-2">
+            <img
+              className="rounded-full align-middle h-10 w-10 float-left ml-2"
+              src={thread.avatar}
+              alt=""
+            />
+            <p className="text-seaweed align-middle p-2 font-bold">
+              {thread.username}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div
+            className="speech-bubble-right"
+            onClick={() => {
+              handleMessageView(thread);
+            }}
+          >
+            <p>
+              <strong>{latest}</strong>
+            </p>
+          </div>
+          <div className="flex p-2">
+            <img
+              className="rounded-full align-middle h-10 w-10 float-left ml-2"
+              src={thread.avatar}
+              alt=""
+            />
+            <p className="text-seaweed align-middle p-2 font-bold">
+              {thread.username}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
