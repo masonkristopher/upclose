@@ -49,7 +49,7 @@ const MessagesView: FC<IProps> = ({
       .then((response) => {
         setAllMessages(response.data);
       })
-      .catch(error => console.log(error));
+      .catch(error => console.error(error));
   };
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const MessagesView: FC<IProps> = ({
         getMessages();
         setMessage('');
       })
-      .catch(error => console.log(error));
+      .catch(error => console.error(error));
   };
 
   const onKeyPress = (event: KeyboardEvent) => {

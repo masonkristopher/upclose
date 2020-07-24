@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import React, {
   FC, useState, ReactElement, useRef, useEffect,
 } from 'react';
@@ -57,12 +58,8 @@ const Video: FC<VideoProps> = ({
 
   return (
     <div className="text-blue">
-      <video ref={ref} playsInline autoPlay>
-        <track />
-      </video>
-      user volume:
-      { Math.round(showVolume * 100) }
-      %
+      <video className="rounded" ref={ref} playsInline autoPlay />
+      <p>{`Volume ${Math.round(showVolume * 100)}%`}</p>
     </div>
   );
 };

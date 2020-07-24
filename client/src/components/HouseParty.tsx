@@ -5,7 +5,6 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
 
-import ChatSend from './ChatSend';
 import PlayerVideoPanel from './PlayerVideoPanel';
 import Room from './Room';
 import Video from './Video';
@@ -46,6 +45,7 @@ const HouseParty: FC<HousePartyProps> = ({
   const { partyId }: any = useParams();
   const playerSocket = socket.id;
 
+  const [host, setHost] = useState<string | null>(null);
   const [invited, setInvited]: any = useState(null);
   const [users, setUsers]: any = useState([]);
   const history = useHistory();
@@ -176,7 +176,10 @@ const HouseParty: FC<HousePartyProps> = ({
 
   // watches users for changes, then checks that the logged in user is an invited user
   useEffect(() => {
-    users.forEach((invitedUser: any, index: number) => {
+    users.forEach((invitedUser: User, index: number) => {
+      if (invitedUser.id === party.idCreator) {
+        setHost(`${invitedUser.nameFirst} ${invitedUser.nameLast}`);
+      }
       if (invitedUser.id === user.id) {
         setInvited(true);
       } else if (index === users.length - 1) {
@@ -201,23 +204,33 @@ const HouseParty: FC<HousePartyProps> = ({
   // to do: make all this render only if a user is invited
   return (
     <div className="pl-8 pt-4">
-      <button onClick={goToSettings} type="button">
-        <svg className="h-6 w-6 fill-current text-gray-500 hover:text-salmon" xmlns="http://www.w3.org/2000/svg">
-          <path xmlns="http://www.w3.org/2000/svg" d="M3.94 6.5L2.22 3.64l1.42-1.42L6.5 3.94c.52-.3 1.1-.54 1.7-.7L9 0h2l.8 3.24c.6.16 1.18.4 1.7.7l2.86-1.72 1.42 1.42-1.72 2.86c.3.52.54 1.1.7 1.7L20 9v2l-3.24.8c-.16.6-.4 1.18-.7 1.7l1.72 2.86-1.42 1.42-2.86-1.72c-.52.3-1.1.54-1.7.7L11 20H9l-.8-3.24c-.6-.16-1.18-.4-1.7-.7l-2.86 1.72-1.42-1.42 1.72-2.86c-.3-.52-.54-1.1-.7-1.7L0 11V9l3.24-.8c.16-.6.4-1.18.7-1.7zM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-        </svg>
-      </button>
-      <h1 className="text-xl">Party Name</h1>
+      <div className="">
+        <button className="inline-block align-middle pr-2" onClick={goToSettings} type="button">
+          <svg className="h-6 w-6 fill-current text-gray-500 hover:text-salmon" xmlns="http://www.w3.org/2000/svg">
+            <path xmlns="http://www.w3.org/2000/svg" d="M3.94 6.5L2.22 3.64l1.42-1.42L6.5 3.94c.52-.3 1.1-.54 1.7-.7L9 0h2l.8 3.24c.6.16 1.18.4 1.7.7l2.86-1.72 1.42 1.42-1.72 2.86c.3.52.54 1.1.7 1.7L20 9v2l-3.24.8c-.16.6-.4 1.18-.7 1.7l1.72 2.86-1.42 1.42-2.86-1.72c-.52.3-1.1.54-1.7.7L11 20H9l-.8-3.24c-.6-.16-1.18-.4-1.7-.7l-2.86 1.72-1.42-1.42 1.72-2.86c-.3-.52-.54-1.1-.7-1.7L0 11V9l3.24-.8c.16-.6.4-1.18.7-1.7zM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+          </svg>
+        </button>
+        <h1 className="text-xl inline-block pr-4 pb-2">{party ? party.name : 'Loading party...'}</h1>
+        {host && <h1 className="inline-block pr-4 pb-2">{`hosted by ${host}`}</h1>}
+      </div>
+
       <div className="float-left">
-        {positions[socket.id] && (
-        <Room
-          house={house}
-          currentRoom={positions[socket.id].currentRoom}
-          party={party}
-          positions={positions}
-          setPeers={setPeers}
-          setPositions={setPositions}
-          socket={socket}
-        />
+        {positions[socket.id] ? (
+          <Room
+            house={house}
+            currentRoom={positions[socket.id].currentRoom}
+            party={party}
+            positions={positions}
+            setPeers={setPeers}
+            setPositions={setPositions}
+            socket={socket}
+          />
+        ) : (
+          <div
+            className={'relative rounded w-500 h-500 inline-block}'}
+          >
+            <p className='bg-red-300 h-full p-3'>Uh oh! Something went wrong. Try refreshing the page...</p>
+          </div>
         )}
       </div>
       <div className="bg-gray-100 md:float-left pl-4">
@@ -226,6 +239,7 @@ const HouseParty: FC<HousePartyProps> = ({
           party={party}
           positions={positions}
           socket={socket}
+          user={user}
           userVideo={userVideo}
         />
         )}
@@ -246,12 +260,6 @@ const HouseParty: FC<HousePartyProps> = ({
             );
           }
         })}
-      </div>
-
-      {/* Underneath Chat Feature */}
-      <div className="clear-both py-6">
-        <h1>Party Chat</h1>
-        <ChatSend key={user.id} user={user} socket={socket} />
       </div>
     </div>
   );
