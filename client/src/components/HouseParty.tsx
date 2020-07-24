@@ -215,17 +215,22 @@ const HouseParty: FC<HousePartyProps> = ({
       </div>
 
       <div className="float-left">
-
-        {positions[socket.id] && (
-        <Room
-          house={house}
-          currentRoom={positions[socket.id].currentRoom}
-          party={party}
-          positions={positions}
-          setPeers={setPeers}
-          setPositions={setPositions}
-          socket={socket}
-        />
+        {positions[socket.id] ? (
+          <Room
+            house={house}
+            currentRoom={positions[socket.id].currentRoom}
+            party={party}
+            positions={positions}
+            setPeers={setPeers}
+            setPositions={setPositions}
+            socket={socket}
+          />
+        ) : (
+          <div
+            className={'relative rounded w-500 h-500 inline-block}'}
+          >
+            <p className='bg-red-300 h-full p-3'>Uh oh! Something went wrong. Try refreshing the page...</p>
+          </div>
         )}
       </div>
       <div className="bg-gray-100 md:float-left pl-4">

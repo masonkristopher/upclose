@@ -19,7 +19,7 @@ const PartyProfile: FC<PartyProfileProps> = ({ user }) => {
   const [invited, setInvited]: any = useState(false);
   const [changeBackground, setChangeBackground]: any = useState(false);
   const [tempRoomBackgrounds, setTempRoomBackgrounds]: any = useState({
-    0: 'red', 1: 'blue', 2: 'green', 3: 'yellow',
+    0: 'caviar', 1: 'blue', 2: 'green', 3: 'orange',
   });
   const [changeName, setChangeName]: any = useState(false);
   const [partyName, setPartyName]: any = useState('');

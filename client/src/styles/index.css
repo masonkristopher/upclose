@@ -46,7 +46,7 @@ body {
 }
 
 .speech-bubble-right {
-  background: #B8D20B;
+  background: #9CD58C;
   -webkit-border-radius: 4px;
   border-radius: 4px;
   font-size: 1.2rem;
@@ -67,7 +67,7 @@ body {
 
 .speech-bubble-right::after {
   border-left: 20px solid transparent;
-  border-top: 20px solid #B8D20B;
+  border-top: 20px solid #9CD58C;
   bottom: -20px;
   content: "";
   position: absolute;
@@ -75,7 +75,7 @@ body {
 }
 
 .speech-bubble-left {
-  background: #F56C57;
+  background: #EC6262;
   -webkit-border-radius: 4px;
   border-radius: 4px;
   font-size: 1.2rem;
@@ -96,7 +96,7 @@ body {
 
 .speech-bubble-left::after {
   border-right: 20px solid transparent;
-  border-top: 20px solid #F56C57;
+  border-top: 20px solid #EC6262;
   bottom: -20px;
   content: "";
   position: absolute;
