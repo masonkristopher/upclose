@@ -14,6 +14,7 @@ import Neighborhood from './Neighborhood';
 import Messages from './InboxList';
 import HouseParty from './HouseParty';
 import PartyProfile from './PartyProfile';
+import Landing from './Landing';
 import Logo from './Logo';
 
 
@@ -149,6 +150,9 @@ const Navbar: FC<NavbarProps> = ({
       </div>
 
       <Switch>
+        <Route exact path="/">
+          <Landing />
+        </Route>
         <Route path="/partyProfile/:partyId">
           {user && (
             <PartyProfile
