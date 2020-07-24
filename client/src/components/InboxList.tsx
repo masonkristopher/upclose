@@ -1,19 +1,19 @@
-import React, { FC, useState, useEffect } from 'react';
-import axios from 'axios';
-import MessagesView from './MessagesView';
-import InboxListItem from './InboxListItem';
-import SearchMessage from './SearchMessage';
+import React, { FC, useState, useEffect } from "react";
+import axios from "axios";
+import MessagesView from "./MessagesView";
+import InboxListItem from "./InboxListItem";
+import SearchMessage from "./SearchMessage";
 
 interface IProps {
-  user:{
-    id: number,
-    nameFirst: string,
-    nameLast: string,
-    username: string,
-    email: string,
-    avatar: string,
-    googleId: string,
-  },
+  user: {
+    id: number;
+    nameFirst: string;
+    nameLast: string;
+    username: string;
+    email: string;
+    avatar: string;
+    googleId: string;
+  };
 }
 
 const Messages: FC<IProps> = ({ user }) => {
@@ -24,26 +24,22 @@ const Messages: FC<IProps> = ({ user }) => {
   const [searching, setSearching]: any = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`messages/threads/${user.id}`)
-      .then(response => {
-        // console.log(response);
-        response.data.forEach((id: number) => {
-          axios
-            .get(`user/${id}`)
-            .then(resObj => {
-              setThreads((users: any) => [...users, resObj.data]);
-            });
-          axios
-            .get(`messages/${user.id}/${id}/last`)
-            .then(res => {
-              recentMessages[id] = res.data;
-              setRecentMessages({ ...recentMessages });
-              console.log(recentMessages);
-            })
-            .catch(error => console.error(error));
+    axios.get(`messages/threads/${user.id}`).then((response) => {
+      // console.log(response);
+      response.data.forEach((id: number) => {
+        axios.get(`user/${id}`).then((resObj) => {
+          setThreads((users: any) => [...users, resObj.data]);
         });
+        axios
+          .get(`messages/${user.id}/${id}/last`)
+          .then((res) => {
+            recentMessages[id] = res.data;
+            setRecentMessages({ ...recentMessages });
+            console.log(recentMessages);
+          })
+          .catch((error) => console.error(error));
       });
+    });
   }, []);
 
   // use this use effect if when know what the other id is or handle the request in the upper useEffect

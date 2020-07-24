@@ -1,19 +1,17 @@
-import React, {
-  FC, ReactElement, useState, useEffect,
-} from 'react';
+import React, { FC, ReactElement, useState, useEffect } from "react";
 
 interface InboxListItemProps {
   thread: {
-    id: number,
-    nameFirst: string,
-    nameLast: string,
-    username: string,
-    email: string,
-    avatar: string,
-    googleId: string,
-  },
-  handleMessageView: any,
-  recentMessages: any,
+    id: number;
+    nameFirst: string;
+    nameLast: string;
+    username: string;
+    email: string;
+    avatar: string;
+    googleId: string;
+  };
+  handleMessageView: any;
+  recentMessages: any;
 }
 
 const InboxListItem: FC<InboxListItemProps> = ({
@@ -21,33 +19,30 @@ const InboxListItem: FC<InboxListItemProps> = ({
   handleMessageView,
   recentMessages,
 }): ReactElement => {
-  const [latest, setLatest] = useState('');
-  const [messageObj, setMessageObj]: any = useState({});
+  const [latest, setLatest]: any = useState({});
+
   useEffect(() => {
-    // console.log(recentMessages);
     Object.keys(recentMessages).forEach((id: any) => {
-      if (recentMessages[id].idSender === thread.id
-        || recentMessages[id].idRecipient === thread.id) {
-        setMessageObj(recentMessages[id]);
-        setLatest(recentMessages[id].message);
+      if (
+        recentMessages[id].idSender === thread.id ||
+        recentMessages[id].idRecipient === thread.id
+      ) {
+        setLatest(recentMessages[id]);
       }
     });
   }, [recentMessages]);
-
   return (
-    <div 
-      className="justify-center"
-    >
-      {messageObj.idSender === thread.id ? (
+    <div className="justify-center">
+      {latest.idSender === thread.id ? (
         <div>
           <div
-            className="speech-bubble-left"
+            className="speech-bubble-left clickDIV"
             onClick={() => {
               handleMessageView(thread);
             }}
           >
             <p>
-              <strong>{latest}</strong>
+              <strong>{latest.message}</strong>
             </p>
           </div>
           <div className="flex p-2">
@@ -64,13 +59,13 @@ const InboxListItem: FC<InboxListItemProps> = ({
       ) : (
         <div>
           <div
-            className="speech-bubble-right"
+            className="speech-bubble-right clickDIV"
             onClick={() => {
               handleMessageView(thread);
             }}
           >
             <p>
-              <strong>{latest}</strong>
+              <strong>{latest.message}</strong>
             </p>
           </div>
           <div className="flex p-2">
