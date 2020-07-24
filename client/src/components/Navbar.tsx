@@ -101,7 +101,7 @@ const Navbar: FC<NavbarProps> = ({
             {/* in the middle */}
             <Logo height={1} width={1} />
             <li className="p-2">
-              <Link to="/landing">
+              <Link to="/">
                 <Logo height={60} width={60} />
               </Link>
             </li>
@@ -150,7 +150,7 @@ const Navbar: FC<NavbarProps> = ({
       </div>
 
       <Switch>
-        <Route path="/landing">
+        <Route exact path="/">
           <Landing />
         </Route>
         <Route path="/partyProfile/:partyId">
