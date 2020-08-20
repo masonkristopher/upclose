@@ -1,10 +1,10 @@
 import React, { FC, ReactElement } from 'react';
 import { CSSProperties } from 'styled-components';
-import logo from '../assets/logo.png';
+import logo from '../assets/transparentLogo.png';
 
 const backgroundStyle: CSSProperties = {
   backgroundImage: `url(${logo})`,
-  backgroundPosition: 'center',
+  backgroundPosition: 'center top',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'contain',
 };
@@ -13,10 +13,10 @@ const Landing: FC = (): ReactElement => {
   return (
     <div
       style={backgroundStyle}
-      className="h-screen w-screen opacity-50"
+      className="h-screen w-screen"
     >
       <div
-        className="text-lg relative top-1/2 mx-auto w-1/2"
+        className="text-lg relative mx-auto w-1/2"
       >
         <p>
           {/* eslint-disable-next-line max-len */}
