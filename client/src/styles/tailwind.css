@@ -19798,6 +19798,14 @@ body {
   width: 250px;
 }
 
+.h-landing {
+  height: 150px;
+}
+
+.w-landing {
+  width: 150px;
+}
+
 .speech-bubble-right {
   background: #9CD58C;
   border-radius: 4px;
